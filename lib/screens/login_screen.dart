@@ -196,7 +196,7 @@ class _LoginScreenState extends State<LoginScreen>
         title: Text('An error occurred'),
         content: Text(message),
         actions: <Widget>[
-          FlatButton(
+          TextButton(
             onPressed: () {
               Navigator.of(context).pop();
             },

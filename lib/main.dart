@@ -1,5 +1,7 @@
 import 'package:exshange/providers/auth.dart';
-import 'package:exshange/screens/item_overview.dart';
+import 'package:exshange/providers/items.dart';
+import 'package:exshange/screens/filter_screen.dart';
+import 'package:exshange/screens/home_screen.dart';
 import 'package:exshange/screens/login_screen.dart';
 import 'package:exshange/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
@@ -20,9 +22,13 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (ctx) => Auth(),
         ),
+        ChangeNotifierProvider(
+          create: (ctx) => Items(),
+        ),
       ],
       child: Consumer<Auth>(
         builder: (ctx, auth, _) => MaterialApp(
+          debugShowCheckedModeBanner: false,
           title: 'Exshange Project',
           theme: ThemeData(
             fontFamily: 'MitrRegular',
@@ -33,31 +39,37 @@ class MyApp extends StatelessWidget {
               headline1: TextStyle(
                 fontSize: 32,
                 color: Color(0xFFF4F0EF),
+                decoration: TextDecoration.none,
               ),
               headline2: TextStyle(
                 fontSize: 28,
                 color: Color(0xFF000000),
+                decoration: TextDecoration.none,
               ),
               headline3: TextStyle(
                 fontSize: 24,
                 color: Color(0xFF000000),
+                decoration: TextDecoration.none,
               ),
               bodyText1: TextStyle(
                 fontSize: 20,
                 color: Color(0xFF000000),
+                decoration: TextDecoration.none,
               ),
               bodyText2: TextStyle(
                 fontSize: 20,
                 color: Color(0xFF555555),
+                decoration: TextDecoration.none,
               ),
               subtitle1: TextStyle(
                 fontSize: 20,
                 color: Color(0xFFFFFFFF),
+                decoration: TextDecoration.none,
               ),
             ),
           ),
           home: auth.isAuth
-              ? ItemOverview()
+              ? HomeScreen()
               : FutureBuilder(
                   future: auth.tryAutoLogin(),
                   builder: (ctx, authResultSnapshot) =>
@@ -66,6 +78,10 @@ class MyApp extends StatelessWidget {
                           ? SplashScreen()
                           : LoginScreen(),
                 ),
+          initialRoute: '/',
+          routes: {
+            '/filter': (context) => FilterScreen(),
+          },
         ),
       ),
     );
