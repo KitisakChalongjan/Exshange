@@ -37,17 +37,12 @@ class MyApp extends StatelessWidget {
             backgroundColor: Color(0xFFF4F0EF),
             textTheme: const TextTheme(
               headline1: TextStyle(
-                fontSize: 32,
+                fontSize: 28,
                 color: Color(0xFFF4F0EF),
                 decoration: TextDecoration.none,
               ),
               headline2: TextStyle(
                 fontSize: 28,
-                color: Color(0xFF000000),
-                decoration: TextDecoration.none,
-              ),
-              headline3: TextStyle(
-                fontSize: 24,
                 color: Color(0xFF000000),
                 decoration: TextDecoration.none,
               ),
@@ -58,12 +53,17 @@ class MyApp extends StatelessWidget {
               ),
               bodyText2: TextStyle(
                 fontSize: 20,
-                color: Color(0xFF555555),
+                color: Color(0xFFFFFFFF),
                 decoration: TextDecoration.none,
               ),
               subtitle1: TextStyle(
-                fontSize: 20,
+                fontSize: 16,
                 color: Color(0xFFFFFFFF),
+                decoration: TextDecoration.none,
+              ),
+              subtitle2: TextStyle(
+                fontSize: 16,
+                color: Color(0xFF000000),
                 decoration: TextDecoration.none,
               ),
             ),

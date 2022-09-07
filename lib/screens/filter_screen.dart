@@ -4,6 +4,7 @@ import 'package:flutter/src/widgets/framework.dart';
 
 class FilterScreen extends StatefulWidget {
   const FilterScreen({Key? key}) : super(key: key);
+  final routeName = '/filter';
 
   @override
   State<FilterScreen> createState() => _FilterScreenState();

@@ -1,3 +1,6 @@
+import 'dart:ui';
+
+import 'package:exshange/screens/filter_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -28,13 +31,13 @@ class _ItemOverviewScreenState extends State<ItemOverviewScreen> {
                   children: [
                     Text(
                       "Logo",
-                      style: Theme.of(context).textTheme.subtitle1,
+                      style: Theme.of(context).textTheme.headline1,
                     ),
                   ],
                 ),
                 SizedBox(
                   height: 30,
-                  child: TextFormField(
+                  child: TextField(
                     style: Theme.of(context).textTheme.bodyText2,
                     decoration: InputDecoration(
                       contentPadding: EdgeInsets.symmetric(horizontal: 20),
@@ -55,25 +58,58 @@ class _ItemOverviewScreenState extends State<ItemOverviewScreen> {
           ),
         ),
       ),
-      body: Consumer<Items>(
-        builder: (context, items, _) => GridView.builder(
-          itemCount: items.items.length,
-          gridDelegate:
-              SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
-          itemBuilder: (context, index) {
-            return Card(
-              child: Column(
+      body: Column(
+        children: [
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context).pushNamed(FilterScreen().routeName);
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                color: Theme.of(context).primaryColorDark,
+              ),
+              width: double.infinity,
+              height: 40,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(items.items[index].title),
-                  Text(items.items[index].detail),
-                  Text(items.items[index].address),
-                  Text(items.items[index].category),
-                  Text(items.items[index].subcategory),
+                  Text(
+                    'ตัวกรอง',
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.bodyText2,
+                  ),
+                  Icon(Icons.filter_list, color: Colors.white),
                 ],
               ),
-            );
-          },
-        ),
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child: Consumer<Items>(
+              builder: (context, items, _) => GridView.builder(
+                itemCount: items.items.length,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2),
+                itemBuilder: (context, index) {
+                  return Card(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                    child: Column(
+                      children: [
+                        Stack(
+                          children: [
+                            Image.network(items.items[index].imageUrl),
+                            Text(items.items[index].title),
+                          ],
+                        )
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
