@@ -12,16 +12,17 @@ class FilterScreen extends StatefulWidget {
 }
 
 class _FilterScreenState extends State<FilterScreen> {
-  List<String> category = [
-    'item1',
-    'item2',
-  ];
-  String? selectedCategory = 'item1';
-  List<String> category2 = [
-    'Goods1',
-    'Goods2',
-  ];
-  String? selectedCategory2 = 'Goods1';
+  Map<String, List<String>> allCategory = {
+    'หมวดหมู่ทั้งหมด': ['หมวดหมู่รองทั้งหมด'],
+    'เสื้อผ้า': ['เสื้อผ้าชาย', 'เสื้อผ้าหญิง'],
+    'เครื่องใช้ไฟฟ้า': ['ขนาดใหญ่', 'ขนาดเล็ก'],
+  };
+
+  String? selectedCategory = 'หมวดหมู่ทั้งหมด';
+
+  List<String> category2 = ['หมวดหมู่รองทั้งหมด'];
+  String? selectedCategory2 = 'หมวดหมู่รองทั้งหมด';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,67 +40,120 @@ class _FilterScreenState extends State<FilterScreen> {
               'กรองตามหมวดหมู่',
               style: Theme.of(context).textTheme.bodyText1,
             ),
-            SizedBox(
-              width: 360,
-              height: 60,
-              child: DropdownButtonFormField<String>(
-                decoration: InputDecoration(
-                  fillColor: Colors.white,
-                  filled: true,
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide.none,
+            Container(
+              margin: EdgeInsets.only(
+                top: 10,
+              ),
+              decoration: BoxDecoration(
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.25),
+                    spreadRadius: 1,
+                    blurRadius: 3,
+                    offset: Offset(1, 3),
                   ),
-                ),
-                value: selectedCategory,
-                items: category
-                    .map(
-                      (item) => DropdownMenuItem<String>(
-                        child: Text(
-                          item,
-                          textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.subtitle2,
+                ],
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              width: 360,
+              height: 40,
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              child: DropdownButtonHideUnderline(
+                child: DropdownButton<String>(
+                  // decoration: InputDecoration(
+                  //   fillColor: Colors.white,
+                  //   filled: true,
+                  //   // enabledBorder: OutlineInputBorder(
+                  //   //   borderRadius: BorderRadius.circular(10),
+                  //   //   borderSide: BorderSide.none,
+                  //   // ),
+                  // ),
+                  dropdownColor: Colors.white,
+                  value: selectedCategory,
+                  items: allCategory.keys
+                      .toList()
+                      .map(
+                        (item) => DropdownMenuItem<String>(
+                          child: Text(
+                            item,
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context).textTheme.subtitle2,
+                          ),
+                          value: item,
                         ),
-                        value: item,
-                      ),
-                    )
-                    .toList(),
-                onChanged: (value) {
-                  setState(() {
-                    selectedCategory = value;
-                  });
-                },
+                      )
+                      .toList(),
+                  onChanged: (category) {
+                    setState(() {
+                      selectedCategory = category;
+                      allCategory.forEach((key, subCategory) {
+                        if (key == category) {
+                          category2.clear();
+                          if (key != 'หมวดหมู่ทั้งหมด') {
+                            category2 = ['หมวดหมู่รองทั้งหมด'];
+                          }
+                          category2.addAll(subCategory);
+                          selectedCategory2 = 'หมวดหมู่รองทั้งหมด';
+                        }
+                      });
+                      print('${selectedCategory} => ${selectedCategory2}');
+                    });
+                  },
+                ),
               ),
             ),
-            SizedBox(
-              width: 360,
-              height: 60,
-              child: DropdownButtonFormField<String>(
-                decoration: InputDecoration(
-                  fillColor: Colors.white,
-                  filled: true,
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide.none,
+            Container(
+              margin: EdgeInsets.only(
+                top: 10,
+              ),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.25),
+                    spreadRadius: 1,
+                    blurRadius: 3,
+                    offset: Offset(1, 3),
                   ),
-                ),
-                value: selectedCategory2,
-                items: category2
-                    .map(
-                      (item) => DropdownMenuItem<String>(
-                        child: Text(
-                          item,
-                          style: Theme.of(context).textTheme.subtitle2,
+                ],
+              ),
+              width: 360,
+              height: 40,
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              child: DropdownButtonHideUnderline(
+                child: DropdownButton<String>(
+                  // decoration: InputDecoration(
+                  //   fillColor: Colors.white,
+                  //   filled: true,
+                  //   // enabledBorder: OutlineInputBorder(
+                  //   //   borderRadius: BorderRadius.circular(10),
+                  //   //   borderSide: BorderSide.none,
+                  //   // ),
+                  // ),
+                  dropdownColor: Colors.white,
+
+                  value: selectedCategory2,
+                  items: category2
+                      .map(
+                        (item) => DropdownMenuItem<String>(
+                          child: Text(
+                            item,
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context).textTheme.subtitle2,
+                          ),
+                          value: item,
                         ),
-                        value: item,
-                      ),
-                    )
-                    .toList(),
-                onChanged: (value) {
-                  setState(() {
-                    selectedCategory2 = value;
-                  });
-                },
+                      )
+                      .toList(),
+                  onChanged: (subCategory) {
+                    setState(() {
+                      selectedCategory2 = subCategory;
+                      print('${selectedCategory} => ${selectedCategory2}');
+                    });
+                  },
+                ),
               ),
             ),
           ],
