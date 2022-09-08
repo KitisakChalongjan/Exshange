@@ -38,7 +38,7 @@ class _ItemOverviewScreenState extends State<ItemOverviewScreen> {
                 SizedBox(
                   height: 30,
                   child: TextField(
-                    style: Theme.of(context).textTheme.bodyText2,
+                    style: Theme.of(context).textTheme.bodyText1,
                     decoration: InputDecoration(
                       contentPadding: EdgeInsets.symmetric(horizontal: 20),
                       filled: true,

@@ -50,7 +50,7 @@ class _LoginScreenState extends State<LoginScreen>
           filled: true,
           fillColor: Theme.of(context).backgroundColor,
           hintText: fieldTitle,
-          hintStyle: Theme.of(context).textTheme.bodyText2,
+          hintStyle: Theme.of(context).textTheme.bodyText1,
           isDense: true,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(40),
@@ -90,7 +90,7 @@ class _LoginScreenState extends State<LoginScreen>
             filled: true,
             fillColor: Theme.of(context).backgroundColor,
             hintText: _authMode == AuthMode.login ? '' : fieldTitle,
-            hintStyle: Theme.of(context).textTheme.bodyText2,
+            hintStyle: Theme.of(context).textTheme.bodyText1,
             isDense: true,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(40),
