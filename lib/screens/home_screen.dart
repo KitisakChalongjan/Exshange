@@ -1,3 +1,4 @@
+import 'package:exshange/FirebaseChatApp/chatchat_screen.dart';
 import 'package:exshange/screens/add_item_screen.dart';
 import 'package:exshange/screens/chat_screen.dart';
 import 'package:exshange/screens/item_overview_screen.dart';
@@ -82,7 +83,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       floatingActionButton: _currentIndex == 0 ? FloatingActionButton(
         onPressed: () {
-          Navigator.of(context).pushNamed(AddItemScreen().routeName);
+          Navigator.of(context).pushNamed(ChatChatScreen().routeName);
         },
         child: Icon(Icons.add),
       ) : null,

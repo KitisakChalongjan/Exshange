@@ -1,3 +1,4 @@
+import 'package:exshange/FirebaseChatApp/chatchat_screen.dart';
 import 'package:exshange/providers/auth.dart';
 import 'package:exshange/providers/items.dart';
 import 'package:exshange/screens/add_item_screen.dart';
@@ -5,11 +6,14 @@ import 'package:exshange/screens/filter_screen.dart';
 import 'package:exshange/screens/home_screen.dart';
 import 'package:exshange/screens/login_screen.dart';
 import 'package:exshange/screens/splash_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -83,6 +87,7 @@ class MyApp extends StatelessWidget {
           routes: {
             FilterScreen().routeName: (context) => FilterScreen(),
             AddItemScreen().routeName: (context) => AddItemScreen(),
+            ChatChatScreen().routeName: (context) => ChatChatScreen(),
           },
         ),
       ),

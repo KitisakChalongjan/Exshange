@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1049601316301",
+    "firebase_url": "https://exshange-project-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "exshange-project",
+    "storage_bucket": "exshange-project.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1049601316301:android:1aa06a3357ebbc40996084",
+        "android_client_info": {
+          "package_name": "com.example.exshange"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1049601316301-skdqlueebn5ipsu7tjki8jsuso4pf4r8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAMl44BuaX_DgbKeJ1EY3b31fn2Pj4k_uQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1049601316301-skdqlueebn5ipsu7tjki8jsuso4pf4r8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
