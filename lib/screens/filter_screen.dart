@@ -69,7 +69,7 @@ class _FilterScreenState extends State<FilterScreen> {
         child: Column(
           children: [
             SizedBox(
-              height: 30,
+              height: 20,
             ),
             Text(
               'กรองตามหมวดหมู่',

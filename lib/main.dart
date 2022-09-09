@@ -1,4 +1,3 @@
-import 'package:exshange/providers/auth.dart';
 import 'package:exshange/providers/authentication.dart';
 import 'package:exshange/providers/items.dart';
 import 'package:exshange/screens/add_item_screen.dart';
