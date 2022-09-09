@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:exshange/providers/authentication.dart';
 import 'package:exshange/screens/filter_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
@@ -28,10 +29,20 @@ class _ItemOverviewScreenState extends State<ItemOverviewScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
                       "Logo",
                       style: Theme.of(context).textTheme.headline1,
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Authentication().signOut();
+                      },
+                      child: Icon(
+                        Icons.logout_rounded,
+                        color: Colors.white,
+                      ),
                     ),
                   ],
                 ),

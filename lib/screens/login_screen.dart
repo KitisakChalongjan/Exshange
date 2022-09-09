@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:exshange/providers/authentication.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -22,9 +23,11 @@ class _LoginScreenState extends State<LoginScreen>
 
   AuthMode _authMode = AuthMode.login;
 
+  String? errorMessage = '';
+
   final GlobalKey<FormState> _formKey = GlobalKey();
 
-  Map<String, String?> _authData = {
+  Map<String, String> _authData = {
     'email': '',
     'password': '',
   };
@@ -156,14 +159,14 @@ class _LoginScreenState extends State<LoginScreen>
     });
     try {
       if (_authMode == AuthMode.login) {
-        await Provider.of<Auth>(context, listen: false).login(
-          _authData['email'],
-          _authData['password'],
+        await Authentication().signInWithEmailAndPassword(
+          email: _authData['email']!,
+          password: _authData['password']!,
         );
       } else {
-        await Provider.of<Auth>(context, listen: false).signup(
-          _authData['email'],
-          _authData['password'],
+        await Authentication().createUserWithEmailAndPassword(
+          email: _authData['email']!,
+          password: _authData['password']!,
         );
       }
     } on HttpException catch (error) {
@@ -273,7 +276,7 @@ class _LoginScreenState extends State<LoginScreen>
                           return null;
                         },
                         (value) {
-                          _authData['email'] = value;
+                          _authData['email'] = value!;
                         },
                       ),
                       _sizedBox(20),
@@ -289,7 +292,7 @@ class _LoginScreenState extends State<LoginScreen>
                           return null;
                         },
                         (pwInput) {
-                          _authData['password'] = pwInput;
+                          _authData['password'] = pwInput!;
                         },
                       ),
                       _sizedBox(20),
