@@ -11,12 +11,44 @@ class FilterScreen extends StatefulWidget {
   State<FilterScreen> createState() => _FilterScreenState();
 }
 
+enum ItemType { all, give, trade }
+
 class _FilterScreenState extends State<FilterScreen> {
   Map<String, List<String>> allCategory = {
     'หมวดหมู่ทั้งหมด': ['หมวดหมู่รองทั้งหมด'],
-    'เสื้อผ้า': ['เสื้อผ้าชาย', 'เสื้อผ้าหญิง'],
-    'เครื่องใช้ไฟฟ้า': ['ขนาดใหญ่', 'ขนาดเล็ก'],
+    'เสื้อผ้าชาย': [
+      'เสื้อ',
+      'กางเกง',
+      'ส่วมใส่เท้า',
+      'เข็มขัด',
+      'เครื่องประดับ'
+    ],
+    'เสื้อผ้าหญิง': [
+      'เสื้อ',
+      'กระโปรง',
+      'ส่วมใส่เท้า',
+      'กางเกง',
+      'เครื่องประดับ',
+      'เข็มขัด'
+    ],
+    'เครื่องใช้ไฟฟ้าภายในบ้าน': [
+      'ห้องครัว',
+      'ห้องน้ำ',
+      'ห้องนั้งเล่น',
+      'ห้องนอน'
+    ],
+    'เครื่องใช้ภายในบ้าน': ['ห้องครัว', 'ห้องน้ำ', 'ห้องนั้งเล่น', 'ห้องนอน'],
+    'อุปกรณ์กีฬาและกิจกรรมกลางแจ้ง': [
+      'อุปกรณ์กีฬา',
+      'เครื่องออกกำลังกาย',
+      'อุปกรณ์ปิกนิกและเดินป่า'
+    ],
+    'สื่อการเรียนรู้และงานอดิเรก': ['หนังสือ', 'สารคดี', 'เครื่องดนตรี'],
   };
+
+  double distance = 5;
+
+  ItemType itemType = ItemType.all;
 
   String? selectedCategory = 'หมวดหมู่ทั้งหมด';
 
@@ -36,6 +68,9 @@ class _FilterScreenState extends State<FilterScreen> {
       body: Center(
         child: Column(
           children: [
+            SizedBox(
+              height: 30,
+            ),
             Text(
               'กรองตามหมวดหมู่',
               style: Theme.of(context).textTheme.bodyText1,
@@ -156,7 +191,116 @@ class _FilterScreenState extends State<FilterScreen> {
                 ),
               ),
             ),
+            SizedBox(
+              height: 30,
+            ),
+            Text(
+              'กรองตามระยะทาง',
+              style: Theme.of(context).textTheme.bodyText1,
+            ),
+            Slider(
+              min: 5.0,
+              max: 1000.0,
+              value: distance,
+              onChanged: ((value) {
+                setState(() {
+                  distance = value;
+                  print(distance);
+                });
+              }),
+            ),
+            Text(
+              '${distance.toInt()}',
+              style: Theme.of(context).textTheme.bodyText1,
+            ),
+            SizedBox(
+              height: 30,
+            ),
+            Text(
+              'กรองรูปแบบสิ่งของ',
+              style: Theme.of(context).textTheme.bodyText1,
+            ),
+            ElevatedButton(
+              style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(
+                      itemType != ItemType.all
+                          ? Colors.white
+                          : Theme.of(context).primaryColor)),
+              onPressed: (() {
+                setState(() {
+                  itemType = ItemType.all;
+                });
+              }),
+              child: Container(
+                width: 100,
+                height: 30,
+                child: Text(
+                  "ทั้งหมด",
+                  style: itemType == ItemType.all
+                      ? Theme.of(context).textTheme.bodyText2
+                      : Theme.of(context).textTheme.bodyText1,
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+            ElevatedButton(
+              style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(
+                      itemType != ItemType.trade
+                          ? Colors.white
+                          : Theme.of(context).primaryColor)),
+              onPressed: (() {
+                setState(() {
+                  itemType = ItemType.trade;
+                });
+              }),
+              child: Container(
+                width: 100,
+                height: 30,
+                child: Text(
+                  "แลกเปลี่ยน",
+                  style: itemType == ItemType.trade
+                      ? Theme.of(context).textTheme.bodyText2
+                      : Theme.of(context).textTheme.bodyText1,
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+            ElevatedButton(
+              style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(
+                      itemType != ItemType.give
+                          ? Colors.white
+                          : Theme.of(context).primaryColor)),
+              onPressed: (() {
+                setState(() {
+                  itemType = ItemType.give;
+                });
+              }),
+              child: Container(
+                width: 100,
+                height: 30,
+                child: Text(
+                  "บริจาค",
+                  style: itemType == ItemType.give
+                      ? Theme.of(context).textTheme.bodyText2
+                      : Theme.of(context).textTheme.bodyText1,
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
           ],
+        ),
+      ),
+      bottomNavigationBar: BottomAppBar(
+        color: Theme.of(context).primaryColor,
+        child: Container(
+          height: 40,
+          child: Text(
+            "ตกลง",
+            style: Theme.of(context).textTheme.bodyText2,
+            textAlign: TextAlign.center,
+          ),
         ),
       ),
     );
