@@ -1,7 +1,11 @@
 import 'package:exshange/models/item.dart';
 import 'package:flutter/material.dart';
 
+
 class Items with ChangeNotifier {
+
+  List<String> itemType = ['ทั้งหมด', 'บริจาค', 'แลกเปลื่ยน'];
+
   List<Item> _items = [
     Item(
       'Shirt',

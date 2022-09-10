@@ -1,4 +1,6 @@
 import 'package:exshange/models/item.dart';
+import 'package:exshange/providers/categories.dart';
+import 'package:exshange/providers/items.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -11,44 +13,14 @@ class FilterScreen extends StatefulWidget {
   State<FilterScreen> createState() => _FilterScreenState();
 }
 
-enum ItemType { all, give, trade }
 
 class _FilterScreenState extends State<FilterScreen> {
-  Map<String, List<String>> allCategory = {
-    'หมวดหมู่ทั้งหมด': ['หมวดหมู่รองทั้งหมด'],
-    'เสื้อผ้าชาย': [
-      'เสื้อ',
-      'กางเกง',
-      'ส่วมใส่เท้า',
-      'เข็มขัด',
-      'เครื่องประดับ'
-    ],
-    'เสื้อผ้าหญิง': [
-      'เสื้อ',
-      'กระโปรง',
-      'ส่วมใส่เท้า',
-      'กางเกง',
-      'เครื่องประดับ',
-      'เข็มขัด'
-    ],
-    'เครื่องใช้ไฟฟ้าภายในบ้าน': [
-      'ห้องครัว',
-      'ห้องน้ำ',
-      'ห้องนั้งเล่น',
-      'ห้องนอน'
-    ],
-    'เครื่องใช้ภายในบ้าน': ['ห้องครัว', 'ห้องน้ำ', 'ห้องนั้งเล่น', 'ห้องนอน'],
-    'อุปกรณ์กีฬาและกิจกรรมกลางแจ้ง': [
-      'อุปกรณ์กีฬา',
-      'เครื่องออกกำลังกาย',
-      'อุปกรณ์ปิกนิกและเดินป่า'
-    ],
-    'สื่อการเรียนรู้และงานอดิเรก': ['หนังสือ', 'สารคดี', 'เครื่องดนตรี'],
-  };
+
+  final allCategory = Categories().allCategory;
 
   double distance = 5;
 
-  ItemType itemType = ItemType.all;
+  String itemType = 'ทั้งหมด';
 
   String? selectedCategory = 'หมวดหมู่ทั้งหมด';
 
@@ -96,14 +68,6 @@ class _FilterScreenState extends State<FilterScreen> {
               padding: EdgeInsets.symmetric(horizontal: 20),
               child: DropdownButtonHideUnderline(
                 child: DropdownButton<String>(
-                  // decoration: InputDecoration(
-                  //   fillColor: Colors.white,
-                  //   filled: true,
-                  //   // enabledBorder: OutlineInputBorder(
-                  //   //   borderRadius: BorderRadius.circular(10),
-                  //   //   borderSide: BorderSide.none,
-                  //   // ),
-                  // ),
                   dropdownColor: Colors.white,
                   value: selectedCategory,
                   items: allCategory.keys
@@ -159,16 +123,7 @@ class _FilterScreenState extends State<FilterScreen> {
               padding: EdgeInsets.symmetric(horizontal: 20),
               child: DropdownButtonHideUnderline(
                 child: DropdownButton<String>(
-                  // decoration: InputDecoration(
-                  //   fillColor: Colors.white,
-                  //   filled: true,
-                  //   // enabledBorder: OutlineInputBorder(
-                  //   //   borderRadius: BorderRadius.circular(10),
-                  //   //   borderSide: BorderSide.none,
-                  //   // ),
-                  // ),
                   dropdownColor: Colors.white,
-
                   value: selectedCategory2,
                   items: category2
                       .map(
@@ -223,12 +178,12 @@ class _FilterScreenState extends State<FilterScreen> {
             ElevatedButton(
               style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(
-                      itemType != ItemType.all
+                      itemType != 'ทั้งหมด'
                           ? Colors.white
                           : Theme.of(context).primaryColor)),
               onPressed: (() {
                 setState(() {
-                  itemType = ItemType.all;
+                  itemType = 'ทั้งหมด';
                 });
               }),
               child: Container(
@@ -236,7 +191,7 @@ class _FilterScreenState extends State<FilterScreen> {
                 height: 30,
                 child: Text(
                   "ทั้งหมด",
-                  style: itemType == ItemType.all
+                  style: itemType == 'ทั้งหมด'
                       ? Theme.of(context).textTheme.bodyText2
                       : Theme.of(context).textTheme.bodyText1,
                   textAlign: TextAlign.center,
@@ -246,12 +201,12 @@ class _FilterScreenState extends State<FilterScreen> {
             ElevatedButton(
               style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(
-                      itemType != ItemType.trade
+                      itemType != 'แลกเปลื่ยน'
                           ? Colors.white
                           : Theme.of(context).primaryColor)),
               onPressed: (() {
                 setState(() {
-                  itemType = ItemType.trade;
+                  itemType = 'แลกเปลื่ยน';
                 });
               }),
               child: Container(
@@ -259,7 +214,7 @@ class _FilterScreenState extends State<FilterScreen> {
                 height: 30,
                 child: Text(
                   "แลกเปลี่ยน",
-                  style: itemType == ItemType.trade
+                  style: itemType == 'แลกเปลื่ยน'
                       ? Theme.of(context).textTheme.bodyText2
                       : Theme.of(context).textTheme.bodyText1,
                   textAlign: TextAlign.center,
@@ -269,12 +224,12 @@ class _FilterScreenState extends State<FilterScreen> {
             ElevatedButton(
               style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(
-                      itemType != ItemType.give
+                      itemType != 'บริจาค'
                           ? Colors.white
                           : Theme.of(context).primaryColor)),
               onPressed: (() {
                 setState(() {
-                  itemType = ItemType.give;
+                  itemType = 'บริจาค';
                 });
               }),
               child: Container(
@@ -282,7 +237,7 @@ class _FilterScreenState extends State<FilterScreen> {
                 height: 30,
                 child: Text(
                   "บริจาค",
-                  style: itemType == ItemType.give
+                  style: itemType == 'บริจาค'
                       ? Theme.of(context).textTheme.bodyText2
                       : Theme.of(context).textTheme.bodyText1,
                   textAlign: TextAlign.center,

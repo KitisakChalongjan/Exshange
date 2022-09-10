@@ -1,5 +1,6 @@
 import 'package:exshange/providers/authentication.dart';
 import 'package:exshange/providers/items.dart';
+import 'package:exshange/screens/add_address_screen.dart';
 import 'package:exshange/screens/add_item_screen.dart';
 import 'package:exshange/screens/filter_screen.dart';
 import 'package:exshange/screens/home_screen.dart';
@@ -96,6 +97,7 @@ class MyApp extends StatelessWidget {
         routes: {
           FilterScreen().routeName: (context) => FilterScreen(),
           AddItemScreen().routeName: (context) => AddItemScreen(),
+          AddAdressScreen().routeName: (context) => AddAdressScreen(),
         },
       ),
     );
