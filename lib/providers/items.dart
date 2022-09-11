@@ -1,63 +1,38 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:exshange/models/item.dart';
 import 'package:flutter/material.dart';
 
-
 class Items with ChangeNotifier {
-
   List<String> itemType = ['ทั้งหมด', 'บริจาค', 'แลกเปลื่ยน'];
 
-  List<Item> _items = [
-    Item(
-      'Shirt',
-      'Good Shirt',
-      'bangkok',
-      'cloth',
-      'man cloth',
-      'https://img1.g-star.com/product/c_fill,f_auto,h_630,q_80/v1614677580/D08512-8415-110-M05/g-star-raw-holorn-t-shirt-white.jpg',
-    ),
-    Item(
-      'Shirt',
-      'Good Shirt',
-      'bangkok',
-      'cloth',
-      'man cloth',
-      'https://img1.g-star.com/product/c_fill,f_auto,h_630,q_80/v1614677580/D08512-8415-110-M05/g-star-raw-holorn-t-shirt-white.jpg',
-    ),
-    Item(
-      'Shirt',
-      'Good Shirt',
-      'bangkok',
-      'cloth',
-      'man cloth',
-      'https://img1.g-star.com/product/c_fill,f_auto,h_630,q_80/v1614677580/D08512-8415-110-M05/g-star-raw-holorn-t-shirt-white.jpg',
-    ),
-    Item(
-      'Shirt',
-      'Good Shirt',
-      'bangkok',
-      'cloth',
-      'man cloth',
-      'https://img1.g-star.com/product/c_fill,f_auto,h_630,q_80/v1614677580/D08512-8415-110-M05/g-star-raw-holorn-t-shirt-white.jpg',
-    ),
-    Item(
-      'Shirt',
-      'Good Shirt',
-      'bangkok',
-      'cloth',
-      'man cloth',
-      'https://img1.g-star.com/product/c_fill,f_auto,h_630,q_80/v1614677580/D08512-8415-110-M05/g-star-raw-holorn-t-shirt-white.jpg',
-    ),
-    Item(
-      'Shirt',
-      'Good Shirt',
-      'bangkok',
-      'cloth',
-      'man cloth',
-      'https://img1.g-star.com/product/c_fill,f_auto,h_630,q_80/v1614677580/D08512-8415-110-M05/g-star-raw-holorn-t-shirt-white.jpg',
-    ),
-  ];
+  FirebaseFirestore db = FirebaseFirestore.instance;
+
+  List<Item> _items = [];
 
   List<Item> get items {
     return _items;
+  }
+
+  Future<void> initItemsData() async {
+    List<Item> loadedData = [];
+    await db.collection("items").get().then((items) {
+      for (var doc in items.docs) {
+        loadedData.add(Item(
+          doc.id,
+          doc['name'],
+          doc['detail'],
+          doc['address'],
+          doc['category'],
+          doc['province'],
+          doc['subCategory'],
+          doc['imagesUrl'],
+          doc['itemType'],
+          doc['latitude'],
+          doc['longitude'],
+        ));
+      _items = loadedData;
+      notifyListeners();
+      }
+    });
   }
 }

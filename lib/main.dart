@@ -1,3 +1,4 @@
+import 'package:exshange/helpers/address_helper.dart';
 import 'package:exshange/providers/authentication.dart';
 import 'package:exshange/providers/items.dart';
 import 'package:exshange/screens/add_address_screen.dart';
@@ -27,6 +28,9 @@ class MyApp extends StatelessWidget {
         // ChangeNotifierProvider(
         //   create: (ctx) => Auth(),
         // ),
+        ChangeNotifierProvider(
+          create: (ctx) => AddressHelper(),
+        ),
         ChangeNotifierProvider(
           create: (ctx) => Items(),
         ),
@@ -68,6 +72,11 @@ class MyApp extends StatelessWidget {
             subtitle2: TextStyle(
               fontSize: 16,
               color: Color(0xFF000000),
+              decoration: TextDecoration.none,
+            ),
+            caption: TextStyle(
+              fontSize: 16,
+              color: Color.fromARGB(255, 80, 80, 80),
               decoration: TextDecoration.none,
             ),
           ),

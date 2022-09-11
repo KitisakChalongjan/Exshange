@@ -1,5 +1,7 @@
 import 'dart:ui';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:exshange/helpers/firestore_helper.dart';
 import 'package:exshange/providers/authentication.dart';
 import 'package:exshange/screens/filter_screen.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +20,14 @@ class ItemOverviewScreen extends StatefulWidget {
 
 class _ItemOverviewScreenState extends State<ItemOverviewScreen> {
   @override
+  void didChangeDependencies() {
+    Provider.of<Items>(context).initItemsData();
+    super.didChangeDependencies();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    var itemsData = Provider.of<Items>(context);
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 100,
@@ -96,27 +105,64 @@ class _ItemOverviewScreenState extends State<ItemOverviewScreen> {
           ),
           Expanded(
             flex: 1,
-            child: Consumer<Items>(
-              builder: (context, items, _) => GridView.builder(
-                itemCount: items.items.length,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2),
-                itemBuilder: (context, index) {
-                  return Card(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                    child: Column(
-                      children: [
-                        Stack(
-                          children: [
-                            Image.network(items.items[index].imageUrl),
-                            Text(items.items[index].title),
-                          ],
-                        )
-                      ],
-                    ),
-                  );
-                },
+            child: Container(
+              padding: EdgeInsets.all(5),
+              child: Consumer<Items>(
+                builder: (context, items, _) => itemsData.items.isEmpty
+                    ? Text(
+                        'ไม่มีข้อมูลสิ่งของ!!',
+                        style: Theme.of(context).textTheme.bodyText1,
+                      )
+                    : GridView.builder(
+                        itemCount: items.items.length,
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          mainAxisExtent: 250,
+                          crossAxisSpacing: 5,
+                        ),
+                        itemBuilder: (context, index) {
+                          return Card(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10)),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                Flexible(
+                                  flex: 3,
+                                  child: Image.network(
+                                    items.items[index].imagesUrl[0],
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                                Flexible(
+                                  flex: 1,
+                                  child: Container(
+                                    padding: EdgeInsets.symmetric(horizontal: 5),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          items.items[index].name,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyText1,
+                                        ),
+                                        Text(
+                                          items.items[index].address,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .caption,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                          );
+                        },
+                      ),
               ),
             ),
           ),

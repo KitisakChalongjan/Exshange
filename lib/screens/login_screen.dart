@@ -1,8 +1,11 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:exshange/providers/authentication.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:exshange/helpers/firestore_helper.dart';
 
 import '../providers/auth.dart';
 
@@ -20,6 +23,8 @@ class _LoginScreenState extends State<LoginScreen>
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _pwController = TextEditingController();
   final TextEditingController _confirmPwController = TextEditingController();
+
+  FirebaseFirestore db = FirestoreHelper().db;
 
   AuthMode _authMode = AuthMode.login;
 
@@ -157,6 +162,8 @@ class _LoginScreenState extends State<LoginScreen>
     setState(() {
       _isLoading = true;
     });
+
+    //await FirestoreHelper().db.collection('users').add();
     try {
       if (_authMode == AuthMode.login) {
         await Authentication().signInWithEmailAndPassword(
@@ -168,6 +175,11 @@ class _LoginScreenState extends State<LoginScreen>
           email: _authData['email']!,
           password: _authData['password']!,
         );
+        User? currentUser = Authentication().currentUser;
+        db
+            .collection('users')
+            .doc('${currentUser!.uid}')
+            .set({'email': currentUser.email});
       }
     } on HttpException catch (error) {
       var errorMessage = 'Authentication failed.';
@@ -182,7 +194,6 @@ class _LoginScreenState extends State<LoginScreen>
       } else if (error.toString().contains('INVALID_PASSWORD')) {
         errorMessage = 'Invalid passwrod.';
       }
-      _showErrorDialog(errorMessage);
     } catch (error) {
       const errorMessage = 'Could not authenticate you, try again later.';
       _showErrorDialog(errorMessage);
