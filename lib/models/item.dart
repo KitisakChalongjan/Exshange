@@ -1,4 +1,5 @@
 class Item {
+  String id;
   String ownerid;
   String name;
   String detail;
@@ -13,6 +14,7 @@ class Item {
 
 
   Item(
+    this.id,
     this.ownerid,
     this.name,
     this.detail,

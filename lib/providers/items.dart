@@ -19,11 +19,12 @@ class Items with ChangeNotifier {
       for (var doc in items.docs) {
         loadedData.add(Item(
           doc.id,
+          doc['ownerId'],
           doc['name'],
           doc['detail'],
           doc['address'],
-          doc['category'],
           doc['province'],
+          doc['category'],
           doc['subCategory'],
           doc['imagesUrl'],
           doc['itemType'],

@@ -4,12 +4,20 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:exshange/helpers/firestore_helper.dart';
 import 'package:exshange/providers/authentication.dart';
 import 'package:exshange/screens/filter_screen.dart';
+import 'package:exshange/screens/item_detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/items.dart';
+
+class ItemArgs {
+  String itemId;
+  int itemIndex;
+
+  ItemArgs(this.itemId, this.itemIndex);
+}
 
 class ItemOverviewScreen extends StatefulWidget {
   const ItemOverviewScreen({Key? key}) : super(key: key);
@@ -118,47 +126,61 @@ class _ItemOverviewScreenState extends State<ItemOverviewScreen> {
                         gridDelegate:
                             const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
-                          mainAxisExtent: 250,
-                          crossAxisSpacing: 5,
+                          mainAxisExtent: 300,
+                          crossAxisSpacing: 10,
                         ),
                         itemBuilder: (context, index) {
-                          return Card(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10)),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                Flexible(
-                                  flex: 3,
-                                  child: Image.network(
-                                    items.items[index].imagesUrl[0],
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                                Flexible(
-                                  flex: 1,
-                                  child: Container(
-                                    padding: EdgeInsets.symmetric(horizontal: 5),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          items.items[index].name,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyText1,
-                                        ),
-                                        Text(
-                                          items.items[index].address,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .caption,
-                                        ),
-                                      ],
+                          return GestureDetector(
+                            onTap: () {
+                              Navigator.of(context).pushNamed(
+                                ItemDetailScreen().routeName,
+                                arguments: ItemArgs(itemsData.items[index].id, index),
+                              );
+                            },
+                            child: Card(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10)),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  Expanded(
+                                    flex: 3,
+                                    child: Hero(
+                                      tag: 'heroItem${index}',
+                                      child: Image.network(
+                                        items.items[index].imagesUrl[0],
+                                        fit: BoxFit.cover,
+                                      ),
                                     ),
                                   ),
-                                )
-                              ],
+                                  Expanded(
+                                    flex: 1,
+                                    child: Container(
+                                      height: double.infinity,
+                                      padding:
+                                          EdgeInsets.symmetric(horizontal: 5),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            items.items[index].name,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyText1,
+                                          ),
+                                          Text(
+                                            items.items[index].province,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .caption,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
                             ),
                           );
                         },

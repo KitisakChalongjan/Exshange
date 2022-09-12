@@ -5,6 +5,8 @@ import 'package:exshange/screens/add_address_screen.dart';
 import 'package:exshange/screens/add_item_screen.dart';
 import 'package:exshange/screens/filter_screen.dart';
 import 'package:exshange/screens/home_screen.dart';
+import 'package:exshange/screens/item_detail_screen.dart';
+import 'package:exshange/screens/item_overview_screen.dart';
 import 'package:exshange/screens/login_screen.dart';
 import 'package:exshange/screens/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -107,6 +109,7 @@ class MyApp extends StatelessWidget {
           FilterScreen().routeName: (context) => FilterScreen(),
           AddItemScreen().routeName: (context) => AddItemScreen(),
           AddAdressScreen().routeName: (context) => AddAdressScreen(),
+          ItemDetailScreen().routeName: (context) => ItemDetailScreen(),
         },
       ),
     );
