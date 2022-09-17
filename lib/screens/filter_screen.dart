@@ -1,5 +1,5 @@
 import 'package:exshange/models/item.dart';
-import 'package:exshange/providers/categories.dart';
+import 'package:exshange/helpers/categories.dart';
 import 'package:exshange/providers/items.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
@@ -184,6 +184,7 @@ class _FilterScreenState extends State<FilterScreen> {
               onPressed: (() {
                 setState(() {
                   itemType = 'ทั้งหมด';
+                  print('ทั้งหมด');
                 });
               }),
               child: Container(
@@ -207,6 +208,7 @@ class _FilterScreenState extends State<FilterScreen> {
               onPressed: (() {
                 setState(() {
                   itemType = 'แลกเปลื่ยน';
+                  print('แลกเปลื่ยน');
                 });
               }),
               child: Container(
@@ -230,6 +232,7 @@ class _FilterScreenState extends State<FilterScreen> {
               onPressed: (() {
                 setState(() {
                   itemType = 'บริจาค';
+                  print('บริจาค');
                 });
               }),
               child: Container(

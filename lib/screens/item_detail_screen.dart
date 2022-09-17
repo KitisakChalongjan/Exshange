@@ -29,13 +29,14 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
         child: Column(
           children: [
             Container(
+              decoration: BoxDecoration(color: Color.fromARGB(255, 57, 57, 57)),
               height: 400,
               width: double.infinity,
               child: Hero(
-                tag: 'heroItem${args.itemIndex}',
+                tag: 'heroItem${args.index}',
                 child: Image.network(
                   item.imagesUrl[0],
-                  fit: BoxFit.fitHeight,
+                  fit: BoxFit.cover,
                 ),
               ),
             ),

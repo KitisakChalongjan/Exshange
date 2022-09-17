@@ -1,8 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:exshange/helpers/address_helper.dart';
-import 'package:exshange/helpers/firestore_helper.dart';
-import 'package:exshange/helpers/province_helper.dart';
+import 'package:exshange/helpers/provinces.dart';
 import 'package:exshange/providers/authentication.dart';
+import 'package:exshange/providers/user_data.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
@@ -21,18 +20,16 @@ class AddAdressScreen extends StatefulWidget {
 class _AddAdressScreenState extends State<AddAdressScreen> {
   User? currentUser = Authentication().currentUser;
 
-  List<String> provinces = ProvinceHelper().provinces;
+  FirebaseFirestore db = FirebaseFirestore.instance;
+
+  List<String> provinces = Provinces().provinces;
 
   String selectedProvince = 'กรุงเทพฯ';
-
-  FirebaseFirestore db = FirestoreHelper().db;
 
   TextEditingController _itemAddressController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    AddressHelper addressHelper = Provider.of<AddressHelper>(context, listen: false);
-
     return Scaffold(
       appBar: AppBar(
         title: Text('เพิ่มที่อยู่ใหม่'),
@@ -125,10 +122,14 @@ class _AddAdressScreenState extends State<AddAdressScreen> {
             'address': _itemAddressController.text,
             'province': selectedProvince,
           };
-           db.collection('users').doc('${currentUser!.uid}').collection('addresses').add(newAddress);
-           print('New Address Added! => ${newAddress}');
-           Navigator.of(context).pop();
-           addressHelper.fetchAddress();
+          db
+              .collection('users')
+              .doc('${currentUser!.uid}')
+              .collection('addresses')
+              .add(newAddress);
+          print('New Address Added! => ${newAddress}');
+          await Provider.of<UserData>(context, listen: false).fetchUserData();
+          Navigator.of(context).pop();
           // WTF!!
           // var newAddresses = {'addresses': []};
           // await db.collection('users').doc('${currentUser!.uid}').get().then(

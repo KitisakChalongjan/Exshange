@@ -1,8 +1,8 @@
 import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:exshange/helpers/firestore_helper.dart';
 import 'package:exshange/providers/authentication.dart';
+import 'package:exshange/providers/user_data.dart';
 import 'package:exshange/screens/filter_screen.dart';
 import 'package:exshange/screens/item_detail_screen.dart';
 import 'package:flutter/material.dart';
@@ -14,9 +14,12 @@ import '../providers/items.dart';
 
 class ItemArgs {
   String itemId;
-  int itemIndex;
+  int index;
 
-  ItemArgs(this.itemId, this.itemIndex);
+  ItemArgs(
+    this.itemId,
+    this.index,
+  );
 }
 
 class ItemOverviewScreen extends StatefulWidget {
@@ -54,6 +57,8 @@ class _ItemOverviewScreenState extends State<ItemOverviewScreen> {
                     ),
                     GestureDetector(
                       onTap: () {
+                        Provider.of<UserData>(context, listen: false)
+                            .clearUserModel();
                         Authentication().signOut();
                       },
                       child: Icon(
@@ -126,16 +131,16 @@ class _ItemOverviewScreenState extends State<ItemOverviewScreen> {
                         gridDelegate:
                             const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
-                          mainAxisExtent: 300,
-                          crossAxisSpacing: 10,
+                          mainAxisExtent: 250,
+                          crossAxisSpacing: 5,
                         ),
                         itemBuilder: (context, index) {
                           return GestureDetector(
                             onTap: () {
                               Navigator.of(context).pushNamed(
-                                ItemDetailScreen().routeName,
-                                arguments: ItemArgs(itemsData.items[index].id, index),
-                              );
+                                  ItemDetailScreen().routeName,
+                                  arguments: ItemArgs(
+                                      itemsData.items[index].id, index));
                             },
                             child: Card(
                               shape: RoundedRectangleBorder(
@@ -143,7 +148,7 @@ class _ItemOverviewScreenState extends State<ItemOverviewScreen> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: [
-                                  Expanded(
+                                  Flexible(
                                     flex: 3,
                                     child: Hero(
                                       tag: 'heroItem${index}',
@@ -153,10 +158,9 @@ class _ItemOverviewScreenState extends State<ItemOverviewScreen> {
                                       ),
                                     ),
                                   ),
-                                  Expanded(
+                                  Flexible(
                                     flex: 1,
                                     child: Container(
-                                      height: double.infinity,
                                       padding:
                                           EdgeInsets.symmetric(horizontal: 5),
                                       child: Column(
@@ -170,7 +174,7 @@ class _ItemOverviewScreenState extends State<ItemOverviewScreen> {
                                                 .bodyText1,
                                           ),
                                           Text(
-                                            items.items[index].province,
+                                            items.items[index].address,
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .caption,

@@ -12,7 +12,6 @@ class Item {
   double latitude;
   double longitude;
 
-
   Item(
     this.id,
     this.ownerid,
@@ -27,4 +26,21 @@ class Item {
     this.latitude,
     this.longitude,
   );
+
+  factory Item.fromMap(String id, Map data) {
+    return Item(
+      id,
+      data['ownerId'],
+      data['name'],
+      data['detail'],
+      data['address'],
+      data['province'],
+      data['category'],
+      data['subCategory'],
+      data['imagesUrl'],
+      data['itemType'],
+      data['latitude'],
+      data['longitude'],
+    );
+  }
 }

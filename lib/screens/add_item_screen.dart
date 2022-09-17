@@ -1,12 +1,11 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:exshange/helpers/address_helper.dart';
-import 'package:exshange/helpers/firestore_helper.dart';
-import 'package:exshange/helpers/geolocator_helper.dart';
-import 'package:exshange/helpers/province_helper.dart';
+import 'package:exshange/helpers/geolocator.dart';
+import 'package:exshange/helpers/provinces.dart';
 import 'package:exshange/providers/authentication.dart';
-import 'package:exshange/providers/categories.dart';
+import 'package:exshange/helpers/categories.dart';
 import 'package:exshange/providers/items.dart';
+import 'package:exshange/providers/user_data.dart';
 import 'package:exshange/screens/add_address_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +26,7 @@ class AddItemScreen extends StatefulWidget {
 
 class _AddItemScreenState extends State<AddItemScreen> {
   User? currentUser = Authentication().currentUser;
+
   TextEditingController _itemNameController = TextEditingController();
   TextEditingController _itemDetailController = TextEditingController();
 
@@ -34,11 +34,11 @@ class _AddItemScreenState extends State<AddItemScreen> {
   List<String> imagesSelectedUrl = [];
   final ImagePicker imagePicker = ImagePicker();
 
+  FirebaseFirestore db = FirebaseFirestore.instance;
+
   final storageRef = FirebaseStorage.instance.ref();
 
   final user = Authentication().currentUser;
-
-  final db = FirestoreHelper().db;
 
   final allCategory = Categories().allCategory;
 
@@ -50,13 +50,24 @@ class _AddItemScreenState extends State<AddItemScreen> {
   String? selectedType = 'ทั้งหมด';
 
   String? _selectedAddress = 'เลือกที่อยู่';
+  List<String> allAddress = [];
+
+  Widget headText(String text, BuildContext ctx) {
+    return Text(
+      text,
+      style: Theme.of(ctx).textTheme.bodyText1,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    Items itemsData = Provider.of<Items>(context, listen: false);
-    AddressHelper addressHelper =
-        Provider.of<AddressHelper>(context, listen: false);
-    addressHelper.fetchAddress();
+    var itemsData = Provider.of<Items>(context, listen: false);
+    var userModel = Provider.of<UserData>(context).userModel;
+    var userAddresses = userModel!.addresses as List<Map<String, dynamic>>;
+    allAddress = ['เลือกที่อยู่', 'เพิ่มที่อยู่ใหม่'];
+    userAddresses.forEach((addressSnapshot) {
+      allAddress.insert(1, addressSnapshot['address']);
+    });
     return Scaffold(
       appBar: AppBar(
         title: Text('เพิ่มสิ่งของ'),
@@ -69,10 +80,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
               SizedBox(
                 height: 20,
               ),
-              Text(
-                'เพิ่มรูปภาพ',
-                style: Theme.of(context).textTheme.bodyText1,
-              ),
+              headText('เพิ่มรูปภาพ', context),
               imageSelected.isEmpty
                   ? Container(
                       alignment: Alignment.center,
@@ -96,33 +104,29 @@ class _AddItemScreenState extends State<AddItemScreen> {
                         itemCount: imageSelected.length,
                         itemBuilder: (context, index) => Container(
                           margin: EdgeInsets.symmetric(horizontal: 6),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(10),
-                            child: Stack(
-                              alignment: Alignment.topRight,
-                              children: [
-                                Image.file(
-                                  File(imageSelected[index].path),
-                                  fit: BoxFit.cover,
+                          child: Stack(
+                            alignment: Alignment.topRight,
+                            children: [
+                              Image.file(
+                                File(imageSelected[index].path),
+                              ),
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  shape: CircleBorder(),
+                                  primary: Colors.red[600],
                                 ),
-                                ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    shape: CircleBorder(),
-                                    primary: Colors.red[600],
-                                  ),
-                                  child: Icon(
-                                    size: 20,
-                                    Icons.close_rounded,
-                                    color: Colors.white,
-                                  ),
-                                  onPressed: () {
-                                    setState(() {
-                                      imageSelected.removeAt(index);
-                                    });
-                                  },
+                                child: Icon(
+                                  size: 20,
+                                  Icons.close_rounded,
+                                  color: Colors.white,
                                 ),
-                              ],
-                            ),
+                                onPressed: () {
+                                  setState(() {
+                                    imageSelected.removeAt(index);
+                                  });
+                                },
+                              ),
+                            ],
                           ),
                         ),
                       ),
@@ -137,10 +141,9 @@ class _AddItemScreenState extends State<AddItemScreen> {
                         return;
                       } else {
                         for (var image in images) {
-                          setState(() {
-                            imageSelected.add(image);
-                          });
+                          imageSelected.add(image);
                         }
+                        setState(() {});
                       }
                     },
                     child: Container(
@@ -194,10 +197,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
               SizedBox(
                 height: 20,
               ),
-              Text(
-                'รายละเอียดสิ่งของ',
-                style: Theme.of(context).textTheme.bodyText1,
-              ),
+              headText('รายละเอียดสิ่งของ', context),
               Container(
                 margin: EdgeInsets.only(
                   top: 10,
@@ -405,66 +405,62 @@ class _AddItemScreenState extends State<AddItemScreen> {
                   ),
                 ),
               ),
-              Consumer<AddressHelper>(
-                builder: (context, addressHelper, _) => Container(
-                  margin: EdgeInsets.only(
-                    top: 10,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.25),
-                        spreadRadius: 1,
-                        blurRadius: 3,
-                        offset: Offset(1, 3),
-                      ),
-                    ],
-                  ),
-                  width: 360,
-                  height: 40,
-                  padding: EdgeInsets.symmetric(horizontal: 20),
-                  child: DropdownButtonHideUnderline(
-                    child: DropdownButton<String>(
-                      dropdownColor: Colors.white,
-                      value: _selectedAddress,
-                      items: addressHelper.allAddress
-                          .map(
-                            (address) => DropdownMenuItem<String>(
-                              value: address,
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    address,
-                                    textAlign: TextAlign.center,
-                                    style:
-                                        Theme.of(context).textTheme.subtitle2,
-                                  ),
-                                  address == 'เพิ่มที่อยู่ใหม่'
-                                      ? Icon(Icons.add_home_rounded)
-                                      : const SizedBox(
-                                          width: 0,
-                                          height: 0,
-                                        ),
-                                ],
-                              ),
-                            ),
-                          )
-                          .toList(),
-                      onChanged: (address) {
-                        if (address == 'เพิ่มที่อยู่ใหม่') {
-                          Navigator.of(context)
-                              .pushNamed(AddAdressScreen().routeName);
-                        } else {
-                          setState(() {
-                            _selectedAddress = address;
-                          });
-                        }
-                      },
+              Container(
+                margin: EdgeInsets.only(
+                  top: 10,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.25),
+                      spreadRadius: 1,
+                      blurRadius: 3,
+                      offset: Offset(1, 3),
                     ),
+                  ],
+                ),
+                width: 360,
+                height: 40,
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                child: DropdownButtonHideUnderline(
+                  child: DropdownButton<String>(
+                    dropdownColor: Colors.white,
+                    value: _selectedAddress,
+                    items: allAddress
+                        .map(
+                          (address) => DropdownMenuItem<String>(
+                            value: address,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  address,
+                                  textAlign: TextAlign.center,
+                                  style: Theme.of(context).textTheme.subtitle2,
+                                ),
+                                address == 'เพิ่มที่อยู่ใหม่'
+                                    ? Icon(Icons.add_home_rounded)
+                                    : const SizedBox(
+                                        width: 0,
+                                        height: 0,
+                                      ),
+                              ],
+                            ),
+                          ),
+                        )
+                        .toList(),
+                    onChanged: (address) {
+                      if (address == 'เพิ่มที่อยู่ใหม่') {
+                        Navigator.of(context)
+                            .pushNamed(AddAdressScreen().routeName);
+                      } else {
+                        setState(() {
+                          _selectedAddress = address;
+                        });
+                      }
+                    },
                   ),
                 ),
               ),
@@ -477,7 +473,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
           String name = _itemNameController.text;
           String detail = _itemDetailController.text;
           String address = _selectedAddress!;
-          String province = addressHelper.addresses.firstWhere(
+          String province = userAddresses.firstWhere(
               (element) => element['address'] == _selectedAddress)['province'];
           String category = selectedCategory!;
           String subCategory = selectedCategory!;
@@ -515,13 +511,12 @@ class _AddItemScreenState extends State<AddItemScreen> {
                   "latitude": latitude,
                   "longitude": longitude,
                 };
-                DocumentReference doc =
-                    await FirestoreHelper().db.collection('items').add(item);
+                DocumentReference doc = await db.collection('items').add(item);
                 print('Document Created! ID : ${doc.id}');
               }
             },
           );
-          itemsData.initItemsData();
+          await itemsData.initItemsData();
           Navigator.of(context).pop();
         },
         child: BottomAppBar(

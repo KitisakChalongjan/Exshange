@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 
-class ProvinceHelper {
+class Provinces {
   List<String> _provinces = [
     'กรุงเทพฯ',
     'กระบี่',

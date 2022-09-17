@@ -1,5 +1,6 @@
 import 'package:exshange/providers/authentication.dart';
 import 'package:exshange/providers/items.dart';
+import 'package:exshange/providers/user_data.dart';
 import 'package:exshange/screens/add_item_screen.dart';
 import 'package:exshange/screens/chat_screen.dart';
 import 'package:exshange/screens/item_overview_screen.dart';
@@ -31,8 +32,13 @@ class _HomeScreenState extends State<HomeScreen> {
   ];
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    Provider.of<UserData>(context, listen: false).fetchUserData();
+    super.initState();
+  }
 
+  @override
+  Widget build(BuildContext context) {
     // return Scaffold(
     //   appBar: AppBar(
     //     title: Text('Exshange'),
@@ -61,6 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
         onTap: (index) {
           setState(() {
             _currentIndex = index;
+            print(_currentIndex);
           });
         },
         items: [

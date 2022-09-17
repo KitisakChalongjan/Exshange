@@ -1,14 +1,15 @@
-import 'package:exshange/helpers/address_helper.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:exshange/providers/authentication.dart';
 import 'package:exshange/providers/items.dart';
+import 'package:exshange/providers/user_data.dart';
 import 'package:exshange/screens/add_address_screen.dart';
 import 'package:exshange/screens/add_item_screen.dart';
 import 'package:exshange/screens/filter_screen.dart';
 import 'package:exshange/screens/home_screen.dart';
 import 'package:exshange/screens/item_detail_screen.dart';
-import 'package:exshange/screens/item_overview_screen.dart';
 import 'package:exshange/screens/login_screen.dart';
 import 'package:exshange/screens/splash_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -30,11 +31,18 @@ class MyApp extends StatelessWidget {
         // ChangeNotifierProvider(
         //   create: (ctx) => Auth(),
         // ),
-        ChangeNotifierProvider(
-          create: (ctx) => AddressHelper(),
+        ChangeNotifierProvider<Authentication>(
+          create: (ctx) => Authentication(),
         ),
-        ChangeNotifierProvider(
+        StreamProvider<User?>(
+          create: (ctx) => ctx.read<Authentication>().authStateChange,
+          initialData: null,
+        ),
+        ChangeNotifierProvider<Items>(
           create: (ctx) => Items(),
+        ),
+        ChangeNotifierProvider<UserData>(
+          create: (ctx) => UserData(),
         ),
       ],
       child: MaterialApp(
@@ -83,18 +91,20 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
-        home: StreamBuilder(
-          stream: Authentication().authStateChange,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return CircularProgressIndicator();
-            } else if (snapshot.hasData) {
-              return HomeScreen();
-            } else {
-              return LoginScreen();
-            }
-          },
-        ),
+        home: Authenticate(),
+        // StreamBuilder(
+        //   stream: Authentication().authStateChange,
+        //   builder: (context, snapshot) {
+        //     if (snapshot.connectionState == ConnectionState.waiting) {
+        //       return CircularProgressIndicator();
+        //     } else if (snapshot.hasData) {
+        //       return HomeScreen();
+        //     } else {
+        //       return LoginScreen();
+        //     }
+        //   },
+        // ),
+        // ----------------------------------------------------------------
         // ? HomeScreen()
         // : FutureBuilder(
         //     future: auth.tryAutoLogin(),
@@ -113,5 +123,18 @@ class MyApp extends StatelessWidget {
         },
       ),
     );
+  }
+}
+
+class Authenticate extends StatelessWidget {
+  const Authenticate({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final firebaseUser = Provider.of<User?>(context);
+    if (firebaseUser != null) {
+      return HomeScreen();
+    }
+    return LoginScreen();
   }
 }

@@ -14,26 +14,37 @@ class Items with ChangeNotifier {
   }
 
   Future<void> initItemsData() async {
-    List<Item> loadedData = [];
-    await db.collection("items").get().then((items) {
-      for (var doc in items.docs) {
-        loadedData.add(Item(
-          doc.id,
-          doc['ownerId'],
-          doc['name'],
-          doc['detail'],
-          doc['address'],
-          doc['province'],
-          doc['category'],
-          doc['subCategory'],
-          doc['imagesUrl'],
-          doc['itemType'],
-          doc['latitude'],
-          doc['longitude'],
-        ));
-      _items = loadedData;
+    List<Item> tempItems = [];
+    var loadedItems = await db.collection("items").get();
+    for (var item in loadedItems.docs) {
+      tempItems.add(
+        Item.fromMap(
+          item.id,
+          item.data(),
+        ),
+      );
+    }
+    _items = tempItems;
       notifyListeners();
-      }
-    });
+    // oldVersion
+    // await db.collection("items").get().then((items) {
+    //   for (var doc in items.docs) {
+    //     loadedData.add(Item(
+    //       doc.id,
+    //       doc['name'],
+    //       doc['detail'],
+    //       doc['address'],
+    //       doc['category'],
+    //       doc['province'],
+    //       doc['subCategory'],
+    //       doc['imagesUrl'],
+    //       doc['itemType'],
+    //       doc['latitude'],
+    //       doc['longitude'],
+    //     ));
+    //   _items = loadedData;
+    //   notifyListeners();
+    //   }
+    // });
   }
 }

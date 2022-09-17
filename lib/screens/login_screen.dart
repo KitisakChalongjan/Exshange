@@ -1,11 +1,10 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:exshange/providers/authentication.dart';
+import 'package:exshange/providers/user_data.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:exshange/helpers/firestore_helper.dart';
 
 import '../providers/auth.dart';
 
@@ -24,7 +23,7 @@ class _LoginScreenState extends State<LoginScreen>
   final TextEditingController _pwController = TextEditingController();
   final TextEditingController _confirmPwController = TextEditingController();
 
-  FirebaseFirestore db = FirestoreHelper().db;
+  var db;
 
   AuthMode _authMode = AuthMode.login;
 
@@ -175,11 +174,6 @@ class _LoginScreenState extends State<LoginScreen>
           email: _authData['email']!,
           password: _authData['password']!,
         );
-        User? currentUser = Authentication().currentUser;
-        db
-            .collection('users')
-            .doc('${currentUser!.uid}')
-            .set({'email': currentUser.email});
       }
     } on HttpException catch (error) {
       var errorMessage = 'Authentication failed.';
@@ -196,11 +190,8 @@ class _LoginScreenState extends State<LoginScreen>
       }
     } catch (error) {
       const errorMessage = 'Could not authenticate you, try again later.';
-      _showErrorDialog(errorMessage);
+      _showErrorDialog(error.toString());
     }
-    setState(() {
-      _isLoading = false;
-    });
   }
 
   void _showErrorDialog(String message) {
@@ -240,6 +231,7 @@ class _LoginScreenState extends State<LoginScreen>
       print('authmode = $_authMode');
     }
   }
+  
 
   @override
   Widget build(BuildContext context) {
