@@ -14,7 +14,8 @@ class _LikedScreenState extends State<LikedScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Exshange'),
+        centerTitle: true,
+        title: Text('แนะนำ'),
       ),
       body: Text('Liked'),
     );
