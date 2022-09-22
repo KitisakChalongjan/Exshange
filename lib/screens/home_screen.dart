@@ -5,6 +5,7 @@ import 'package:exshange/screens/add_item_screen.dart';
 import 'package:exshange/screens/chat_screen.dart';
 import 'package:exshange/screens/item_overview_screen.dart';
 import 'package:exshange/screens/liked_screen.dart';
+import 'package:exshange/screens/profile_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
@@ -28,7 +29,7 @@ class _HomeScreenState extends State<HomeScreen> {
     ItemOverviewScreen(),
     LikedScreen(),
     ChatScreen(),
-    LikedScreen(),
+    ProfileScreen(),
   ];
 
   @override
