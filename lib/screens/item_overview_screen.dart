@@ -31,15 +31,11 @@ class ItemOverviewScreen extends StatefulWidget {
 
 class _ItemOverviewScreenState extends State<ItemOverviewScreen> {
   @override
-  void didChangeDependencies() {
-    Provider.of<Items>(context).initItemsData();
-    super.didChangeDependencies();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    var itemsData = Provider.of<Items>(context);
+    var itemsData = context.read<Items>();
+    itemsData.initItemsData();
     return Scaffold(
+      backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
         toolbarHeight: 100,
         flexibleSpace: SafeArea(
@@ -54,17 +50,6 @@ class _ItemOverviewScreenState extends State<ItemOverviewScreen> {
                     Text(
                       "Logo",
                       style: Theme.of(context).textTheme.headline1,
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        Provider.of<UserData>(context, listen: false)
-                            .clearUserModel();
-                        Authentication().signOut();
-                      },
-                      child: Icon(
-                        Icons.logout_rounded,
-                        color: Colors.white,
-                      ),
                     ),
                   ],
                 ),
@@ -122,76 +107,128 @@ class _ItemOverviewScreenState extends State<ItemOverviewScreen> {
               padding: EdgeInsets.all(5),
               child: Consumer<Items>(
                 builder: (context, items, _) => itemsData.items.isEmpty
-                    ? Text(
-                        'ไม่มีข้อมูลสิ่งของ!!',
-                        style: Theme.of(context).textTheme.bodyText1,
+                    ? Center(
+                        child: CircularProgressIndicator(),
                       )
-                    : GridView.builder(
-                        itemCount: items.items.length,
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          mainAxisExtent: 250,
-                          crossAxisSpacing: 5,
-                        ),
-                        itemBuilder: (context, index) {
-                          return GestureDetector(
-                            onTap: () {
-                              Navigator.of(context).pushNamed(
-                                  ItemDetailScreen().routeName,
-                                  arguments: ItemArgs(
-                                      itemsData.items[index].id, index));
-                            },
-                            child: Card(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10)),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                children: [
-                                  Flexible(
-                                    flex: 3,
-                                    child: Hero(
-                                      tag: 'heroItem${index}',
-                                      child: Image.network(
-                                        items.items[index].imagesUrl[0],
-                                        fit: BoxFit.cover,
-                                      ),
+                    : FutureBuilder(
+                        future: itemsData.initItemsData(),
+                        builder: ((context, snapshot) {
+                          if (!snapshot.hasData) {
+                            return GridView.builder(
+                              itemCount: 6,
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                mainAxisExtent: 250,
+                                crossAxisSpacing: 5,
+                              ),
+                              itemBuilder: (context, index) {
+                                return Card(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(15),
+                                      color: Colors.grey[400],
                                     ),
                                   ),
-                                  Flexible(
-                                    flex: 1,
-                                    child: Container(
-                                      padding:
-                                          EdgeInsets.symmetric(horizontal: 5),
+                                );
+                              },
+                            );
+                          } else {
+                            return GridView.builder(
+                              itemCount: items.items.length,
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                mainAxisExtent: 250,
+                                crossAxisSpacing: 0,
+                              ),
+                              itemBuilder: (context, index) {
+                                return GestureDetector(
+                                  onTap: () {
+                                    Navigator.of(context).pushNamed(
+                                      ItemDetailScreen().routeName,
+                                      arguments: ItemArgs(
+                                          itemsData.items[index].id, index),
+                                    );
+                                  },
+                                  child: Card(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(15),
+                                    ),
+                                    child: SizedBox(
                                       child: Column(
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                            CrossAxisAlignment.stretch,
                                         children: [
-                                          Text(
-                                            items.items[index].name,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .bodyText1,
+                                          Flexible(
+                                            flex: 3,
+                                            child: SizedBox(
+                                              child: Hero(
+                                                tag: 'heroItem${index}',
+                                                child: SizedBox(
+                                                  child: ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.vertical(
+                                                            top:
+                                                                Radius.circular(
+                                                                    15)),
+                                                    child: Image.network(
+                                                      items.items[index]
+                                                          .imagesUrl[0],
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
                                           ),
-                                          Text(
-                                            items.items[index].address,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .caption,
-                                          ),
+                                          Flexible(
+                                            flex: 1,
+                                            child: Container(
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 5),
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.vertical(
+                                                  bottom: Radius.circular(15),
+                                                ),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      items.items[index].name,
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .bodyText1,
+                                                    ),
+                                                    Text(
+                                                      items
+                                                          .items[index].address,
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .caption,
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          )
                                         ],
                                       ),
                                     ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          );
-                        },
-                      ),
+                                  ),
+                                );
+                              },
+                            );
+                          }
+                        })),
               ),
             ),
-          ),
+          )
         ],
       ),
     );

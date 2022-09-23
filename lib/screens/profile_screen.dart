@@ -1,6 +1,15 @@
+import 'package:exshange/providers/authentication.dart';
+import 'package:exshange/providers/user_data.dart';
+import 'package:exshange/screens/edit_profile_screen.dart';
+import 'package:exshange/screens/my_address_screen.dart';
+import 'package:exshange/screens/my_category.dart';
+import 'package:exshange/screens/my_deal_screen.dart';
+import 'package:exshange/screens/my_history_screen.dart';
+import 'package:exshange/screens/my_item_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:provider/provider.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -12,7 +21,9 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
+    var userProfileUrl = context.watch<UserData>().userModel?.profileImgUrl;
     return Scaffold(
+      backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
         centerTitle: true,
         title: Text('โปรไฟล์'),
@@ -31,8 +42,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       alignment: Alignment.center,
                       child: CircleAvatar(
                         radius: 60,
-                        backgroundImage: NetworkImage(
-                            'https://scontent.fbkk2-6.fna.fbcdn.net/v/t1.6435-9/154260188_3255528624549548_8327535047766500805_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=cHITwOpPW98AX-VjeM7&tn=j02aFp6cw9CJp3HY&_nc_ht=scontent.fbkk2-6.fna&oh=00_AT93ZDNgVNfcVv3B9Ts-ERRfyoF5FxCn-FK00-vgFb-UUQ&oe=635105C0'),
+                        backgroundImage: userProfileUrl == '' || userProfileUrl == null
+                            ? AssetImage('assets/images/person-icon.png')
+                            : NetworkImage(userProfileUrl) as ImageProvider,
                       ),
                     ),
                   ),
@@ -88,22 +100,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ],
               ),
             ),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              decoration: BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.25),
-                    spreadRadius: 1,
-                    blurRadius: 3,
-                    offset: Offset(1, 3),
-                  ),
-                ],
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: GestureDetector(
+            GestureDetector(
+              onTap: (() {
+                Navigator.of(context).pushNamed(MyItemsScreen().routeName);
+              }),
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.25),
+                      spreadRadius: 1,
+                      blurRadius: 3,
+                      offset: Offset(1, 3),
+                    ),
+                  ],
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                ),
                 child: Container(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -116,22 +131,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ),
             ),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              decoration: BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.25),
-                    spreadRadius: 1,
-                    blurRadius: 3,
-                    offset: Offset(1, 3),
-                  ),
-                ],
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: GestureDetector(
+            GestureDetector(
+              onTap: (() {
+                Navigator.of(context).pushNamed(MyDealScreen().routeName);
+              }),
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.25),
+                      spreadRadius: 1,
+                      blurRadius: 3,
+                      offset: Offset(1, 3),
+                    ),
+                  ],
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                ),
                 child: Container(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -144,22 +162,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ),
             ),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              decoration: BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.25),
-                    spreadRadius: 1,
-                    blurRadius: 3,
-                    offset: Offset(1, 3),
-                  ),
-                ],
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: GestureDetector(
+            GestureDetector(
+              onTap: (() {
+                Navigator.of(context).pushNamed(MyHistoryScreen().routeName);
+              }),
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.25),
+                      spreadRadius: 1,
+                      blurRadius: 3,
+                      offset: Offset(1, 3),
+                    ),
+                  ],
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                ),
                 child: Container(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -172,22 +193,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ),
             ),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              decoration: BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.25),
-                    spreadRadius: 1,
-                    blurRadius: 3,
-                    offset: Offset(1, 3),
-                  ),
-                ],
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: GestureDetector(
+            GestureDetector(
+              onTap: (() {
+                Navigator.of(context).pushNamed(MyCategoriesScreen().routeName);
+              }),
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.25),
+                      spreadRadius: 1,
+                      blurRadius: 3,
+                      offset: Offset(1, 3),
+                    ),
+                  ],
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                ),
                 child: Container(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -200,22 +224,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ),
             ),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              decoration: BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.25),
-                    spreadRadius: 1,
-                    blurRadius: 3,
-                    offset: Offset(1, 3),
-                  ),
-                ],
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: GestureDetector(
+            GestureDetector(
+              onTap: (() {
+                Navigator.of(context).pushNamed(EditProfileScreen().routeName);
+              }),
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.25),
+                      spreadRadius: 1,
+                      blurRadius: 3,
+                      offset: Offset(1, 3),
+                    ),
+                  ],
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                ),
                 child: Container(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -228,22 +255,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ),
             ),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              decoration: BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.25),
-                    spreadRadius: 1,
-                    blurRadius: 3,
-                    offset: Offset(1, 3),
-                  ),
-                ],
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: GestureDetector(
+            GestureDetector(
+              onTap: (() {
+                Navigator.of(context).pushNamed(MyAddressScreen().routeName);
+              }),
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.25),
+                      spreadRadius: 1,
+                      blurRadius: 3,
+                      offset: Offset(1, 3),
+                    ),
+                  ],
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                ),
                 child: Container(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -256,22 +286,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ),
             ),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              decoration: BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.25),
-                    spreadRadius: 1,
-                    blurRadius: 3,
-                    offset: Offset(1, 3),
-                  ),
-                ],
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: GestureDetector(
+            GestureDetector(
+              onTap: (() {
+                context.read<Authentication>().signOut();
+              }),
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.25),
+                      spreadRadius: 1,
+                      blurRadius: 3,
+                      offset: Offset(1, 3),
+                    ),
+                  ],
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                ),
                 child: Container(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,

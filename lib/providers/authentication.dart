@@ -32,6 +32,13 @@ class Authentication with ChangeNotifier {
       email: email,
       password: password,
     );
+    await db.collection('users').doc(currentUser!.uid).set(
+      {
+        'email': email,
+        'profileImgUrl': '',
+        'name': 'noname',
+      },
+    );
     print(currentUser!.email);
   }
 

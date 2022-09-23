@@ -4,9 +4,9 @@ import 'package:exshange/models/user.dart';
 import 'package:exshange/providers/authentication.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:image_picker/image_picker.dart';
 
 class UserData with ChangeNotifier {
-  
   FirebaseFirestore db = FirebaseFirestore.instance;
 
   final User? user = FirebaseAuth.instance.currentUser;
@@ -25,14 +25,17 @@ class UserData with ChangeNotifier {
     String userId = user!.uid;
     List<Map<String, dynamic>> addresses = [];
     String email;
-    var loadedUserDataRef = db.collection('users').doc('${userId}');
-    var emailData = await loadedUserDataRef.get();
-    email = emailData['email'];
-    var addressesData = await loadedUserDataRef.collection('addresses').get();
+    String profileImgUrl;
+    var loadedUserRef = db.collection('users').doc('${userId}');
+    var loadedUserData = await loadedUserRef.get();
+    email = loadedUserData['email'];
+    profileImgUrl = loadedUserData['profileImgUrl'];
+    var addressesData = await loadedUserRef.collection('addresses').get();
     addressesData.docs.forEach((snapshot) {
       addresses.add(snapshot.data());
     });
-    _userModel = UserModel(userId, addresses, email);
+    _userModel = UserModel(userId, addresses, email, profileImgUrl);
+    print(UserModel);
     print('Fetch User\'s Data Successful!');
     notifyListeners();
   }

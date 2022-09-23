@@ -1,15 +1,29 @@
+import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+
 class UserModel {
-  String id;
+  String _id;
   List<Map<String, dynamic>> _addresses;
   String _email;
+  String _profileImgUrl;
 
-  UserModel(this.id, this._addresses, this._email);
+  UserModel(this._id, this._addresses, this._email, this._profileImgUrl);
 
-  get addresses {
+  List<Map<String, dynamic>> get addresses {
     return _addresses;
   }
 
-  get email {
+  String get email {
     return _email;
+  }
+
+  String get profileImgUrl{
+    return _profileImgUrl;
+  }
+
+  @override
+  String toString() {
+    // TODO: implement toString
+    return '${_id}, ${_addresses}, ${_email}, ${_profileImgUrl}';
   }
 }

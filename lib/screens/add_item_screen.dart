@@ -38,8 +38,6 @@ class _AddItemScreenState extends State<AddItemScreen> {
 
   final storageRef = FirebaseStorage.instance.ref();
 
-  final user = Authentication().currentUser;
-
   final allCategory = Categories().allCategory;
 
   String? _selectedCategory = 'หมวดหมู่ทั้งหมด';
@@ -68,14 +66,15 @@ class _AddItemScreenState extends State<AddItemScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var itemsData = Provider.of<Items>(context, listen: false);
-    var userModel = Provider.of<UserData>(context).userModel;
+    var itemsData = context.read<Items>();
+    var userModel = context.watch<UserData>().userModel;
     var userAddresses = userModel!.addresses as List<Map<String, dynamic>>;
     allAddress = ['เลือกที่อยู่', 'เพิ่มที่อยู่ใหม่'];
-    userAddresses.forEach((addressSnapshot) {
+    for (var addressSnapshot in userAddresses) {
       allAddress.insert(1, addressSnapshot['address']);
-    });
+    }
     return Scaffold(
+      backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
         title: Text('เพิ่มสิ่งของ'),
         centerTitle: true,
@@ -443,7 +442,9 @@ class _AddItemScreenState extends State<AddItemScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  address,
+                                  address.length > 30
+                                      ? '${address.substring(0, 30)}...'
+                                      : address,
                                   textAlign: TextAlign.center,
                                   style: Theme.of(context).textTheme.subtitle2,
                                 ),

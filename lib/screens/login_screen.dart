@@ -144,7 +144,7 @@ class _LoginScreenState extends State<LoginScreen>
         ),
         onPressed: () => _submit(context),
         child: Text(
-          'ล็อกอิน',
+          _authMode == AuthMode.login ? 'ล็อกอิน' : 'สมัครสมาชิก',
           style: Theme.of(context).textTheme.subtitle1,
         ),
       ),
@@ -165,15 +165,15 @@ class _LoginScreenState extends State<LoginScreen>
     //await FirestoreHelper().db.collection('users').add();
     try {
       if (_authMode == AuthMode.login) {
-        await Authentication().signInWithEmailAndPassword(
-          email: _authData['email']!.trim(),
-          password: _authData['password']!.trim(),
-        );
+        await context.read<Authentication>().signInWithEmailAndPassword(
+              email: _authData['email']!.trim(),
+              password: _authData['password']!.trim(),
+            );
       } else {
-        await Authentication().createUserWithEmailAndPassword(
-          email: _authData['email']!.trim(),
-          password: _authData['password']!.trim(),
-        );
+        await context.read<Authentication>().createUserWithEmailAndPassword(
+              email: _authData['email']!.trim(),
+              password: _authData['password']!.trim(),
+            );
       }
     } on HttpException catch (error) {
       var errorMessage = 'Authentication failed.';
@@ -227,11 +227,11 @@ class _LoginScreenState extends State<LoginScreen>
     } else {
       setState(() {
         _authMode = AuthMode.login;
+        _confirmPwController.text = '';
       });
       print('authmode = $_authMode');
     }
   }
-  
 
   @override
   Widget build(BuildContext context) {

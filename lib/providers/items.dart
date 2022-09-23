@@ -13,7 +13,7 @@ class Items with ChangeNotifier {
     return _items;
   }
 
-  Future<void> initItemsData() async {
+  Future<String> initItemsData() async {
     List<Item> tempItems = [];
     var loadedItems = await db.collection("items").get();
     for (var item in loadedItems.docs) {
@@ -25,7 +25,8 @@ class Items with ChangeNotifier {
       );
     }
     _items = tempItems;
-      notifyListeners();
+    notifyListeners();
+    return 'ok';
     // oldVersion
     // await db.collection("items").get().then((items) {
     //   for (var doc in items.docs) {
@@ -47,7 +48,4 @@ class Items with ChangeNotifier {
     //   }
     // });
   }
-
-
-  
 }

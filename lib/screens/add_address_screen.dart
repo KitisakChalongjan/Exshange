@@ -18,7 +18,7 @@ class AddAdressScreen extends StatefulWidget {
 }
 
 class _AddAdressScreenState extends State<AddAdressScreen> {
-  User? currentUser = Authentication().currentUser;
+  User? currentUser = null;
 
   FirebaseFirestore db = FirebaseFirestore.instance;
 
@@ -30,7 +30,9 @@ class _AddAdressScreenState extends State<AddAdressScreen> {
 
   @override
   Widget build(BuildContext context) {
+    currentUser = context.read<Authentication>().currentUser;
     return Scaffold(
+      backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
         title: Text('เพิ่มที่อยู่ใหม่'),
         centerTitle: true,

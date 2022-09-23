@@ -4,10 +4,16 @@ import 'package:exshange/providers/items.dart';
 import 'package:exshange/providers/user_data.dart';
 import 'package:exshange/screens/add_address_screen.dart';
 import 'package:exshange/screens/add_item_screen.dart';
+import 'package:exshange/screens/edit_profile_screen.dart';
 import 'package:exshange/screens/filter_screen.dart';
 import 'package:exshange/screens/home_screen.dart';
 import 'package:exshange/screens/item_detail_screen.dart';
 import 'package:exshange/screens/login_screen.dart';
+import 'package:exshange/screens/my_address_screen.dart';
+import 'package:exshange/screens/my_category.dart';
+import 'package:exshange/screens/my_deal_screen.dart';
+import 'package:exshange/screens/my_history_screen.dart';
+import 'package:exshange/screens/my_item_screen.dart';
 import 'package:exshange/screens/splash_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -120,6 +126,12 @@ class MyApp extends StatelessWidget {
           AddItemScreen().routeName: (context) => AddItemScreen(),
           AddAdressScreen().routeName: (context) => AddAdressScreen(),
           ItemDetailScreen().routeName: (context) => ItemDetailScreen(),
+          EditProfileScreen().routeName: (cintext) => EditProfileScreen(),
+          MyItemsScreen().routeName: (cintext) => MyItemsScreen(),
+          MyHistoryScreen().routeName: (cintext) => MyHistoryScreen(),
+          MyDealScreen().routeName: (cintext) => MyDealScreen(),
+          MyCategoriesScreen().routeName: (cintext) => MyCategoriesScreen(),
+          MyAddressScreen().routeName: (cintext) => MyAddressScreen(),
         },
       ),
     );
