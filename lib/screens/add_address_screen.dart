@@ -127,8 +127,9 @@ class _AddAdressScreenState extends State<AddAdressScreen> {
               .doc('${currentUser!.uid}')
               .collection('addresses')
               .add(newAddress);
+
           print('New Address Added! => ${newAddress}');
-          await Provider.of<UserData>(context, listen: false).fetchUserData();
+          await context.read<UserData>().fetchUserData();
           Navigator.of(context).pop();
           // WTF!!
           // var newAddresses = {'addresses': []};

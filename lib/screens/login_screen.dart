@@ -130,7 +130,7 @@ class _LoginScreenState extends State<LoginScreen>
     );
   }
 
-  Widget _submitButton() {
+  Widget _submitButton(BuildContext context) {
     return SizedBox(
       width: 300,
       height: 60,
@@ -142,7 +142,7 @@ class _LoginScreenState extends State<LoginScreen>
             ),
           ),
         ),
-        onPressed: _submit,
+        onPressed: () => _submit(context),
         child: Text(
           'ล็อกอิน',
           style: Theme.of(context).textTheme.subtitle1,
@@ -151,7 +151,7 @@ class _LoginScreenState extends State<LoginScreen>
     );
   }
 
-  Future<void> _submit() async {
+  Future<void> _submit(BuildContext context) async {
     if (!_formKey.currentState!.validate()) {
       // Invalid!
       print('Invalid');
@@ -166,13 +166,13 @@ class _LoginScreenState extends State<LoginScreen>
     try {
       if (_authMode == AuthMode.login) {
         await Authentication().signInWithEmailAndPassword(
-          email: _authData['email']!,
-          password: _authData['password']!,
+          email: _authData['email']!.trim(),
+          password: _authData['password']!.trim(),
         );
       } else {
         await Authentication().createUserWithEmailAndPassword(
-          email: _authData['email']!,
-          password: _authData['password']!,
+          email: _authData['email']!.trim(),
+          password: _authData['password']!.trim(),
         );
       }
     } on HttpException catch (error) {
@@ -312,7 +312,7 @@ class _LoginScreenState extends State<LoginScreen>
                         },
                       ),
                       _sizedBox(20),
-                      _submitButton(),
+                      _submitButton(context),
                       _sizedBox(10),
                       _flatButton('สมัครสมาชิก'),
                     ],

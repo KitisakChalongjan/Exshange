@@ -17,7 +17,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final args = ModalRoute.of(context)!.settings.arguments as ItemArgs;
-    final items = Provider.of<Items>(context, listen: false).items;
+    final items = context.read<Items>().items;
     final item = items.firstWhere((element) => element.id == args.itemId);
 
     return Scaffold(
@@ -85,9 +85,21 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
               decoration: BoxDecoration(
                 color: Colors.amber,
               ),
-              child: Text(
-                item.detail,
-                style: Theme.of(context).textTheme.bodyText1,
+              child: Column(
+                children: [
+                  Text(
+                    item.detail,
+                    style: Theme.of(context).textTheme.bodyText1,
+                  ),
+                  Text(
+                    item.detail,
+                    style: Theme.of(context).textTheme.bodyText1,
+                  ),
+                  Text(
+                    item.detail,
+                    style: Theme.of(context).textTheme.bodyText1,
+                  ),
+                ],
               ),
             ),
           ],
@@ -95,7 +107,9 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
       ),
       bottomNavigationBar: GestureDetector(
         child: BottomAppBar(
-          color: item.itemType == "แลกเปลื่ยน" ? Theme.of(context).primaryColor : Color(0XFF68EDD2),
+          color: item.itemType == "แลกเปลื่ยน"
+              ? Theme.of(context).primaryColor
+              : Color(0XFF68EDD2),
           child: Container(
             height: 40,
             child: Text(

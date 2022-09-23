@@ -42,15 +42,22 @@ class _AddItemScreenState extends State<AddItemScreen> {
 
   final allCategory = Categories().allCategory;
 
-  String? selectedCategory = 'หมวดหมู่ทั้งหมด';
+  String? _selectedCategory = 'หมวดหมู่ทั้งหมด';
   List<String> category2 = ['หมวดหมู่รองทั้งหมด'];
-  String? selectedCategory2 = 'หมวดหมู่รองทั้งหมด';
+  String? _selectedCategory2 = 'หมวดหมู่รองทั้งหมด';
 
   List<String> allType = Items().itemType;
   String? selectedType = 'ทั้งหมด';
 
   String? _selectedAddress = 'เลือกที่อยู่';
   List<String> allAddress = [];
+
+  String address = '';
+  String province = '';
+  String category = '';
+  String subCategory = '';
+  double? latitude;
+  double? longitude;
 
   Widget headText(String text, BuildContext ctx) {
     return Text(
@@ -284,7 +291,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
                 child: DropdownButtonHideUnderline(
                   child: DropdownButton<String>(
                     dropdownColor: Colors.white,
-                    value: selectedCategory,
+                    value: _selectedCategory,
                     items: allCategory.keys
                         .toList()
                         .map(
@@ -300,7 +307,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
                         .toList(),
                     onChanged: (category) {
                       setState(() {
-                        selectedCategory = category;
+                        _selectedCategory = category;
                         allCategory.forEach((key, subCategory) {
                           if (key == category) {
                             category2.clear();
@@ -308,10 +315,10 @@ class _AddItemScreenState extends State<AddItemScreen> {
                               category2 = ['หมวดหมู่รองทั้งหมด'];
                             }
                             category2.addAll(subCategory);
-                            selectedCategory2 = 'หมวดหมู่รองทั้งหมด';
+                            _selectedCategory2 = 'หมวดหมู่รองทั้งหมด';
                           }
                         });
-                        print('${selectedCategory} => ${selectedCategory2}');
+                        print('${_selectedCategory} => ${_selectedCategory2}');
                       });
                     },
                   ),
@@ -339,7 +346,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
                 child: DropdownButtonHideUnderline(
                   child: DropdownButton<String>(
                     dropdownColor: Colors.white,
-                    value: selectedCategory2,
+                    value: _selectedCategory2,
                     items: category2
                         .map(
                           (item) => DropdownMenuItem<String>(
@@ -354,8 +361,8 @@ class _AddItemScreenState extends State<AddItemScreen> {
                         .toList(),
                     onChanged: (subCategory) {
                       setState(() {
-                        selectedCategory2 = subCategory;
-                        print('${selectedCategory} => ${selectedCategory2}');
+                        _selectedCategory2 = subCategory;
+                        print('${_selectedCategory} => ${_selectedCategory2}');
                       });
                     },
                   ),
@@ -470,52 +477,14 @@ class _AddItemScreenState extends State<AddItemScreen> {
       ),
       bottomNavigationBar: GestureDetector(
         onTap: () async {
-          String name = _itemNameController.text;
-          String detail = _itemDetailController.text;
-          String address = _selectedAddress!;
-          String province = userAddresses.firstWhere(
+          province = userAddresses.firstWhere(
               (element) => element['address'] == _selectedAddress)['province'];
-          String category = selectedCategory!;
-          String subCategory = selectedCategory!;
-          List<String> imagesUrl = imagesSelectedUrl;
-          String itemType = selectedType!;
-          double? latitude;
-          double? longitude;
 
           Position geo = await GeolocatorHelper().determinePosition();
           latitude = geo.latitude;
           longitude = geo.longitude;
 
-          // ignore: avoid_function_literals_in_foreach_calls
-          imageSelected.forEach(
-            (image) async {
-              Reference imagesRef = storageRef.child('images/');
-              imagesSelectedUrl.clear;
-              File file = File(image.path);
-              String filename = basename(file.path);
-              Reference imageFileRef = imagesRef.child(filename);
-              await imageFileRef.putFile(file);
-              String imgUrl = await imageFileRef.getDownloadURL();
-              imagesSelectedUrl.add(imgUrl);
-              if (imagesSelectedUrl.length == imageSelected.length) {
-                final item = <String, dynamic>{
-                  'ownerId': currentUser!.uid,
-                  "name": name,
-                  "detail": detail,
-                  "address": address,
-                  "province": province,
-                  "category": category,
-                  "subCategory": subCategory,
-                  "imagesUrl": imagesUrl,
-                  "itemType": itemType,
-                  "latitude": latitude,
-                  "longitude": longitude,
-                };
-                DocumentReference doc = await db.collection('items').add(item);
-                print('Document Created! ID : ${doc.id}');
-              }
-            },
-          );
+          addItemToFirestore();
           await itemsData.initItemsData();
           Navigator.of(context).pop();
         },
@@ -532,5 +501,35 @@ class _AddItemScreenState extends State<AddItemScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> addItemToFirestore() async {
+    for (var image in imageSelected) {
+      Reference imagesRef = storageRef.child('images/');
+      imagesSelectedUrl.clear;
+      File file = File(image.path);
+      String filename = basename(file.path);
+      Reference imageFileRef = imagesRef.child(filename);
+      await imageFileRef.putFile(file);
+      String imgUrl = await imageFileRef.getDownloadURL();
+      imagesSelectedUrl.add(imgUrl);
+      if (imagesSelectedUrl.length == imageSelected.length) {
+        final item = <String, dynamic>{
+          'ownerId': currentUser!.uid,
+          "name": _itemNameController.text,
+          "detail": _itemDetailController.text,
+          "address": _selectedAddress,
+          "province": province,
+          "category": _selectedCategory,
+          "subCategory": _selectedCategory2,
+          "imagesUrl": imagesSelectedUrl,
+          "itemType": selectedType,
+          "latitude": latitude,
+          "longitude": longitude,
+        };
+        DocumentReference doc = await db.collection('items').add(item);
+        print('Document Created! ID : ${doc.id}');
+      }
+    }
   }
 }
