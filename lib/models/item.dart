@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Item {
   String id;
   String ownerid;
@@ -12,35 +14,64 @@ class Item {
   double latitude;
   double longitude;
 
-  Item(
-    this.id,
-    this.ownerid,
-    this.name,
-    this.detail,
-    this.address,
-    this.province,
-    this.category,
-    this.subCategory,
-    this.imagesUrl,
-    this.itemType,
-    this.latitude,
-    this.longitude,
-  );
+  Item({
+    required this.id,
+    required this.ownerid,
+    required this.name,
+    required this.detail,
+    required this.address,
+    required this.province,
+    required this.category,
+    required this.subCategory,
+    required this.imagesUrl,
+    required this.itemType,
+    required this.latitude,
+    required this.longitude,
+  });
 
-  factory Item.fromMap(String id, Map data) {
+  factory Item.fromMap(QueryDocumentSnapshot<Map<String, dynamic>> item) {
+    var itemMap = item.data();
     return Item(
-      id,
-      data['ownerId'],
-      data['name'],
-      data['detail'],
-      data['address'],
-      data['province'],
-      data['category'],
-      data['subCategory'],
-      data['imagesUrl'],
-      data['itemType'],
-      data['latitude'],
-      data['longitude'],
+      id: item.id,
+      ownerid: itemMap['ownerId'],
+      name: itemMap['name'],
+      detail: itemMap['detail'],
+      address: itemMap['address'], 
+      province: itemMap['province'],
+      category: itemMap['category'],
+      subCategory: itemMap['subCategory'],
+      imagesUrl: itemMap['imagesUrl'],
+      itemType: itemMap['itemType'],
+      latitude: itemMap['latitude'],
+      longitude: itemMap['longitude'],
     );
+  }
+
+  static Map<String, dynamic> toMap(
+    String ownerId,
+    String name,
+    String detail,
+    String address,
+    String province,
+    String category,
+    String subCategory,
+    List<String> imagesUrl,
+    String itemType,
+    double latitude,
+    double longitude,
+  ) {
+    return {
+      'ownerId': ownerId,
+      "name": name,
+      "detail": detail,
+      "address": address,
+      "province": province,
+      "category": category,
+      "subCategory": subCategory,
+      "imagesUrl": imagesUrl,
+      "itemType": itemType,
+      "latitude": latitude,
+      "longitude": longitude,
+    };
   }
 }

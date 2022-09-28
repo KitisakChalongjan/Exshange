@@ -25,10 +25,7 @@ class Items with ChangeNotifier {
     var loadedItems = await db.collection("items").get();
     for (var item in loadedItems.docs) {
       tempItems.add(
-        Item.fromMap(
-          item.id,
-          item.data(),
-        ),
+        Item.fromMap(item),
       );
     }
     _items = tempItems;
@@ -84,19 +81,20 @@ class Items with ChangeNotifier {
     double latitude,
     double longitude,
   ) async {
-    final item = <String, dynamic>{
-      'ownerId': ownerId,
-      "name": name,
-      "detail": detail,
-      "address": address,
-      "province": province,
-      "category": category,
-      "subCategory": subCategory,
-      "imagesUrl": imagesUrl,
-      "itemType": itemType,
-      "latitude": latitude,
-      "longitude": longitude,
-    };
+    final item = Item.toMap(
+      ownerId,
+      name,
+      detail,
+      address,
+      province,
+      category,
+      subCategory,
+      imagesUrl,
+      itemType,
+      latitude,
+      longitude,
+    );
+
     DocumentReference doc = await db.collection('items').add(item);
     print('Document Created! ID : ${doc.id}');
   }
