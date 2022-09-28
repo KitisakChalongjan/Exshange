@@ -1,11 +1,18 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:exshange/models/item.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart';
 
 class Items with ChangeNotifier {
   List<String> itemType = ['ทั้งหมด', 'บริจาค', 'แลกเปลื่ยน'];
 
   FirebaseFirestore db = FirebaseFirestore.instance;
+
+  Reference storageRef = FirebaseStorage.instance.ref();
 
   List<Item> _items = [];
 
@@ -47,5 +54,50 @@ class Items with ChangeNotifier {
     //   notifyListeners();
     //   }
     // });
+  }
+
+  Future<List<String>> addImageToStorage(List<XFile> imagesSelectedUrl) async {
+    List<String> imagesUrl = [];
+    for (var image in imagesSelectedUrl) {
+      Reference imagesRef = storageRef.child('images/');
+      imagesSelectedUrl.clear;
+      File file = File(image.path);
+      String filename = basename(file.path);
+      Reference imageFileRef = imagesRef.child(filename);
+      await imageFileRef.putFile(file);
+      String imgUrl = await imageFileRef.getDownloadURL();
+      imagesUrl.add(imgUrl);
+    }
+    return imagesUrl;
+  }
+
+  Future<void> addItemToFireStore(
+    String ownerId,
+    String name,
+    String detail,
+    String address,
+    String province,
+    String category,
+    String subCategory,
+    List<String> imagesUrl,
+    String itemType,
+    double latitude,
+    double longitude,
+  ) async {
+    final item = <String, dynamic>{
+      'ownerId': ownerId,
+      "name": name,
+      "detail": detail,
+      "address": address,
+      "province": province,
+      "category": category,
+      "subCategory": subCategory,
+      "imagesUrl": imagesUrl,
+      "itemType": itemType,
+      "latitude": latitude,
+      "longitude": longitude,
+    };
+    DocumentReference doc = await db.collection('items').add(item);
+    print('Document Created! ID : ${doc.id}');
   }
 }

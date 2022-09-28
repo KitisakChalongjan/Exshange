@@ -485,8 +485,9 @@ class _AddItemScreenState extends State<AddItemScreen> {
           latitude = geo.latitude;
           longitude = geo.longitude;
 
-          addItemToFirestore();
-          await itemsData.initItemsData();
+          imagesSelectedUrl = await itemsData.addImageToStorage(imageSelected);
+          await itemsData.addItemToFireStore(currentUser!.uid, _itemNameController.text, _itemDetailController.text, _selectedAddress!, province, _selectedCategory!, _selectedCategory2!, imagesSelectedUrl, selectedType!, latitude!, longitude!);
+          
           Navigator.of(context).pop();
         },
         child: BottomAppBar(
@@ -504,33 +505,33 @@ class _AddItemScreenState extends State<AddItemScreen> {
     );
   }
 
-  Future<void> addItemToFirestore() async {
-    for (var image in imageSelected) {
-      Reference imagesRef = storageRef.child('images/');
-      imagesSelectedUrl.clear;
-      File file = File(image.path);
-      String filename = basename(file.path);
-      Reference imageFileRef = imagesRef.child(filename);
-      await imageFileRef.putFile(file);
-      String imgUrl = await imageFileRef.getDownloadURL();
-      imagesSelectedUrl.add(imgUrl);
-      if (imagesSelectedUrl.length == imageSelected.length) {
-        final item = <String, dynamic>{
-          'ownerId': currentUser!.uid,
-          "name": _itemNameController.text,
-          "detail": _itemDetailController.text,
-          "address": _selectedAddress,
-          "province": province,
-          "category": _selectedCategory,
-          "subCategory": _selectedCategory2,
-          "imagesUrl": imagesSelectedUrl,
-          "itemType": selectedType,
-          "latitude": latitude,
-          "longitude": longitude,
-        };
-        DocumentReference doc = await db.collection('items').add(item);
-        print('Document Created! ID : ${doc.id}');
-      }
-    }
-  }
+  // Future<void> addImageToStorage() async {
+  //   for (var image in imageSelected) {
+  //     Reference imagesRef = storageRef.child('images/');
+  //     imagesSelectedUrl.clear;
+  //     File file = File(image.path);
+  //     String filename = basename(file.path);
+  //     Reference imageFileRef = imagesRef.child(filename);
+  //     await imageFileRef.putFile(file);
+  //     String imgUrl = await imageFileRef.getDownloadURL();
+  //     imagesSelectedUrl.add(imgUrl);
+  //     if (imagesSelectedUrl.length == imageSelected.length) {
+  //       final item = <String, dynamic>{
+  //         'ownerId': currentUser!.uid,
+  //         "name": _itemNameController.text,
+  //         "detail": _itemDetailController.text,
+  //         "address": _selectedAddress,
+  //         "province": province,
+  //         "category": _selectedCategory,
+  //         "subCategory": _selectedCategory2,
+  //         "imagesUrl": imagesSelectedUrl,
+  //         "itemType": selectedType,
+  //         "latitude": latitude,
+  //         "longitude": longitude,
+  //       };
+  //       DocumentReference doc = await db.collection('items').add(item);
+  //       print('Document Created! ID : ${doc.id}');
+  //     }
+  //   }
+  // }
 }
