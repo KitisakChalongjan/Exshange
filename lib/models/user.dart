@@ -2,28 +2,71 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 class UserModel {
-  String _id;
-  List<Map<String, dynamic>> _addresses;
+  String _userId;
   String _email;
-  String _profileImgUrl;
+  String _name;
+  String _phone;
+  List<Map<String, dynamic>> _addresses;
+  int _tradeCount;
+  int _donateCount;
+  double _rating;
+  List<dynamic> _favoriteCategories;
+  List<dynamic> _favoriteItems;
+  String _profileImageUrl;
 
-  UserModel(this._id, this._addresses, this._email, this._profileImgUrl);
+  get userId => this._userId;
 
-  List<Map<String, dynamic>> get addresses {
-    return _addresses;
-  }
+  get email => this._email;
 
-  String get email {
-    return _email;
-  }
+  set email(value) => this._email = value;
 
-  String get profileImgUrl{
-    return _profileImgUrl;
-  }
+  get name => this._name;
 
-  @override
-  String toString() {
-    // TODO: implement toString
-    return '${_id}, ${_addresses}, ${_email}, ${_profileImgUrl}';
-  }
+  set name(value) => this._name = value;
+
+  get phone => this._phone;
+
+  set phone(value) => this._phone = value;
+
+  get addresses => this._addresses;
+
+  set addresses(value) => this._addresses = value;
+
+  get tradeCount => this._tradeCount;
+
+  set tradeCount(value) => this._tradeCount = value;
+
+  get donateCount => this._donateCount;
+
+  set donateCount(value) => this._donateCount = value;
+
+  get rating => this._rating;
+
+  set rating(value) => this._rating = value;
+
+  get favoriteCategories => this._favoriteCategories;
+
+  set favoriteCategories(value) => this._favoriteCategories = value;
+
+  get favoriteItems => this._favoriteItems;
+
+  set favoriteItems(value) => this._favoriteItems = value;
+
+  get profileImageUrl => this._profileImageUrl;
+
+  set profileImageUrl(value) => this._profileImageUrl = value;
+
+  UserModel(
+    this._userId,
+    this._email,
+    this._name,
+    this._phone,
+    this._addresses,
+    this._tradeCount,
+    this._donateCount,
+    this._rating,
+    this._favoriteCategories,
+    this._favoriteItems,
+    this._profileImageUrl,
+  );
 }

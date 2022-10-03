@@ -18,19 +18,18 @@ class AddAdressScreen extends StatefulWidget {
 }
 
 class _AddAdressScreenState extends State<AddAdressScreen> {
-  User? currentUser = null;
+  final User? user = FirebaseAuth.instance.currentUser;
 
   FirebaseFirestore db = FirebaseFirestore.instance;
 
   List<String> provinces = Provinces().provinces;
 
-  String selectedProvince = 'กรุงเทพฯ';
+  String _selectedProvince = 'กรุงเทพฯ';
 
   TextEditingController _itemAddressController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    currentUser = context.read<Authentication>().currentUser;
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
@@ -94,7 +93,7 @@ class _AddAdressScreenState extends State<AddAdressScreen> {
               child: DropdownButtonHideUnderline(
                 child: DropdownButton<String>(
                   dropdownColor: Colors.white,
-                  value: selectedProvince,
+                  value: _selectedProvince,
                   items: provinces
                       .map(
                         (province) => DropdownMenuItem<String>(
@@ -109,7 +108,7 @@ class _AddAdressScreenState extends State<AddAdressScreen> {
                       .toList(),
                   onChanged: (province) {
                     setState(() {
-                      selectedProvince = province!;
+                      _selectedProvince = province!;
                     });
                   },
                 ),
@@ -122,13 +121,10 @@ class _AddAdressScreenState extends State<AddAdressScreen> {
         onTap: () async {
           var newAddress = {
             'address': _itemAddressController.text,
-            'province': selectedProvince,
+            'province': _selectedProvince,
+            'userId': user!.uid,
           };
-          db
-              .collection('users')
-              .doc('${currentUser!.uid}')
-              .collection('addresses')
-              .add(newAddress);
+          db.collection('userAddress').add(newAddress);
 
           print('New Address Added! => ${newAddress}');
           await context.read<UserData>().fetchUserData();

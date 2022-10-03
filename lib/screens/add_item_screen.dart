@@ -25,7 +25,7 @@ class AddItemScreen extends StatefulWidget {
 }
 
 class _AddItemScreenState extends State<AddItemScreen> {
-  User? currentUser = Authentication().currentUser;
+  final User? user = FirebaseAuth.instance.currentUser;
 
   TextEditingController _itemNameController = TextEditingController();
   TextEditingController _itemDetailController = TextEditingController();
@@ -44,7 +44,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
 
   String _selectedCategory = 'หมวดหมู่ทั้งหมด';
   List<String> category2 = ['หมวดหมู่รองทั้งหมด'];
-  String _selectedCategory2 = 'หมวดหมู่รองทั้งหมด';
+  String _selectedSubCategory = 'หมวดหมู่รองทั้งหมด';
 
   List<String> allType = Items().itemType;
   String? selectedType = 'ทั้งหมด';
@@ -70,9 +70,9 @@ class _AddItemScreenState extends State<AddItemScreen> {
   Widget build(BuildContext context) {
     var itemsData = context.read<Items>();
     var userModel = context.watch<UserData>().userModel;
-    var userAddresses = userModel!.addresses as List<Map<String, dynamic>>;
+    List<Map<String, dynamic>> addresses = userModel!.addresses;
     allAddress = ['เลือกที่อยู่', 'เพิ่มที่อยู่ใหม่'];
-    for (var addressSnapshot in userAddresses) {
+    for (var addressSnapshot in addresses) {
       allAddress.insert(1, addressSnapshot['address']);
     }
     return Scaffold(
@@ -297,11 +297,11 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                     category2 = ['หมวดหมู่รองทั้งหมด'];
                                   }
                                   category2.addAll(subCategory);
-                                  _selectedCategory2 = 'หมวดหมู่รองทั้งหมด';
+                                  _selectedSubCategory = 'หมวดหมู่รองทั้งหมด';
                                 }
                               });
                               print(
-                                  '${_selectedCategory} => ${_selectedCategory2}');
+                                  '${_selectedCategory} => ${_selectedSubCategory}');
                             });
                           },
                         ),
@@ -329,7 +329,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton<String>(
                           dropdownColor: Colors.white,
-                          value: _selectedCategory2,
+                          value: _selectedSubCategory,
                           items: category2
                               .map(
                                 (item) => DropdownMenuItem<String>(
@@ -345,9 +345,9 @@ class _AddItemScreenState extends State<AddItemScreen> {
                               .toList(),
                           onChanged: (subCategory) {
                             setState(() {
-                              _selectedCategory2 = subCategory!;
+                              _selectedSubCategory = subCategory!;
                               print(
-                                  '${_selectedCategory} => ${_selectedCategory2}');
+                                  '${_selectedCategory} => ${_selectedSubCategory}');
                             });
                           },
                         ),
@@ -475,8 +475,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
             isAddItemLoading = true;
           });
 
-          province = userAddresses.firstWhere(
-              (element) => element['address'] == _selectedAddress)['province'];
+          province = addresses.firstWhere((element) => element['address'] == _selectedAddress)['province'];
 
           Position geo = await GeolocatorHelper().determinePosition();
           latitude = geo.latitude;
@@ -484,13 +483,13 @@ class _AddItemScreenState extends State<AddItemScreen> {
 
           imagesSelectedUrl = await itemsData.addImageToStorage(imageSelected);
           await itemsData.addItemToFireStore(
-            currentUser!.uid,
+            user!.uid,
             _itemNameController.text,
             _itemDetailController.text,
             _selectedAddress,
             province,
             _selectedCategory,
-            _selectedCategory2,
+            _selectedSubCategory,
             imagesSelectedUrl,
             selectedType!,
             latitude!,

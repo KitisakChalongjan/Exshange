@@ -35,11 +35,18 @@ class Authentication with ChangeNotifier {
     await db.collection('users').doc(currentUser!.uid).set(
       {
         'email': email,
-        'profileImgUrl': '',
         'name': 'noname',
+        'phone': '',
+        'userAddressId': '',
+        'tradeCount': 0,
+        'donateCount': 0,
+        'rating': 0.0,
+        'favoriteCategories': [],
+        'favoriteItems': [],
+        'profileImageUrl': '',
       },
     );
-    print(currentUser!.email);
+    print('Registered : ${currentUser!.email}');
   }
 
   Future<void> signOut() async {

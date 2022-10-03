@@ -23,20 +23,57 @@ class UserData with ChangeNotifier {
 
   Future<void> fetchUserData() async {
     String userId = user!.uid;
-    List<Map<String, dynamic>> addresses = [];
     String email;
-    String profileImgUrl;
-    var loadedUserRef = db.collection('users').doc('${userId}');
-    var loadedUserData = await loadedUserRef.get();
-    email = loadedUserData['email'];
-    profileImgUrl = loadedUserData['profileImgUrl'];
-    var addressesData = await loadedUserRef.collection('addresses').get();
-    addressesData.docs.forEach((snapshot) {
-      addresses.add(snapshot.data());
-    });
-    _userModel = UserModel(userId, addresses, email, profileImgUrl);
-    print(UserModel);
+    String name;
+    String phone;
+    List<Map<String, dynamic>> addresses = [];
+    int tradeCount;
+    int donateCount;
+    double rating;
+    List<dynamic> favoriteCategories;
+    List<dynamic> favoriteItems;
+    String profileImageUrl;
+
+    var usersRef = db.collection('users').doc('${userId}');
+    var userAddressRef =
+        db.collection('userAddress').where('userId', isEqualTo: user!.uid);
+
+    var usersSnapshot = await usersRef.get();
+    var userAddresSnapshot = await userAddressRef.get();
+
+    var usersData = usersSnapshot.data()!;
+
+    email = usersData['email'];
+    name = usersData['name'];
+    phone = usersData['phone'];
+    for (var element in userAddresSnapshot.docs) {
+      addresses.add(element.data());
+    }
+    tradeCount = usersData['tradeCount'];
+    donateCount = usersData['donateCount'];
+    rating = usersData['rating'];
+    favoriteCategories = usersData['favoriteCategories'];
+    favoriteItems = usersData['favoriteItems'];
+    profileImageUrl = usersData['profileImageUrl'];
+
+    _userModel = UserModel(
+      userId,
+      email,
+      name,
+      phone,
+      addresses,
+      tradeCount,
+      donateCount,
+      rating,
+      favoriteCategories,
+      favoriteItems,
+      profileImageUrl,
+    );
+
+    print('UserId(${_userModel!.userId})');
     print('Fetch User\'s Data Successful!');
     notifyListeners();
   }
+
+  
 }

@@ -31,10 +31,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   @override
   void initState() {
-    if (context.read<UserData>().userModel!.profileImgUrl == '') {
+    if (context.read<UserData>().userModel!.profileImageUrl == '') {
       img = AssetImage('assets/images/person-icon.png');
     } else {
-      img = NetworkImage(context.read<UserData>().userModel!.profileImgUrl);
+      img = NetworkImage(context.read<UserData>().userModel!.profileImageUrl);
     }
     super.initState();
   }

@@ -21,7 +21,7 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
-    var userProfileUrl = context.watch<UserData>().userModel?.profileImgUrl;
+    var userProfileUrl = context.watch<UserData>().userModel?.profileImageUrl;
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(

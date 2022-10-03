@@ -172,9 +172,8 @@ class _ItemOverviewScreenState extends State<ItemOverviewScreen> {
                                                   child: ClipRRect(
                                                     borderRadius:
                                                         BorderRadius.vertical(
-                                                            top:
-                                                                Radius.circular(
-                                                                    15)),
+                                                      top: Radius.circular(15),
+                                                    ),
                                                     child: Image.network(
                                                       items.items[index]
                                                           .imagesUrl[0],
@@ -206,8 +205,12 @@ class _ItemOverviewScreenState extends State<ItemOverviewScreen> {
                                                           .bodyText1,
                                                     ),
                                                     Text(
-                                                      items
-                                                          .items[index].address,
+                                                      items.items[index].address
+                                                                  .length >
+                                                              16
+                                                          ? '${items.items[index].address.substring(0, 16)}...'
+                                                          : items.items[index]
+                                                              .address,
                                                       style: Theme.of(context)
                                                           .textTheme
                                                           .caption,
