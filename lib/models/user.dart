@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -69,4 +70,28 @@ class UserModel {
     this._favoriteItems,
     this._profileImageUrl,
   );
+
+  factory UserModel.fromMap(
+    String uid,
+    Map<String, dynamic> data,
+    List<QueryDocumentSnapshot<Map<String, dynamic>>> dataAddress,
+  ) {
+    List<Map<String, dynamic>> addresses = [];
+    for (var element in dataAddress) {
+      addresses.add(element.data());
+    }
+    return UserModel(
+        uid,
+        data['email'],
+        data['name'],
+        data['phone'],
+        addresses,
+        data['tradeCount'],
+        data['donateCount'],
+        data['rating'],
+        data['favoriteCategories'],
+        data['favoriteItems'],
+        data['profileImageUrl'],
+    );
+  }
 }

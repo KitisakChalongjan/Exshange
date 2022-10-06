@@ -2,18 +2,18 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:exshange/providers/authentication.dart';
 import 'package:exshange/providers/items.dart';
 import 'package:exshange/providers/user_data.dart';
-import 'package:exshange/screens/add_address_screen.dart';
-import 'package:exshange/screens/add_item_screen.dart';
-import 'package:exshange/screens/edit_profile_screen.dart';
-import 'package:exshange/screens/filter_screen.dart';
+import 'package:exshange/screens/home/add_address_screen.dart';
+import 'package:exshange/screens/home/add_item_screen.dart';
+import 'package:exshange/screens/profile/edit_profile_screen.dart';
+import 'package:exshange/screens/home/filter_screen.dart';
 import 'package:exshange/screens/home_screen.dart';
-import 'package:exshange/screens/item_detail_screen.dart';
+import 'package:exshange/screens/home/item_detail_screen.dart';
 import 'package:exshange/screens/login_screen.dart';
-import 'package:exshange/screens/my_address_screen.dart';
-import 'package:exshange/screens/my_category.dart';
-import 'package:exshange/screens/my_deal_screen.dart';
-import 'package:exshange/screens/my_history_screen.dart';
-import 'package:exshange/screens/my_item_screen.dart';
+import 'package:exshange/screens/profile/my_address_screen.dart';
+import 'package:exshange/screens/profile/my_category.dart';
+import 'package:exshange/screens/profile/my_deal_screen.dart';
+import 'package:exshange/screens/profile/my_history_screen.dart';
+import 'package:exshange/screens/profile/my_item_screen.dart';
 import 'package:exshange/screens/splash_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -58,6 +58,7 @@ class MyApp extends StatelessWidget {
           fontFamily: 'MitrRegular',
           primarySwatch: Colors.deepOrange,
           accentColor: Color(0xFF1DD6B0),
+          hintColor: Color.fromARGB(255, 80, 80, 80),
           backgroundColor: Color(0xFFF4F0EF),
           textTheme: const TextTheme(
             headline1: TextStyle(
@@ -145,7 +146,23 @@ class Authenticate extends StatelessWidget {
   Widget build(BuildContext context) {
     final firebaseUser = Provider.of<User?>(context);
     if (firebaseUser != null) {
-      return HomeScreen();
+      return FutureBuilder(
+        future: Future.wait([
+          context.read<Items>().initItemsData(),
+          context.read<UserData>().fetchUserData(),
+        ]),
+        builder: ((context, snapshot) {
+          if (!snapshot.hasData) {
+            return Scaffold(
+              body: Center(
+                child: CircularProgressIndicator(),
+              ),
+            );
+          } else {
+            return HomeScreen();
+          }
+        }),
+      );
     }
     return LoginScreen();
   }

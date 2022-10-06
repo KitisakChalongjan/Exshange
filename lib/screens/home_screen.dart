@@ -1,11 +1,11 @@
 import 'package:exshange/providers/authentication.dart';
 import 'package:exshange/providers/items.dart';
 import 'package:exshange/providers/user_data.dart';
-import 'package:exshange/screens/add_item_screen.dart';
-import 'package:exshange/screens/chat_screen.dart';
-import 'package:exshange/screens/item_overview_screen.dart';
-import 'package:exshange/screens/liked_screen.dart';
-import 'package:exshange/screens/profile_screen.dart';
+import 'package:exshange/screens/home/add_item_screen.dart';
+import 'package:exshange/screens/chat/chat_screen.dart';
+import 'package:exshange/screens/home/item_overview_screen.dart';
+import 'package:exshange/screens/recommend/recommend_screen.dart';
+import 'package:exshange/screens/profile/profile_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
@@ -27,16 +27,10 @@ class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
   final screens = [
     ItemOverviewScreen(),
-    LikedScreen(),
+    RecommendScreen(),
     ChatScreen(),
     ProfileScreen(),
   ];
-
-  @override
-  void initState() {
-    Provider.of<UserData>(context, listen: false).fetchUserData();
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,8 +72,8 @@ class _HomeScreenState extends State<HomeScreen> {
             backgroundColor: Theme.of(context).primaryColor,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.favorite),
-            label: 'Liked',
+            icon: Icon(Icons.star),
+            label: 'Recommend',
             backgroundColor: Theme.of(context).primaryColor,
           ),
           BottomNavigationBarItem(

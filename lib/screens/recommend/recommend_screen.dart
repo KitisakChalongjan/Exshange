@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 
-class LikedScreen extends StatefulWidget {
-  const LikedScreen({Key? key}) : super(key: key);
+class RecommendScreen extends StatefulWidget {
+  const RecommendScreen({Key? key}) : super(key: key);
 
   @override
-  State<LikedScreen> createState() => _LikedScreenState();
+  State<RecommendScreen> createState() => _RecommendScreenState();
 }
 
-class _LikedScreenState extends State<LikedScreen> {
+class _RecommendScreenState extends State<RecommendScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

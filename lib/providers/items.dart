@@ -8,7 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart';
 
 class Items with ChangeNotifier {
-  List<String> itemType = ['ทั้งหมด', 'บริจาค', 'แลกเปลื่ยน'];
+  List<String> itemType = ['ทั้งหมด', 'ให้', 'แลก'];
 
   FirebaseFirestore db = FirebaseFirestore.instance;
 
@@ -29,28 +29,9 @@ class Items with ChangeNotifier {
       );
     }
     _items = tempItems;
+    print('Initialize Item Data Successful!');
     notifyListeners();
-    return 'ok';
-    // oldVersion
-    // await db.collection("items").get().then((items) {
-    //   for (var doc in items.docs) {
-    //     loadedData.add(Item(
-    //       doc.id,
-    //       doc['name'],
-    //       doc['detail'],
-    //       doc['address'],
-    //       doc['category'],
-    //       doc['province'],
-    //       doc['subCategory'],
-    //       doc['imagesUrl'],
-    //       doc['itemType'],
-    //       doc['latitude'],
-    //       doc['longitude'],
-    //     ));
-    //   _items = loadedData;
-    //   notifyListeners();
-    //   }
-    // });
+    return 'done';
   }
 
   Future<List<String>> addImageToStorage(List<XFile> imagesSelectedUrl) async {
@@ -93,6 +74,7 @@ class Items with ChangeNotifier {
       itemType,
       latitude,
       longitude,
+      DateTime.now().millisecondsSinceEpoch,
     );
 
     DocumentReference doc = await db.collection('items').add(item);

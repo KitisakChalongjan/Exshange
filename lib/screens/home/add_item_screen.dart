@@ -6,7 +6,7 @@ import 'package:exshange/providers/authentication.dart';
 import 'package:exshange/helpers/categories.dart';
 import 'package:exshange/providers/items.dart';
 import 'package:exshange/providers/user_data.dart';
-import 'package:exshange/screens/add_address_screen.dart';
+import 'package:exshange/screens/home/add_address_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
@@ -469,51 +469,55 @@ class _AddItemScreenState extends State<AddItemScreen> {
           : Center(
               child: CircularProgressIndicator(),
             ),
-      bottomNavigationBar: GestureDetector(
-        onTap: () async {
-          setState(() {
-            isAddItemLoading = true;
-          });
+      bottomNavigationBar: isAddItemLoading == true
+          ? SizedBox(width: 0, height: 0)
+          : GestureDetector(
+              onTap: () async {
+                setState(() {
+                  isAddItemLoading = true;
+                });
 
-          province = addresses.firstWhere((element) => element['address'] == _selectedAddress)['province'];
+                province = addresses.firstWhere((element) =>
+                    element['address'] == _selectedAddress)['province'];
 
-          Position geo = await GeolocatorHelper().determinePosition();
-          latitude = geo.latitude;
-          longitude = geo.longitude;
+                Position geo = await GeolocatorHelper().determinePosition();
+                latitude = geo.latitude;
+                longitude = geo.longitude;
 
-          imagesSelectedUrl = await itemsData.addImageToStorage(imageSelected);
-          await itemsData.addItemToFireStore(
-            user!.uid,
-            _itemNameController.text,
-            _itemDetailController.text,
-            _selectedAddress,
-            province,
-            _selectedCategory,
-            _selectedSubCategory,
-            imagesSelectedUrl,
-            selectedType!,
-            latitude!,
-            longitude!,
-          );
+                imagesSelectedUrl =
+                    await itemsData.addImageToStorage(imageSelected);
+                await itemsData.addItemToFireStore(
+                  user!.uid,
+                  _itemNameController.text,
+                  _itemDetailController.text,
+                  _selectedAddress,
+                  province,
+                  _selectedCategory,
+                  _selectedSubCategory,
+                  imagesSelectedUrl,
+                  selectedType!,
+                  latitude!,
+                  longitude!,
+                );
 
-          setState(() {
-            isAddItemLoading = false;
-          });
+                setState(() {
+                  isAddItemLoading = false;
+                });
 
-          Navigator.of(context).pop();
-        },
-        child: BottomAppBar(
-          color: Theme.of(context).primaryColor,
-          child: Container(
-            height: 40,
-            child: Text(
-              "ตกลง",
-              style: Theme.of(context).textTheme.bodyText2,
-              textAlign: TextAlign.center,
+                Navigator.of(context).pop();
+              },
+              child: BottomAppBar(
+                color: Theme.of(context).primaryColor,
+                child: Container(
+                  height: 40,
+                  child: Text(
+                    "ตกลง",
+                    style: Theme.of(context).textTheme.bodyText2,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
             ),
-          ),
-        ),
-      ),
     );
   }
 

@@ -21,7 +21,7 @@ class UserData with ChangeNotifier {
     _userModel = null;
   }
 
-  Future<void> fetchUserData() async {
+  Future<String> fetchUserData() async {
     String userId = user!.uid;
     String email;
     String name;
@@ -42,37 +42,13 @@ class UserData with ChangeNotifier {
     var userAddresSnapshot = await userAddressRef.get();
 
     var usersData = usersSnapshot.data()!;
+    var userAddresData = userAddresSnapshot.docs;
 
-    email = usersData['email'];
-    name = usersData['name'];
-    phone = usersData['phone'];
-    for (var element in userAddresSnapshot.docs) {
-      addresses.add(element.data());
-    }
-    tradeCount = usersData['tradeCount'];
-    donateCount = usersData['donateCount'];
-    rating = usersData['rating'];
-    favoriteCategories = usersData['favoriteCategories'];
-    favoriteItems = usersData['favoriteItems'];
-    profileImageUrl = usersData['profileImageUrl'];
-
-    _userModel = UserModel(
-      userId,
-      email,
-      name,
-      phone,
-      addresses,
-      tradeCount,
-      donateCount,
-      rating,
-      favoriteCategories,
-      favoriteItems,
-      profileImageUrl,
-    );
+    _userModel = UserModel.fromMap(userId, usersData, userAddresData);
 
     print('UserId(${_userModel!.userId})');
     print('Fetch User\'s Data Successful!');
-    notifyListeners();
+    return 'done';
   }
 
   

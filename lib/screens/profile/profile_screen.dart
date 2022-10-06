@@ -1,11 +1,11 @@
 import 'package:exshange/providers/authentication.dart';
 import 'package:exshange/providers/user_data.dart';
-import 'package:exshange/screens/edit_profile_screen.dart';
-import 'package:exshange/screens/my_address_screen.dart';
-import 'package:exshange/screens/my_category.dart';
-import 'package:exshange/screens/my_deal_screen.dart';
-import 'package:exshange/screens/my_history_screen.dart';
-import 'package:exshange/screens/my_item_screen.dart';
+import 'package:exshange/screens/profile/edit_profile_screen.dart';
+import 'package:exshange/screens/profile/my_address_screen.dart';
+import 'package:exshange/screens/profile/my_category.dart';
+import 'package:exshange/screens/profile/my_deal_screen.dart';
+import 'package:exshange/screens/profile/my_history_screen.dart';
+import 'package:exshange/screens/profile/my_item_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -21,7 +21,8 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
-    var userProfileUrl = context.watch<UserData>().userModel?.profileImageUrl;
+    var userData = context.watch<UserData>().userModel;
+    var userProfileUrl = userData!.profileImageUrl;
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
@@ -42,8 +43,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       alignment: Alignment.center,
                       child: CircleAvatar(
                         radius: 60,
-                        backgroundImage: userProfileUrl == '' || userProfileUrl == null
-                            ? AssetImage('assets/images/person-icon.png')
+                        backgroundImage: userProfileUrl == '' ||
+                                userProfileUrl == null
+                            ? NetworkImage(
+                                'https://firebasestorage.googleapis.com/v0/b/exshange-project.appspot.com/o/images%2Fperson-icon.png?alt=media&token=e32d807b-eeaa-42cb-89e1-291c0af9e852')
                             : NetworkImage(userProfileUrl) as ImageProvider,
                       ),
                     ),
@@ -57,9 +60,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('ชื่อ'),
-                          Text('email'),
-                          Text('เบอร์'),
+                          Text('ชื่อ : ${userData.name}'),
+                          Text('อีเมล์ : ${userData.email}'),
+                          Text('เบอร์ : ${userData.phone}'),
                           Container(
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -73,7 +76,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         Icons.loop_sharp,
                                         color: Colors.white,
                                       ),
-                                      Text('10'),
+                                      Text('${userData.tradeCount}'),
+                                    ],
+                                  ),
+                                ),
+                                Flexible(
+                                  flex: 1,
+                                  child: Wrap(
+                                    spacing: 5,
+                                    children: [
+                                      Icon(
+                                        Icons.handshake,
+                                        color: Colors.white,
+                                      ),
+                                      Text('${userData.donateCount}'),
                                     ],
                                   ),
                                 ),
@@ -86,7 +102,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         Icons.star_purple500_outlined,
                                         color: Colors.white,
                                       ),
-                                      Text('10'),
+                                      Text('${userData.rating}'),
                                     ],
                                   ),
                                 ),
