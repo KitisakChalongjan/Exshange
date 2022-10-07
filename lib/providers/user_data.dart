@@ -9,7 +9,6 @@ import 'package:image_picker/image_picker.dart';
 class UserData with ChangeNotifier {
   FirebaseFirestore db = FirebaseFirestore.instance;
 
-  final User? user = FirebaseAuth.instance.currentUser;
 
   UserModel? _userModel;
 
@@ -21,8 +20,8 @@ class UserData with ChangeNotifier {
     _userModel = null;
   }
 
-  Future<String> fetchUserData() async {
-    String userId = user!.uid;
+  Future<String> fetchUserData(String uid) async {
+    String userId = uid;
     String email;
     String name;
     String phone;
@@ -36,7 +35,7 @@ class UserData with ChangeNotifier {
 
     var usersRef = db.collection('users').doc('${userId}');
     var userAddressRef =
-        db.collection('userAddress').where('userId', isEqualTo: user!.uid);
+        db.collection('userAddress').where('userId', isEqualTo: userId);
 
     var usersSnapshot = await usersRef.get();
     var userAddresSnapshot = await userAddressRef.get();

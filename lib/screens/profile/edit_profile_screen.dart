@@ -108,7 +108,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               .collection('users')
               .doc(currentUser!.uid)
               .update({'profileImgUrl': imgUrl});
-          context.read<UserData>().fetchUserData();
+          context.read<UserData>().fetchUserData(currentUser.uid);
           Navigator.pop(context);
         }),
         child: BottomAppBar(

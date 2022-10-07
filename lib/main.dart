@@ -4,6 +4,7 @@ import 'package:exshange/providers/items.dart';
 import 'package:exshange/providers/user_data.dart';
 import 'package:exshange/screens/home/add_address_screen.dart';
 import 'package:exshange/screens/home/add_item_screen.dart';
+import 'package:exshange/screens/home/offer_screen.dart';
 import 'package:exshange/screens/profile/edit_profile_screen.dart';
 import 'package:exshange/screens/home/filter_screen.dart';
 import 'package:exshange/screens/home_screen.dart';
@@ -58,6 +59,9 @@ class MyApp extends StatelessWidget {
           fontFamily: 'MitrRegular',
           primarySwatch: Colors.deepOrange,
           accentColor: Color(0xFF1DD6B0),
+          errorColor: Colors.red,
+          primaryColorLight: Color(0xFFFF916A),
+          focusColor: Color(0xFF4BD9BC) ,
           hintColor: Color.fromARGB(255, 80, 80, 80),
           backgroundColor: Color(0xFFF4F0EF),
           textTheme: const TextTheme(
@@ -127,12 +131,13 @@ class MyApp extends StatelessWidget {
           AddItemScreen().routeName: (context) => AddItemScreen(),
           AddAdressScreen().routeName: (context) => AddAdressScreen(),
           ItemDetailScreen().routeName: (context) => ItemDetailScreen(),
-          EditProfileScreen().routeName: (cintext) => EditProfileScreen(),
-          MyItemsScreen().routeName: (cintext) => MyItemsScreen(),
-          MyHistoryScreen().routeName: (cintext) => MyHistoryScreen(),
-          MyDealScreen().routeName: (cintext) => MyDealScreen(),
-          MyCategoriesScreen().routeName: (cintext) => MyCategoriesScreen(),
-          MyAddressScreen().routeName: (cintext) => MyAddressScreen(),
+          EditProfileScreen().routeName: (context) => EditProfileScreen(),
+          MyItemsScreen().routeName: (context) => MyItemsScreen(),
+          MyHistoryScreen().routeName: (context) => MyHistoryScreen(),
+          MyDealScreen().routeName: (context) => MyDealScreen(),
+          MyCategoriesScreen().routeName: (context) => MyCategoriesScreen(),
+          MyAddressScreen().routeName: (context) => MyAddressScreen(),
+          OfferScreen().routeName: (context) => OfferScreen(),
         },
       ),
     );
@@ -149,7 +154,7 @@ class Authenticate extends StatelessWidget {
       return FutureBuilder(
         future: Future.wait([
           context.read<Items>().initItemsData(),
-          context.read<UserData>().fetchUserData(),
+          context.read<UserData>().fetchUserData(firebaseUser.uid),
         ]),
         builder: ((context, snapshot) {
           if (!snapshot.hasData) {

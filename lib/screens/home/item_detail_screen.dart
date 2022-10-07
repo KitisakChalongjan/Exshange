@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:exshange/models/user.dart';
 import 'package:exshange/providers/items.dart';
 import 'package:exshange/screens/home/item_overview_screen.dart';
+import 'package:exshange/screens/home/offer_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -193,6 +194,15 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
         ),
       ),
       bottomNavigationBar: GestureDetector(
+        onTap: (() {
+          Navigator.of(context).pushNamed(
+            OfferScreen().routeName,
+            arguments: ItemArgs(
+              args.itemId,
+              args.index,
+            ),
+          );
+        }),
         child: BottomAppBar(
           color: item.itemType == "แลกเปลื่ยน"
               ? Theme.of(context).primaryColor

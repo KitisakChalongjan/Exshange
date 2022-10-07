@@ -1,11 +1,13 @@
 import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:exshange/models/item.dart';
 import 'package:exshange/providers/authentication.dart';
 import 'package:exshange/providers/items.dart';
 import 'package:exshange/providers/user_data.dart';
 import 'package:exshange/screens/home/filter_screen.dart';
 import 'package:exshange/screens/home/item_detail_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -29,9 +31,15 @@ class ItemOverviewScreen extends StatefulWidget {
 }
 
 class _ItemOverviewScreenState extends State<ItemOverviewScreen> {
+  final User? user = FirebaseAuth.instance.currentUser;
+
   @override
   Widget build(BuildContext context) {
-    var itemsData = context.read<Items>();
+    List<Item> itemsData = context
+        .watch<Items>()
+        .items
+        .where((item) => item.ownerid != user!.uid)
+        .toList();
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
@@ -103,139 +111,132 @@ class _ItemOverviewScreenState extends State<ItemOverviewScreen> {
             flex: 1,
             child: Container(
               padding: EdgeInsets.all(5),
-              child: Consumer<Items>(
-                builder: (context, items, _) => itemsData.items.isEmpty
-                    ? Center(
-                        child: CircularProgressIndicator(),
-                      )
-                    : GridView.builder(
-                        itemCount: items.items.length,
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          mainAxisExtent: 250,
-                          crossAxisSpacing: 0,
-                        ),
-                        itemBuilder: (context, index) {
-                          return GestureDetector(
-                            onTap: () {
-                              Navigator.of(context).pushNamed(
-                                ItemDetailScreen().routeName,
-                                arguments:
-                                    ItemArgs(itemsData.items[index].id, index),
-                              );
-                            },
-                            child: Card(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15),
+              child: itemsData.isEmpty
+                  ? Center(
+                      child: CircularProgressIndicator(),
+                    )
+                  : GridView.builder(
+                      itemCount: itemsData.length,
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        mainAxisExtent: 250,
+                        crossAxisSpacing: 0,
+                      ),
+                      itemBuilder: (context, index) {
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).pushNamed(
+                              ItemDetailScreen().routeName,
+                              arguments: ItemArgs(
+                                itemsData[index].id,
+                                index,
                               ),
-                              child: SizedBox(
-                                child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.stretch,
-                                  children: [
-                                    Flexible(
-                                      flex: 3,
-                                      child: SizedBox(
-                                        child: Hero(
-                                          tag: 'heroItem${index}',
-                                          child: SizedBox(
-                                            child: ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.vertical(
-                                                top: Radius.circular(15),
-                                              ),
-                                              child: Image.network(
-                                                items.items[index].imagesUrl[0],
-                                                fit: BoxFit.cover,
-                                              ),
+                            );
+                          },
+                          child: Card(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            child: SizedBox(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  Flexible(
+                                    flex: 3,
+                                    child: SizedBox(
+                                      child: Hero(
+                                        tag: 'heroItem${index}',
+                                        child: SizedBox(
+                                          child: ClipRRect(
+                                            borderRadius: BorderRadius.vertical(
+                                              top: Radius.circular(15),
+                                            ),
+                                            child: Image.network(
+                                              itemsData[index].imagesUrl[0],
+                                              fit: BoxFit.cover,
                                             ),
                                           ),
                                         ),
                                       ),
                                     ),
-                                    Flexible(
-                                      flex: 1,
-                                      child: Container(
-                                        padding:
-                                            EdgeInsets.symmetric(horizontal: 5),
-                                        child: ClipRRect(
-                                          borderRadius: BorderRadius.vertical(
-                                            bottom: Radius.circular(15),
-                                          ),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Text(
-                                                    items.items[index].name
-                                                                .length >
-                                                            8
-                                                        ? items
-                                                            .items[index].name
-                                                            .substring(0, 8)
-                                                        : items
-                                                            .items[index].name,
+                                  ),
+                                  Flexible(
+                                    flex: 1,
+                                    child: Container(
+                                      padding:
+                                          EdgeInsets.symmetric(horizontal: 5),
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.vertical(
+                                          bottom: Radius.circular(15),
+                                        ),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text(
+                                                  itemsData[index].name.length >
+                                                          8
+                                                      ? itemsData[index]
+                                                          .name
+                                                          .substring(0, 8)
+                                                      : itemsData[index].name,
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodyText1,
+                                                ),
+                                                Container(
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal: 10),
+                                                  decoration: BoxDecoration(
+                                                    color:
+                                                        itemsData[index]
+                                                                    .itemType ==
+                                                                'ให้'
+                                                            ? Theme.of(context)
+                                                                .accentColor
+                                                            : Theme.of(context)
+                                                                .primaryColor,
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                      Radius.circular(5),
+                                                    ),
+                                                  ),
+                                                  child: Text(
+                                                    itemsData[index].itemType,
                                                     style: Theme.of(context)
                                                         .textTheme
-                                                        .bodyText1,
+                                                        .subtitle1,
                                                   ),
-                                                  Container(
-                                                    padding:
-                                                        EdgeInsets.symmetric(
-                                                            horizontal: 10),
-                                                    decoration: BoxDecoration(
-                                                      color: items.items[index]
-                                                                  .itemType ==
-                                                              'ให้'
-                                                          ? Theme.of(context)
-                                                              .accentColor
-                                                          : Theme.of(context)
-                                                              .primaryColor,
-                                                      borderRadius:
-                                                          BorderRadius.all(
-                                                        Radius.circular(5),
-                                                      ),
-                                                    ),
-                                                    child: Text(
-                                                      items.items[index]
-                                                          .itemType,
-                                                      style: Theme.of(context)
-                                                          .textTheme
-                                                          .subtitle1,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              Text(
-                                                items.items[index].address
-                                                            .length >
-                                                        16
-                                                    ? '${items.items[index].address.substring(0, 16)}...'
-                                                    : items
-                                                        .items[index].address,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .caption,
-                                              ),
-                                            ],
-                                          ),
+                                                ),
+                                              ],
+                                            ),
+                                            Text(
+                                              itemsData[index].address.length >
+                                                      16
+                                                  ? '${itemsData[index].address.substring(0, 16)}...'
+                                                  : itemsData[index].address,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .caption,
+                                            ),
+                                          ],
                                         ),
                                       ),
-                                    )
-                                  ],
-                                ),
+                                    ),
+                                  )
+                                ],
                               ),
                             ),
-                          );
-                        },
-                      ),
-              ),
+                          ),
+                        );
+                      },
+                    ),
             ),
           )
         ],

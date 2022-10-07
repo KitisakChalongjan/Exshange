@@ -30,6 +30,8 @@ class _AddAdressScreenState extends State<AddAdressScreen> {
 
   @override
   Widget build(BuildContext context) {
+
+    User? user = context.read<Authentication>().currentUser;
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
@@ -127,7 +129,7 @@ class _AddAdressScreenState extends State<AddAdressScreen> {
           db.collection('userAddress').add(newAddress);
 
           print('New Address Added! => ${newAddress}');
-          await context.read<UserData>().fetchUserData();
+          await context.read<UserData>().fetchUserData(user.uid);
           Navigator.of(context).pop();
           // WTF!!
           // var newAddresses = {'addresses': []};

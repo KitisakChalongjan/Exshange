@@ -22,6 +22,7 @@ class Authentication with ChangeNotifier {
       password: password,
     );
     print(currentUser!.email);
+    print(currentUser!.uid);
   }
 
   Future<void> createUserWithEmailAndPassword({
@@ -47,6 +48,7 @@ class Authentication with ChangeNotifier {
       },
     );
     print('Registered : ${currentUser!.email}');
+    print(currentUser!.uid);
   }
 
   Future<void> signOut() async {
