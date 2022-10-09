@@ -73,14 +73,14 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                     flex: 2,
                     child: Container(
                       decoration: BoxDecoration(
-                        color: item.itemType == 'แลกเปลื่ยน'
+                        color: item.itemType == 'แลก'
                             ? Theme.of(context).primaryColorLight
                             : Color(0XFF68EDD2),
                         boxShadow: [],
                       ),
                       alignment: Alignment.center,
                       child: Text(
-                        item.itemType == 'แลกเปลื่ยน' ? 'แลก' : 'ให้',
+                        item.itemType == 'แลก' ? 'แลก' : 'ให้',
                         style: Theme.of(context).textTheme.bodyText2,
                       ),
                     ),
@@ -204,13 +204,13 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
           );
         }),
         child: BottomAppBar(
-          color: item.itemType == "แลกเปลื่ยน"
+          color: item.itemType == "แลก"
               ? Theme.of(context).primaryColor
               : Color(0XFF68EDD2),
           child: Container(
             height: 40,
             child: Text(
-              item.itemType == "แลกเปลื่ยน" ? 'เสนอ' : 'ขอ',
+              item.itemType == "แลก" ? 'เสนอ' : 'ขอ',
               style: Theme.of(context).textTheme.bodyText2,
               textAlign: TextAlign.center,
             ),

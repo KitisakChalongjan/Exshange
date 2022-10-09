@@ -25,11 +25,11 @@ class Items with ChangeNotifier {
     var loadedItems = await db.collection("items").get();
     for (var item in loadedItems.docs) {
       tempItems.add(
-        Item.fromMap(item),
+        Item.fromQueryDocumentSnapshot(item),
       );
     }
     _items = tempItems;
-    print('Initialize Item Data Successful!');
+    print('Initialize Items Data Successful!');
     notifyListeners();
     return 'done';
   }
@@ -49,7 +49,7 @@ class Items with ChangeNotifier {
     return imagesUrl;
   }
 
-  Future<void> addItemToFireStore(
+  Future<String> addItemToFireStore(
     String ownerId,
     String name,
     String detail,
@@ -61,6 +61,7 @@ class Items with ChangeNotifier {
     String itemType,
     double latitude,
     double longitude,
+    String status,
   ) async {
     final item = Item.toMap(
       ownerId,
@@ -74,10 +75,18 @@ class Items with ChangeNotifier {
       itemType,
       latitude,
       longitude,
+      status,
       DateTime.now().millisecondsSinceEpoch,
     );
 
     DocumentReference doc = await db.collection('items').add(item);
-    print('Document Created! ID : ${doc.id}');
+    print('Document Item Created! ID : ${doc.id}');
+    return doc.id;
+  }
+
+  Future<Item> getItemById(String itemId) async {
+    var itemDoc = await db.collection('items').doc('${itemId}').get();
+    Item item = Item.fromDocumentSnapshot(itemDoc);
+    return item;
   }
 }

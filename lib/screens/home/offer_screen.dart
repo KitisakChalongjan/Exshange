@@ -1,12 +1,17 @@
 import 'dart:io';
 
 import 'package:exshange/helpers/categories.dart';
+import 'package:exshange/helpers/geolocator.dart';
 import 'package:exshange/providers/items.dart';
+import 'package:exshange/providers/offers.dart';
+import 'package:exshange/providers/user_data.dart';
 import 'package:exshange/screens/home/add_address_screen.dart';
 import 'package:exshange/screens/home/item_overview_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
@@ -19,10 +24,13 @@ class OfferScreen extends StatefulWidget {
 }
 
 class _OfferScreenState extends State<OfferScreen> {
+  User? user;
+  var isAddItemLoading = false;
+
   TextEditingController _itemNameController = TextEditingController();
   TextEditingController _itemDetailController = TextEditingController();
 
-  XFile? imageSelected = null;
+  List<XFile> imageSelected = [];
   List<String> imagesSelectedUrl = [];
   final ImagePicker imagePicker = ImagePicker();
 
@@ -32,17 +40,30 @@ class _OfferScreenState extends State<OfferScreen> {
   List<String> category2 = ['หมวดหมู่รองทั้งหมด'];
   String _selectedSubCategory = 'หมวดหมู่รองทั้งหมด';
 
-  List<String> allType = Items().itemType;
-  String? selectedType = 'ทั้งหมด';
-
   String _selectedAddress = 'เลือกที่อยู่';
   List<String> allAddress = [];
 
+  String address = '';
+  String province = '';
+  String category = '';
+  String subCategory = '';
+  double? latitude;
+  double? longitude;
+
   @override
   Widget build(BuildContext context) {
+    user = FirebaseAuth.instance.currentUser;
     final args = ModalRoute.of(context)!.settings.arguments as ItemArgs;
-    final items = context.read<Items>().items;
-    final item = items.firstWhere((element) => element.id == args.itemId);
+    var itemsData = context.read<Items>();
+    final item =
+        itemsData.items.firstWhere((element) => element.id == args.itemId);
+    var userModel = context.watch<UserData>().userModel;
+    final offers = context.read<Offers>();
+    List<Map<String, dynamic>> addresses = userModel!.addresses;
+    allAddress = ['เลือกที่อยู่', 'เพิ่มที่อยู่ใหม่'];
+    for (var addressSnapshot in addresses) {
+      allAddress.insert(1, addressSnapshot['address']);
+    }
     return Scaffold(
       appBar: AppBar(
         title: Text('เสนอ'),
@@ -52,8 +73,10 @@ class _OfferScreenState extends State<OfferScreen> {
           child: Center(
         child: Column(
           children: [
+            SizedBox(
+              height: 40,
+            ),
             Container(
-              margin: EdgeInsets.only(top: 40),
               decoration: BoxDecoration(
                   color: Color.fromARGB(255, 57, 57, 57),
                   borderRadius: BorderRadius.circular(20)),
@@ -78,7 +101,7 @@ class _OfferScreenState extends State<OfferScreen> {
                 size: 40,
               ),
             ),
-            imageSelected == null
+            imageSelected.isEmpty
                 ? Container(
                     alignment: Alignment.center,
                     height: 240,
@@ -106,7 +129,7 @@ class _OfferScreenState extends State<OfferScreen> {
                         ClipRRect(
                           borderRadius: BorderRadius.circular(20),
                           child: Image.file(
-                            File(imageSelected!.path),
+                            File(imageSelected[0].path),
                             fit: BoxFit.cover,
                             width: 240,
                             height: 240,
@@ -124,7 +147,7 @@ class _OfferScreenState extends State<OfferScreen> {
                           ),
                           onPressed: () {
                             setState(() {
-                              imageSelected == null;
+                              imageSelected.clear();
                             });
                           },
                         ),
@@ -139,13 +162,14 @@ class _OfferScreenState extends State<OfferScreen> {
               children: [
                 ElevatedButton(
                   onPressed: () async {
-                    List<XFile>? images = await imagePicker.pickMultiImage();
+                    XFile? images = await imagePicker.pickImage(
+                        source: ImageSource.gallery);
                     if (images == null) {
                       return;
                     } else {
-                      for (var image in images) {
-                        imageSelected = image;
-                      }
+                      imageSelected.clear();
+                      imageSelected.add(images);
+                      print(imageSelected);
                       setState(() {});
                     }
                   },
@@ -162,9 +186,10 @@ class _OfferScreenState extends State<OfferScreen> {
                     if (image == null) {
                       return;
                     } else {
-                      setState(() {
-                        imageSelected = image;
-                      });
+                      imageSelected.clear();
+                      imageSelected.add(image);
+                      print(imageSelected);
+                      setState(() {});
                     }
                   },
                   child: Container(
@@ -360,50 +385,6 @@ class _OfferScreenState extends State<OfferScreen> {
               child: DropdownButtonHideUnderline(
                 child: DropdownButton<String>(
                   dropdownColor: Colors.white,
-                  value: selectedType,
-                  items: allType
-                      .map(
-                        (type) => DropdownMenuItem<String>(
-                          child: Text(
-                            type,
-                            textAlign: TextAlign.center,
-                            style: Theme.of(context).textTheme.subtitle2,
-                          ),
-                          value: type,
-                        ),
-                      )
-                      .toList(),
-                  onChanged: (type) {
-                    setState(() {
-                      selectedType = type;
-                      print('${selectedType}');
-                    });
-                  },
-                ),
-              ),
-            ),
-            Container(
-              margin: EdgeInsets.only(
-                top: 10,
-              ),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.25),
-                    spreadRadius: 1,
-                    blurRadius: 3,
-                    offset: Offset(1, 3),
-                  ),
-                ],
-              ),
-              width: 360,
-              height: 40,
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              child: DropdownButtonHideUnderline(
-                child: DropdownButton<String>(
-                  dropdownColor: Colors.white,
                   value: _selectedAddress,
                   items: allAddress
                       .map(
@@ -443,43 +424,92 @@ class _OfferScreenState extends State<OfferScreen> {
                 ),
               ),
             ),
+            SizedBox(
+              height: 40,
+            ),
           ],
         ),
       )),
-      bottomNavigationBar: GestureDetector(
-        onTap: (() {}),
-        child: BottomAppBar(
-          child: Row(
-            children: [
-              Expanded(
-                child: GestureDetector(
-                  child: Container(
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(color: Colors.red),
-                    height: 60,
-                    child: Text(
-                      'ยกเลิก',
-                      style: Theme.of(context).textTheme.bodyText2,
-                    ),
+      bottomNavigationBar: BottomAppBar(
+        child: Row(
+          children: [
+            Expanded(
+              child: GestureDetector(
+                child: Container(
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(color: Colors.red),
+                  height: 60,
+                  child: Text(
+                    'ยกเลิก',
+                    style: Theme.of(context).textTheme.bodyText2,
                   ),
                 ),
+                onTap: (() {
+                  Navigator.of(context).pop();
+                }),
               ),
-              Expanded(
-                child: GestureDetector(
-                  child: Container(
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                        color: Theme.of(context).primaryColorLight),
-                    height: 60,
-                    child: Text(
-                      'ยืนยัน',
-                      style: Theme.of(context).textTheme.bodyText2,
-                    ),
+            ),
+            Expanded(
+              child: GestureDetector(
+                child: Container(
+                  alignment: Alignment.center,
+                  decoration:
+                      BoxDecoration(color: Theme.of(context).primaryColorLight),
+                  height: 60,
+                  child: Text(
+                    'ยืนยัน',
+                    style: Theme.of(context).textTheme.bodyText2,
                   ),
                 ),
+                onTap: (() async {
+                  setState(() {
+                    isAddItemLoading = true;
+                  });
+
+                  province = addresses.firstWhere((element) =>
+                      element['address'] == _selectedAddress)['province'];
+
+                  Position geo = await GeolocatorHelper().determinePosition();
+                  latitude = geo.latitude;
+                  longitude = geo.longitude;
+
+                  imagesSelectedUrl =
+                      await itemsData.addImageToStorage(imageSelected);
+
+                  var docId = await itemsData.addItemToFireStore(
+                    user!.uid,
+                    _itemNameController.text,
+                    _itemDetailController.text,
+                    _selectedAddress,
+                    province,
+                    _selectedCategory,
+                    _selectedSubCategory,
+                    imagesSelectedUrl,
+                    item.itemType,
+                    latitude!,
+                    longitude!,
+                    'off'
+                  );
+                  var firstOfferItemId = item.id;
+                  var firstUserId = item.ownerid;
+                  var secondOfferItemId = docId;
+                  var secondUserId = user!.uid;
+
+                  await offers.addOfferToFireBase(
+                    firstUserId,
+                    secondUserId,
+                    firstOfferItemId,
+                    secondOfferItemId,
+                    'offer',
+                  );
+
+                  setState(() {
+                    isAddItemLoading = false;
+                  });
+                }),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

@@ -13,6 +13,7 @@ class Item {
   String itemType;
   double latitude;
   double longitude;
+  String status;
   int timestamp;
 
   Item({
@@ -28,10 +29,11 @@ class Item {
     required this.itemType,
     required this.latitude,
     required this.longitude,
+    required this.status,
     required this.timestamp,
   });
 
-  factory Item.fromMap(QueryDocumentSnapshot<Map<String, dynamic>> item) {
+  factory Item.fromQueryDocumentSnapshot(QueryDocumentSnapshot<Map<String, dynamic>> item) {
     var itemMap = item.data();
     return Item(
       id: item.id,
@@ -46,6 +48,27 @@ class Item {
       itemType: itemMap['itemType'],
       latitude: itemMap['latitude'],
       longitude: itemMap['longitude'],
+      status: itemMap['status'],
+      timestamp: itemMap['timestamp'],
+    );
+  }
+
+    factory Item.fromDocumentSnapshot(DocumentSnapshot<Map<String, dynamic>>? item) {
+    var itemMap = item!.data()!;
+    return Item(
+      id: item.id,
+      ownerid: itemMap['ownerId'],
+      name: itemMap['name'],
+      detail: itemMap['detail'],
+      address: itemMap['address'],
+      province: itemMap['province'],
+      category: itemMap['category'],
+      subCategory: itemMap['subCategory'],
+      imagesUrl: itemMap['imagesUrl'],
+      itemType: itemMap['itemType'],
+      latitude: itemMap['latitude'],
+      longitude: itemMap['longitude'],
+      status: itemMap['status'],
       timestamp: itemMap['timestamp'],
     );
   }
@@ -62,6 +85,7 @@ class Item {
     String itemType,
     double latitude,
     double longitude,
+    String status,
     int timestamp,
   ) {
     return {
@@ -76,6 +100,7 @@ class Item {
       "itemType": itemType,
       "latitude": latitude,
       "longitude": longitude,
+      "status": status,
       "timestamp": timestamp,
     };
   }

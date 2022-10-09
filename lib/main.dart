@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:exshange/providers/authentication.dart';
 import 'package:exshange/providers/items.dart';
+import 'package:exshange/providers/offers.dart';
 import 'package:exshange/providers/user_data.dart';
 import 'package:exshange/screens/home/add_address_screen.dart';
 import 'package:exshange/screens/home/add_item_screen.dart';
@@ -35,9 +36,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        // ChangeNotifierProvider(
-        //   create: (ctx) => Auth(),
-        // ),
+        ChangeNotifierProvider(
+          create: (ctx) => Offers(),
+        ),
         ChangeNotifierProvider<Authentication>(
           create: (ctx) => Authentication(),
         ),

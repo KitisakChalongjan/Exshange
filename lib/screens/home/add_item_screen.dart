@@ -25,7 +25,7 @@ class AddItemScreen extends StatefulWidget {
 }
 
 class _AddItemScreenState extends State<AddItemScreen> {
-  final User? user = FirebaseAuth.instance.currentUser;
+  User? user;
 
   TextEditingController _itemNameController = TextEditingController();
   TextEditingController _itemDetailController = TextEditingController();
@@ -68,6 +68,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
 
   @override
   Widget build(BuildContext context) {
+    user = FirebaseAuth.instance.currentUser;
     var itemsData = context.read<Items>();
     var userModel = context.watch<UserData>().userModel;
     List<Map<String, dynamic>> addresses = userModel!.addresses;
@@ -153,6 +154,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
                               for (var image in images) {
                                 imageSelected.add(image);
                               }
+                              print(imageSelected);
                               setState(() {});
                             }
                           },
@@ -169,6 +171,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
                             if (image == null) {
                               return;
                             } else {
+                              print(imageSelected);
                               setState(() {
                                 imageSelected.add(image);
                               });
@@ -498,6 +501,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
                   selectedType!,
                   latitude!,
                   longitude!,
+                  'on'
                 );
 
                 setState(() {

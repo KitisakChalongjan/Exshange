@@ -16,7 +16,6 @@ class MyItemsScreen extends StatefulWidget {
 }
 
 class _MyItemsScreenState extends State<MyItemsScreen> {
-
   var datetimeHelper = DateTimeHelper();
   @override
   Widget build(BuildContext context) {
@@ -27,102 +26,104 @@ class _MyItemsScreenState extends State<MyItemsScreen> {
         .where(
           (item) => item.ownerid == user!.uid,
         )
+        .where(
+          (item) => item.status == 'on',
+        )
         .toList();
     return Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title: Text('รายการของฉัน'),
-        ),
-        body: ListView.builder(
-          itemCount: myItems.length,
-          itemBuilder: ((context, index) {
-            return Container(
-              margin: EdgeInsets.symmetric(horizontal: 20),
-              height: 140,
-              child: Card(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Expanded(
-                        flex: 3,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.horizontal(
-                            left: Radius.circular(15),
-                          ),
-                          child: Image.network(
-                            myItems[index].imagesUrl[0],
-                            fit: BoxFit.cover,
-                          ),
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text('รายการของฉัน'),
+      ),
+      body: ListView.builder(
+        itemCount: myItems.length,
+        itemBuilder: ((context, index) {
+          return Container(
+            margin: EdgeInsets.symmetric(horizontal: 20),
+            height: 140,
+            child: Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: SizedBox(
+                width: double.infinity,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Expanded(
+                      flex: 3,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.horizontal(
+                          left: Radius.circular(15),
+                        ),
+                        child: Image.network(
+                          myItems[index].imagesUrl[0],
+                          fit: BoxFit.cover,
                         ),
                       ),
-                      Expanded(
-                        flex: 6,
-                        child: ClipRRect(
-                            borderRadius: BorderRadius.horizontal(
-                              right: Radius.circular(15),
-                            ),
-                            child: Container(
-                              padding: EdgeInsets.all(20),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Container(
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                          '${myItems[index].name}',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyText1,
+                    ),
+                    Expanded(
+                      flex: 6,
+                      child: ClipRRect(
+                          borderRadius: BorderRadius.horizontal(
+                            right: Radius.circular(15),
+                          ),
+                          child: Container(
+                            padding: EdgeInsets.all(20),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Container(
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        '${myItems[index].name}',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1,
+                                      ),
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(5)),
+                                          color: myItems[index].itemType ==
+                                                  'ให้'
+                                              ? Theme.of(context).accentColor
+                                              : Theme.of(context).primaryColor,
                                         ),
-                                        Container(
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(5)),
-                                            color: myItems[index].itemType ==
-                                                    'บริจาค'
-                                                ? Theme.of(context).accentColor
-                                                : Theme.of(context)
-                                                    .primaryColor,
+                                        child: Container(
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: 5,
                                           ),
-                                          child: Container(
-                                            padding: EdgeInsets.symmetric(
-                                              horizontal: 5,
-                                            ),
-                                            child: Text(
-                                              '${myItems[index].itemType}',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .subtitle1,
-                                            ),
+                                          child: Text(
+                                            '${myItems[index].itemType}',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .subtitle1,
                                           ),
-                                        )
-                                      ],
-                                    ),
+                                        ),
+                                      )
+                                    ],
                                   ),
-                                  Text(
-                                    '${datetimeHelper.timestampToDateTIme(myItems[index].timestamp)}',
-                                    style:
-                                        Theme.of(context).textTheme.caption,
-                                  )
-                                ],
-                              ),
-                            )),
-                      ),
-                    ],
-                  ),
+                                ),
+                                Text(
+                                  '${datetimeHelper.timestampToDateTIme(myItems[index].timestamp)}',
+                                  style: Theme.of(context).textTheme.caption,
+                                )
+                              ],
+                            ),
+                          )),
+                    ),
+                  ],
                 ),
               ),
-            );
-          }),
-        ));
+            ),
+          );
+        }),
+      ),
+    );
   }
 }
