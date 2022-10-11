@@ -39,6 +39,7 @@ class _ItemOverviewScreenState extends State<ItemOverviewScreen> {
         .watch<Items>()
         .items
         .where((item) => item.ownerid != user!.uid)
+        .where((item) => item.status != 'off')
         .toList();
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,

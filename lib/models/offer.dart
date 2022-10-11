@@ -8,8 +8,7 @@ class Offer {
   UserModel secondUser;
   Item firstOfferItem;
   Item secondOfferItem;
-
-  String userStatus;
+  String status;
   int createdTimestamp;
 
   Offer({
@@ -18,22 +17,9 @@ class Offer {
     required this.secondUser,
     required this.firstOfferItem,
     required this.secondOfferItem,
-    required this.userStatus,
+    required this.status,
     required this.createdTimestamp,
   });
-
-  factory Offer.fromMap(QueryDocumentSnapshot<Map<String, dynamic>> offer) {
-    var itemMap = offer.data();
-    return Offer(
-      id: offer.id,
-      firstUser: offer['firstOfferItemId'],
-      secondUser: offer['firstUserId'],
-      firstOfferItem: offer['secondOfferItemId'],
-      secondOfferItem: offer['secondUserId'],
-      userStatus: offer['userStatus'],
-      createdTimestamp: offer['createdTimestamp'],
-    );
-  }
 
   static Map<String, dynamic> toMap(
     String firstUserId,
@@ -72,9 +58,9 @@ class Offer {
   set setSecondOfferItem(secondOfferItem) =>
       this.secondOfferItem = secondOfferItem;
 
-  get getUserStatus => this.userStatus;
+  get getStatus => this.status;
 
-  set setUserStatus(userStatus) => this.userStatus = userStatus;
+  set setStatus(status) => this.status = status;
 
   get getCreatedTimestamp => this.createdTimestamp;
 

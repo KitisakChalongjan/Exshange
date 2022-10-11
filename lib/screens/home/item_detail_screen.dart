@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:exshange/models/user.dart';
 import 'package:exshange/providers/items.dart';
+import 'package:exshange/screens/home/donate_screen.dart';
 import 'package:exshange/screens/home/item_overview_screen.dart';
 import 'package:exshange/screens/home/offer_screen.dart';
 import 'package:flutter/material.dart';
@@ -196,7 +197,9 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
       bottomNavigationBar: GestureDetector(
         onTap: (() {
           Navigator.of(context).pushNamed(
-            OfferScreen().routeName,
+            item.itemType == 'แลก'
+                ? OfferScreen().routeName
+                : DonateScreen().routeName,
             arguments: ItemArgs(
               args.itemId,
               args.index,

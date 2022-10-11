@@ -48,7 +48,7 @@ class Offers with ChangeNotifier {
             secondUser.id, secondUser.data()!, secondUserAddress),
         firstOfferItem: Item.fromDocumentSnapshot(firstItem),
         secondOfferItem: Item.fromDocumentSnapshot(secondItem),
-        userStatus: status,
+        status: status,
         createdTimestamp: createdTimestamp,
       );
       tempOffers.add(offer);

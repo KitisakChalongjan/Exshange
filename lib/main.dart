@@ -5,6 +5,7 @@ import 'package:exshange/providers/offers.dart';
 import 'package:exshange/providers/user_data.dart';
 import 'package:exshange/screens/home/add_address_screen.dart';
 import 'package:exshange/screens/home/add_item_screen.dart';
+import 'package:exshange/screens/home/donate_screen.dart';
 import 'package:exshange/screens/home/offer_screen.dart';
 import 'package:exshange/screens/profile/edit_profile_screen.dart';
 import 'package:exshange/screens/home/filter_screen.dart';
@@ -139,6 +140,7 @@ class MyApp extends StatelessWidget {
           MyCategoriesScreen().routeName: (context) => MyCategoriesScreen(),
           MyAddressScreen().routeName: (context) => MyAddressScreen(),
           OfferScreen().routeName: (context) => OfferScreen(),
+          DonateScreen().routeName: (context) => DonateScreen(),
         },
       ),
     );
