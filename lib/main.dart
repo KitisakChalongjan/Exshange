@@ -7,6 +7,7 @@ import 'package:exshange/screens/home/add_address_screen.dart';
 import 'package:exshange/screens/home/add_item_screen.dart';
 import 'package:exshange/screens/home/donate_screen.dart';
 import 'package:exshange/screens/home/offer_screen.dart';
+import 'package:exshange/screens/profile/edit_address_screen.dart';
 import 'package:exshange/screens/profile/edit_profile_screen.dart';
 import 'package:exshange/screens/home/filter_screen.dart';
 import 'package:exshange/screens/home_screen.dart';
@@ -63,7 +64,7 @@ class MyApp extends StatelessWidget {
           accentColor: Color(0xFF1DD6B0),
           errorColor: Colors.red,
           primaryColorLight: Color(0xFFFF916A),
-          focusColor: Color(0xFF4BD9BC) ,
+          focusColor: Color(0xFF4BD9BC),
           hintColor: Color.fromARGB(255, 80, 80, 80),
           backgroundColor: Color(0xFFF4F0EF),
           textTheme: const TextTheme(
@@ -141,6 +142,7 @@ class MyApp extends StatelessWidget {
           MyAddressScreen().routeName: (context) => MyAddressScreen(),
           OfferScreen().routeName: (context) => OfferScreen(),
           DonateScreen().routeName: (context) => DonateScreen(),
+          EditAddressScreen().routeName: (context) => EditAddressScreen(),
         },
       ),
     );
