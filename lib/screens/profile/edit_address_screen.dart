@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:exshange/helpers/provinces.dart';
 import 'package:exshange/providers/authentication.dart';
 import 'package:exshange/providers/user_data.dart';
+import 'package:exshange/screens/profile/my_address_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
@@ -26,10 +27,17 @@ class _EditAddressScreenState extends State<EditAddressScreen> {
 
   String _selectedProvince = 'กรุงเทพฯ';
 
+  var flag = true;
+
   TextEditingController _itemAddressController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    final args = ModalRoute.of(context)!.settings.arguments as AddressArgs;
+    if (flag) {
+      _selectedProvince = args.province;
+      flag = false;
+    }
     User? user = context.read<Authentication>().currentUser;
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
@@ -65,7 +73,7 @@ class _EditAddressScreenState extends State<EditAddressScreen> {
                     enabledBorder: InputBorder.none,
                     errorBorder: InputBorder.none,
                     disabledBorder: InputBorder.none,
-                    hintText: "ที่อยู่"),
+                    hintText: args.address),
                 minLines: 4,
                 maxLines: 8,
                 controller: _itemAddressController,
@@ -120,14 +128,21 @@ class _EditAddressScreenState extends State<EditAddressScreen> {
       ),
       bottomNavigationBar: GestureDetector(
         onTap: () async {
+          var address;
+          if(_itemAddressController.text == ''){
+            address = args.address;
+          }
+          else{
+            address = _itemAddressController.text;
+          }
           var newAddress = {
-            'address': _itemAddressController.text,
+            'address': address,
             'province': _selectedProvince,
             'userId': user!.uid,
           };
-          db.collection('userAddress').add(newAddress);
+          db.collection('userAddress').doc(args.addressId).set(newAddress);
 
-          print('New Address Added! => ${newAddress}');
+          print('Edit Address at => ${args.addressId}');
           await context.read<UserData>().fetchUserData(user.uid);
           Navigator.of(context).pop();
           // WTF!!

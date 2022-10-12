@@ -51,7 +51,17 @@ class _MyDealScreenState extends State<MyDealScreen> {
           } else {
             return Column(
               children: [
-                SizedBox(
+                Container(
+                  decoration: BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.25),
+                        spreadRadius: 1,
+                        blurRadius: 3,
+                        offset: Offset(1, 3),
+                      )
+                    ],
+                  ),
                   height: 40,
                   width: double.infinity,
                   child: Row(children: [
@@ -71,15 +81,15 @@ class _MyDealScreenState extends State<MyDealScreen> {
                           height: double.infinity,
                           decoration: BoxDecoration(
                             color: offerTab == true
-                                ? Theme.of(context).primaryColorLight
-                                : Colors.white,
+                                ? Colors.white
+                                : Theme.of(context).primaryColorLight,
                           ),
                           child: Center(
                             child: Text(
                               'ข้อเสนอของฉัน',
                               style: offerTab == true
-                                  ? Theme.of(context).textTheme.bodyText2
-                                  : Theme.of(context).textTheme.bodyText1,
+                                  ? Theme.of(context).textTheme.bodyText1
+                                  : Theme.of(context).textTheme.bodyText2,
                             ),
                           ),
                         ),
@@ -101,21 +111,24 @@ class _MyDealScreenState extends State<MyDealScreen> {
                           height: double.infinity,
                           decoration: BoxDecoration(
                             color: offerTab == true
-                                ? Colors.white
-                                : Theme.of(context).primaryColorLight,
+                                ? Theme.of(context).primaryColorLight
+                                : Colors.white,
                           ),
                           child: Center(
                             child: Text(
                               'ข้อเสนอที่ได้รับ',
                               style: offerTab == true
-                                  ? Theme.of(context).textTheme.bodyText1
-                                  : Theme.of(context).textTheme.bodyText2,
+                                  ? Theme.of(context).textTheme.bodyText2
+                                  : Theme.of(context).textTheme.bodyText1,
                             ),
                           ),
                         ),
                       ),
                     ),
                   ]),
+                ),
+                SizedBox(
+                  height: 20,
                 ),
                 Expanded(
                   child: ListView.builder(

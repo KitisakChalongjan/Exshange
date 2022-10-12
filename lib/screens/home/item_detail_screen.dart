@@ -201,8 +201,8 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                 ? OfferScreen().routeName
                 : DonateScreen().routeName,
             arguments: ItemArgs(
-              args.itemId,
-              args.index,
+              itemId: args.itemId,
+              index: args.index,
             ),
           );
         }),

@@ -17,10 +17,10 @@ class ItemArgs {
   String itemId;
   int index;
 
-  ItemArgs(
-    this.itemId,
-    this.index,
-  );
+  ItemArgs({
+    required this.itemId,
+    required this.index,
+});
 }
 
 class ItemOverviewScreen extends StatefulWidget {
@@ -130,8 +130,8 @@ class _ItemOverviewScreenState extends State<ItemOverviewScreen> {
                             Navigator.of(context).pushNamed(
                               ItemDetailScreen().routeName,
                               arguments: ItemArgs(
-                                itemsData[index].id,
-                                index,
+                                itemId: itemsData[index].id,
+                                index: index,
                               ),
                             );
                           },

@@ -1,9 +1,25 @@
+import 'package:exshange/providers/user_data.dart';
 import 'package:exshange/screens/home/add_address_screen.dart';
 import 'package:exshange/screens/profile/edit_address_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:provider/provider.dart';
+
+class AddressArgs {
+  String address;
+  String province;
+  String userId;
+  String addressId;
+
+  AddressArgs({
+    required this.address,
+    required this.province,
+    required this.userId,
+    required this.addressId,
+  });
+}
 
 class MyAddressScreen extends StatefulWidget {
   const MyAddressScreen({Key? key}) : super(key: key);
@@ -16,6 +32,8 @@ class MyAddressScreen extends StatefulWidget {
 class _MyAddressScreenState extends State<MyAddressScreen> {
   @override
   Widget build(BuildContext context) {
+    var addresses = context.watch<UserData>().userModel!.addresses;
+    
     return Scaffold(
       appBar: AppBar(
         title: Text('ที่อยู่ของฉัน'),
@@ -24,7 +42,15 @@ class _MyAddressScreenState extends State<MyAddressScreen> {
         itemBuilder: ((context, index) {
           return GestureDetector(
             onTap: () {
-              Navigator.of(context).pushNamed(EditAddressScreen().routeName);
+              Navigator.of(context).pushNamed(
+                EditAddressScreen().routeName,
+                arguments: AddressArgs(
+                  address: addresses[index]['address'],
+                  province: addresses[index]['province'],
+                  userId: addresses[index]['userId'],
+                  addressId: addresses[index]['addressId'],
+                ),
+              );
             },
             child: Container(
               margin: EdgeInsets.symmetric(horizontal: 20),
@@ -33,23 +59,31 @@ class _MyAddressScreenState extends State<MyAddressScreen> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15),
                 ),
-                child: Column(
-                  children: [
-                    Text(
-                      index.toString(),
-                      style: Theme.of(context).textTheme.bodyText1,
-                    ),
-                    Text(
-                      "bangkok 1995",
-                      style: Theme.of(context).textTheme.bodyText1,
-                    ),
-                  ],
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        index.toString(),
+                        style: Theme.of(context).textTheme.subtitle2,
+                      ),
+                      Text(
+                        addresses[index]['address'],
+                        style: Theme.of(context).textTheme.subtitle2,
+                      ),
+                      Text(
+                        addresses[index]['addressId'],
+                        style: Theme.of(context).textTheme.subtitle2,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
           );
         }),
-        itemCount: 2,
+        itemCount: addresses.length,
       ),
       bottomNavigationBar: GestureDetector(
         onTap: () {

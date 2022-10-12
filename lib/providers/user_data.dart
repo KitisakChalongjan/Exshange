@@ -47,6 +47,7 @@ class UserData with ChangeNotifier {
 
     print('UserId(${_userModel!.userId})');
     print('Fetch User\'s Data Successful!');
+    notifyListeners();
     return 'done';
   }
 

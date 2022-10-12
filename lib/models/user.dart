@@ -29,7 +29,7 @@ class UserModel {
 
   set phone(value) => this._phone = value;
 
-  get addresses => this._addresses;
+  List<Map<String, dynamic>> get addresses => this._addresses;
 
   set addresses(value) => this._addresses = value;
 
@@ -78,7 +78,9 @@ class UserModel {
   ) {
     List<Map<String, dynamic>> addresses = [];
     for (var element in dataAddress) {
-      addresses.add(element.data());
+      var addressData = element.data();
+      addressData.addEntries(<String, dynamic>{'addressId': element.id}.entries);
+      addresses.add(addressData);
     }
     return UserModel(
         uid,
