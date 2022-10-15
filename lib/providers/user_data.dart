@@ -9,7 +9,6 @@ import 'package:image_picker/image_picker.dart';
 class UserData with ChangeNotifier {
   FirebaseFirestore db = FirebaseFirestore.instance;
 
-
   UserModel? _userModel;
 
   UserModel? get userModel {
@@ -22,16 +21,6 @@ class UserData with ChangeNotifier {
 
   Future<String> fetchUserData(String uid) async {
     String userId = uid;
-    String email;
-    String name;
-    String phone;
-    List<Map<String, dynamic>> addresses = [];
-    int tradeCount;
-    int donateCount;
-    double rating;
-    List<dynamic> favoriteCategories;
-    List<dynamic> favoriteItems;
-    String profileImageUrl;
 
     var usersRef = db.collection('users').doc('${userId}');
     var userAddressRef =
@@ -51,5 +40,29 @@ class UserData with ChangeNotifier {
     return 'done';
   }
 
-  
+  Future<UserModel> getUserFromId(String uid) async {
+    var usersRef = db.collection('users').doc('${uid}');
+    var userAddressRef =
+        db.collection('userAddress').where('userId', isEqualTo: uid);
+
+    var usersSnapshot = await usersRef.get();
+    var userAddresSnapshot = await userAddressRef.get();
+
+    var usersData = usersSnapshot.data()!;
+    var userAddresData = userAddresSnapshot.docs;
+
+    var user = UserModel.fromMap(uid, usersData, userAddresData);
+
+    return user;
+  }
+
+  Future<String> deleteAddress(String addressId) async {
+    var userAddressRef = db.collection('userAddress').doc(addressId);
+    await userAddressRef.delete();
+    _userModel!.addresses
+        .removeWhere((address) => address['addressId'] == addressId);
+    print('Delete Address(${addressId}) Of User(${_userModel!.userId})');
+    notifyListeners();
+    return 'done';
+  }
 }

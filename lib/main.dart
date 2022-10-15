@@ -15,6 +15,7 @@ import 'package:exshange/screens/home/item_detail_screen.dart';
 import 'package:exshange/screens/login_screen.dart';
 import 'package:exshange/screens/profile/my_address_screen.dart';
 import 'package:exshange/screens/profile/my_category.dart';
+import 'package:exshange/screens/profile/my_deal_detail_screen.dart';
 import 'package:exshange/screens/profile/my_deal_screen.dart';
 import 'package:exshange/screens/profile/my_history_screen.dart';
 import 'package:exshange/screens/profile/my_item_screen.dart';
@@ -143,6 +144,7 @@ class MyApp extends StatelessWidget {
           OfferScreen().routeName: (context) => OfferScreen(),
           DonateScreen().routeName: (context) => DonateScreen(),
           EditAddressScreen().routeName: (context) => EditAddressScreen(),
+          MyDealDetailScreen().routeName: (context) => MyDealDetailScreen(),
         },
       ),
     );

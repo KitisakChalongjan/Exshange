@@ -17,6 +17,7 @@ class _MyCategoriesScreenState extends State<MyCategoriesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
         centerTitle: true,
         title: Text('หมวดหมู่ที่สนใจ'),

@@ -126,7 +126,7 @@ class _AddAdressScreenState extends State<AddAdressScreen> {
             'province': _selectedProvince,
             'userId': user!.uid,
           };
-          db.collection('userAddress').add(newAddress);
+          await db.collection('userAddress').add(newAddress);
 
           print('New Address Added! => ${newAddress}');
           await context.read<UserData>().fetchUserData(user.uid);
