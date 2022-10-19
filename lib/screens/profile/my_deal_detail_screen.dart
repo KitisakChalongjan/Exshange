@@ -1,7 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:exshange/providers/offers.dart';
 import 'package:exshange/screens/profile/my_deal_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter/widgets.dart';
+import 'package:http/http.dart';
+import 'package:provider/provider.dart';
 
 class MyDealDetailScreen extends StatefulWidget {
   const MyDealDetailScreen({Key? key}) : super(key: key);
@@ -12,8 +17,11 @@ class MyDealDetailScreen extends StatefulWidget {
 }
 
 class _MyDealDetailScreenState extends State<MyDealDetailScreen> {
+  FirebaseFirestore db = FirebaseFirestore.instance;
+
   @override
   Widget build(BuildContext context) {
+    var offers = context.read<Offers>();
     final offerArg = ModalRoute.of(context)!.settings.arguments as OfferArge;
     var offer = offerArg.offer;
     var tab = offerArg.offerTab;
@@ -28,7 +36,14 @@ class _MyDealDetailScreenState extends State<MyDealDetailScreen> {
           child: Column(
             children: [
               SizedBox(
-                height: 40,
+                height: 20,
+              ),
+              Text(
+                'คุณ',
+                style: Theme.of(context).textTheme.bodyText1,
+              ),
+              SizedBox(
+                height: 10,
               ),
               Container(
                 decoration: BoxDecoration(
@@ -55,13 +70,29 @@ class _MyDealDetailScreenState extends State<MyDealDetailScreen> {
                   ),
                 ),
               ),
+              SizedBox(
+                height: 10,
+              ),
+              Text(
+                tab == true
+                    ? offer.secondOfferItem.name
+                    : offer.firstOfferItem.name,
+                style: Theme.of(context).textTheme.bodyText1,
+              ),
               Container(
                 margin: EdgeInsets.symmetric(vertical: 20),
                 child: Icon(
                   Icons.loop_sharp,
                   color: Colors.black,
-                  size: 40,
+                  size: 60,
                 ),
+              ),
+              Text(
+                'อีกคน',
+                style: Theme.of(context).textTheme.bodyText1,
+              ),
+              SizedBox(
+                height: 10,
               ),
               Container(
                 decoration: BoxDecoration(
@@ -89,7 +120,7 @@ class _MyDealDetailScreenState extends State<MyDealDetailScreen> {
                 ),
               ),
               SizedBox(
-                height: 20,
+                height: 10,
               ),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 40),
@@ -236,7 +267,27 @@ class _MyDealDetailScreenState extends State<MyDealDetailScreen> {
                     style: Theme.of(context).textTheme.bodyText2,
                   ),
                 ),
-                onTap: (() async {}),
+                onTap: (() async {
+                  print(offer.id);
+                  var updateOfferStatus =
+                      await db.collection('offers').doc(offer.id).update({
+                    'status': 'accepted',
+                  });
+                  var responseOffer =
+                      await db.collection('offers').doc(offer.id).get();
+                  var responseOfferData = responseOffer.data();
+                  if (responseOfferData!['status'] == 'accepted') {
+                    print('Offer Id : ${responseOffer.id} Updated!');
+                    print(
+                        'Status From : \'offer\' ==> ${responseOfferData['status']}');
+                    offers.fetchMyOffersData();
+                  } else {
+                    print('Update Offer Status Failed :');
+                  }
+                  if (!mounted) return;
+                  offers.notify();
+                  Navigator.pop(context);
+                }),
               ),
             ),
           ],

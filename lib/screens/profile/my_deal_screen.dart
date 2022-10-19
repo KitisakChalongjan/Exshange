@@ -23,20 +23,6 @@ class _MyDealScreenState extends State<MyDealScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var offers = context.read<Offers>();
-    var user = context.read<Authentication>().currentUser;
-    offers.fetchMyOffersData();
-    var myOffers = offers.offers;
-    List<Offer> selectedOffer;
-    if (offerTab == true) {
-      selectedOffer = myOffers
-          .where((offer) => offer.secondUser.userId == user!.uid)
-          .toList();
-    } else {
-      selectedOffer = myOffers
-          .where((offer) => offer.firstUser.userId == user!.uid)
-          .toList();
-    }
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
@@ -124,11 +110,7 @@ class _MyDealScreenState extends State<MyDealScreen> {
           SizedBox(
             height: 20,
           ),
-          OfferListWidget(
-              selectedOffer: selectedOffer,
-              offerTab: offerTab,
-              myOffers: myOffers,
-              datetimeHelper: datetimeHelper),
+          OfferListWidget(offerTab: offerTab, datetimeHelper: datetimeHelper),
         ],
       ),
     );
@@ -145,15 +127,10 @@ class OfferArge {
 class OfferListWidget extends StatefulWidget {
   const OfferListWidget({
     Key? key,
-    required this.selectedOffer,
     required this.offerTab,
-    required this.myOffers,
     required this.datetimeHelper,
   }) : super(key: key);
-
-  final List<Offer> selectedOffer;
   final bool offerTab;
-  final List<Offer> myOffers;
   final DateTimeHelper datetimeHelper;
 
   @override
@@ -164,7 +141,7 @@ class _OfferListWidgetState extends State<OfferListWidget> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: context.read<Offers>().fetchMyOffersData(),
+      future: context.watch<Offers>().fetchMyOffersData(),
       builder: ((context, snapshot) {
         if (!snapshot.hasData) {
           print('circle');
@@ -172,18 +149,36 @@ class _OfferListWidgetState extends State<OfferListWidget> {
             child: CircularProgressIndicator(),
           );
         } else {
+          var offers = context.read<Offers>();
+          var user = context.read<Authentication>().currentUser;
+          var myOffers = offers.offers;
+          List<Offer> selectedOffer;
+          var onOfferOffers =
+              myOffers.where((offer) => offer.status == 'offer').toList();
+          if (widget.offerTab == true) {
+            selectedOffer = onOfferOffers
+                .where((offer) => offer.secondUser.userId == user!.uid)
+                .where((offer) => offer.status == 'offer')
+                .toList();
+          } else {
+            selectedOffer = onOfferOffers
+                .where((offer) => offer.firstUser.userId == user!.uid)
+                .where((offer) => offer.status == 'offer')
+                .toList();
+          }
           print('done');
           return Expanded(
             child: ListView.builder(
-              itemCount: widget.selectedOffer.length,
+              itemCount: selectedOffer.length,
               itemBuilder: ((context, index) {
                 return GestureDetector(
                   onTap: (() {
                     Navigator.of(context).pushNamed(
                       const MyDealDetailScreen().routeName,
                       arguments: OfferArge(
-                          offer: widget.selectedOffer[index],
-                          offerTab: widget.offerTab),
+                        offer: selectedOffer[index],
+                        offerTab: widget.offerTab,
+                      ),
                     );
                   }),
                   child: Container(
@@ -207,10 +202,12 @@ class _OfferListWidgetState extends State<OfferListWidget> {
                                   children: [
                                     Text(
                                       widget.offerTab == true
-                                          ? widget.selectedOffer[index]
-                                              .secondOfferItem.name
-                                          : widget.selectedOffer[index]
-                                              .firstOfferItem.name,
+                                          ? selectedOffer[index]
+                                              .secondOfferItem
+                                              .name
+                                          : selectedOffer[index]
+                                              .firstOfferItem
+                                              .name,
                                       style:
                                           Theme.of(context).textTheme.subtitle2,
                                     ),
@@ -231,15 +228,13 @@ class _OfferListWidgetState extends State<OfferListWidget> {
                                               BorderRadius.circular(10),
                                           child: widget.offerTab == true
                                               ? Image.network(
-                                                  widget
-                                                      .selectedOffer[index]
+                                                  selectedOffer[index]
                                                       .secondOfferItem
                                                       .imagesUrl[0],
                                                   fit: BoxFit.cover,
                                                 )
                                               : Image.network(
-                                                  widget
-                                                      .selectedOffer[index]
+                                                  selectedOffer[index]
                                                       .firstOfferItem
                                                       .imagesUrl[0],
                                                   fit: BoxFit.cover,
@@ -249,10 +244,8 @@ class _OfferListWidgetState extends State<OfferListWidget> {
                                     ),
                                     Text(
                                       widget.offerTab == true
-                                          ? widget.selectedOffer[index]
-                                              .secondUser.name
-                                          : widget.selectedOffer[index]
-                                              .firstUser.name,
+                                          ? selectedOffer[index].secondUser.name
+                                          : selectedOffer[index].firstUser.name,
                                       style:
                                           Theme.of(context).textTheme.subtitle2,
                                     ),
@@ -266,8 +259,9 @@ class _OfferListWidgetState extends State<OfferListWidget> {
                                 margin: EdgeInsets.symmetric(horizontal: 20),
                                 child: Icon(Icons.loop_sharp,
                                     size: 40,
-                                    color: widget.selectedOffer[index]
-                                                .firstOfferItem.itemType ==
+                                    color: selectedOffer[index]
+                                                .firstOfferItem
+                                                .itemType ==
                                             'ให้'
                                         ? Theme.of(context).accentColor
                                         : Theme.of(context).primaryColor),
@@ -282,10 +276,12 @@ class _OfferListWidgetState extends State<OfferListWidget> {
                                   children: [
                                     Text(
                                       widget.offerTab == true
-                                          ? widget.selectedOffer[index]
-                                              .firstOfferItem.name
-                                          : widget.selectedOffer[index]
-                                              .secondOfferItem.name,
+                                          ? selectedOffer[index]
+                                              .firstOfferItem
+                                              .name
+                                          : selectedOffer[index]
+                                              .secondOfferItem
+                                              .name,
                                       style:
                                           Theme.of(context).textTheme.subtitle2,
                                     ),
@@ -306,15 +302,13 @@ class _OfferListWidgetState extends State<OfferListWidget> {
                                               BorderRadius.circular(10),
                                           child: widget.offerTab == true
                                               ? Image.network(
-                                                  widget
-                                                      .selectedOffer[index]
+                                                  selectedOffer[index]
                                                       .firstOfferItem
                                                       .imagesUrl[0],
                                                   fit: BoxFit.cover,
                                                 )
                                               : Image.network(
-                                                  widget
-                                                      .selectedOffer[index]
+                                                  selectedOffer[index]
                                                       .secondOfferItem
                                                       .imagesUrl[0],
                                                   fit: BoxFit.cover,
@@ -324,10 +318,10 @@ class _OfferListWidgetState extends State<OfferListWidget> {
                                     ),
                                     Text(
                                       widget.offerTab == true
-                                          ? widget.selectedOffer[index]
-                                              .firstUser.name
-                                          : widget.selectedOffer[index]
-                                              .secondUser.name,
+                                          ? selectedOffer[index].firstUser.name
+                                          : selectedOffer[index]
+                                              .secondUser
+                                              .name,
                                       style:
                                           Theme.of(context).textTheme.subtitle2,
                                     ),

@@ -23,6 +23,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
   Future<Map<String, dynamic>?> getItemOwnerData(String id) async {
     var docItemOwner = await db.collection('users').doc('${id}').get();
     var dataItemOwner = docItemOwner.data();
+    await Future.delayed(const Duration(seconds: 3));
     return dataItemOwner;
   }
 
@@ -184,8 +185,38 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                           ),
                         );
                       }
-                      snapshot.data;
-                      return SizedBox();
+                      return SizedBox(
+                        height: 60,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                CircleAvatar(
+                                  radius: 40,
+                                  child: CircleAvatar(
+                                      child: null),
+                                ),
+                                Text(
+                                  'loading',
+                                  style: Theme.of(context).textTheme.bodyText1,
+                                ),
+                              ],
+                            ),
+                            Container(
+                              margin: EdgeInsets.symmetric(horizontal: 10),
+                              padding: EdgeInsets.all(5),
+                              child: Icon(
+                                size: 30,
+                                color: Theme.of(context).hintColor,
+                                Icons.chat_bubble,
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
                     }),
                   ),
                 ],

@@ -17,6 +17,7 @@ import 'package:exshange/screens/profile/my_address_screen.dart';
 import 'package:exshange/screens/profile/my_category.dart';
 import 'package:exshange/screens/profile/my_deal_detail_screen.dart';
 import 'package:exshange/screens/profile/my_deal_screen.dart';
+import 'package:exshange/screens/profile/my_history_detail_screen.dart';
 import 'package:exshange/screens/profile/my_history_screen.dart';
 import 'package:exshange/screens/profile/my_item_screen.dart';
 import 'package:exshange/screens/splash_screen.dart';
@@ -138,6 +139,7 @@ class MyApp extends StatelessWidget {
           EditProfileScreen().routeName: (context) => EditProfileScreen(),
           MyItemsScreen().routeName: (context) => MyItemsScreen(),
           MyHistoryScreen().routeName: (context) => MyHistoryScreen(),
+          MyHistoryDetailScreen().routeName: (context) => MyHistoryDetailScreen(),
           MyDealScreen().routeName: (context) => MyDealScreen(),
           MyCategoriesScreen().routeName: (context) => MyCategoriesScreen(),
           MyAddressScreen().routeName: (context) => MyAddressScreen(),

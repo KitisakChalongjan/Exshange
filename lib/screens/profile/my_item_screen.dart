@@ -31,6 +31,7 @@ class _MyItemsScreenState extends State<MyItemsScreen> {
         )
         .toList();
     return Scaffold(
+      backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
         centerTitle: true,
         title: Text('รายการของฉัน'),
@@ -39,7 +40,7 @@ class _MyItemsScreenState extends State<MyItemsScreen> {
         itemCount: myItems.length,
         itemBuilder: ((context, index) {
           return Container(
-            margin: EdgeInsets.symmetric(horizontal: 20),
+            margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
             height: 140,
             child: Card(
               shape: RoundedRectangleBorder(

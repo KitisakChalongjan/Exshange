@@ -55,8 +55,11 @@ class Offers with ChangeNotifier {
     }
     _offers = tempOffers;
     print('Fetch Offers Data Successful!');
-    notifyListeners();
     return 'done';
+  }
+
+  void notify(){
+    notifyListeners();
   }
 
   Future<String> addOfferToFireBase(
