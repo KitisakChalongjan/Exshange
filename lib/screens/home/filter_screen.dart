@@ -1,9 +1,12 @@
 import 'package:exshange/models/item.dart';
 import 'package:exshange/helpers/categories.dart';
+import 'package:exshange/providers/filter.dart';
 import 'package:exshange/providers/items.dart';
+import 'package:exshange/screens/home/item_overview_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:provider/provider.dart';
 
 class FilterScreen extends StatefulWidget {
   const FilterScreen({Key? key}) : super(key: key);
@@ -13,22 +16,22 @@ class FilterScreen extends StatefulWidget {
   State<FilterScreen> createState() => _FilterScreenState();
 }
 
-
 class _FilterScreenState extends State<FilterScreen> {
-
   final allCategory = Categories().allCategory;
-
-  double distance = 5;
 
   String itemType = 'ทั้งหมด';
 
-  String? selectedCategory = 'หมวดหมู่ทั้งหมด';
-
-  List<String> category2 = ['หมวดหมู่รองทั้งหมด'];
-  String? selectedCategory2 = 'หมวดหมู่รองทั้งหมด';
+  late List<String> category2;
 
   @override
   Widget build(BuildContext context) {
+    var filter = context.watch<Filter>();
+    if (filter.filterCategory != 'หมวดหมู่ทั้งหมด') {
+      category2 = allCategory['${filter.filterCategory}']!.toList();
+      category2.insert(0, 'หมวดหมู่รองทั้งหมด');
+    }if(filter.filterCategory == 'หมวดหมู่ทั้งหมด'){
+      category2 = ['หมวดหมู่รองทั้งหมด'];
+    }
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
@@ -69,7 +72,7 @@ class _FilterScreenState extends State<FilterScreen> {
               child: DropdownButtonHideUnderline(
                 child: DropdownButton<String>(
                   dropdownColor: Colors.white,
-                  value: selectedCategory,
+                  value: filter.filterCategory,
                   items: allCategory.keys
                       .toList()
                       .map(
@@ -85,7 +88,7 @@ class _FilterScreenState extends State<FilterScreen> {
                       .toList(),
                   onChanged: (category) {
                     setState(() {
-                      selectedCategory = category;
+                      filter.filterCategory = category!;
                       allCategory.forEach((key, subCategory) {
                         if (key == category) {
                           category2.clear();
@@ -93,10 +96,11 @@ class _FilterScreenState extends State<FilterScreen> {
                             category2 = ['หมวดหมู่รองทั้งหมด'];
                           }
                           category2.addAll(subCategory);
-                          selectedCategory2 = 'หมวดหมู่รองทั้งหมด';
+                          filter.filterSubCategory = 'หมวดหมู่รองทั้งหมด';
                         }
                       });
-                      print('${selectedCategory} => ${selectedCategory2}');
+                      print(
+                          '${filter.filterCategory} => ${filter.filterSubCategory}');
                     });
                   },
                 ),
@@ -124,7 +128,7 @@ class _FilterScreenState extends State<FilterScreen> {
               child: DropdownButtonHideUnderline(
                 child: DropdownButton<String>(
                   dropdownColor: Colors.white,
-                  value: selectedCategory2,
+                  value: filter.filterSubCategory,
                   items: category2
                       .map(
                         (item) => DropdownMenuItem<String>(
@@ -139,8 +143,9 @@ class _FilterScreenState extends State<FilterScreen> {
                       .toList(),
                   onChanged: (subCategory) {
                     setState(() {
-                      selectedCategory2 = subCategory;
-                      print('${selectedCategory} => ${selectedCategory2}');
+                      filter.filterSubCategory = subCategory!;
+                      print(
+                          '${filter.filterCategory} => ${filter.filterSubCategory}');
                     });
                   },
                 ),
@@ -154,18 +159,18 @@ class _FilterScreenState extends State<FilterScreen> {
               style: Theme.of(context).textTheme.bodyText1,
             ),
             Slider(
-              min: 5.0,
+              min: 1.0,
               max: 1000.0,
-              value: distance,
+              value: filter.filterDistance,
               onChanged: ((value) {
                 setState(() {
-                  distance = value;
-                  print(distance);
+                  filter.filterDistance = value;
+                  print(filter.filterDistance);
                 });
               }),
             ),
             Text(
-              '${distance.toInt()}',
+              '${filter.filterDistance.toInt()}',
               style: Theme.of(context).textTheme.bodyText1,
             ),
             SizedBox(
@@ -178,12 +183,12 @@ class _FilterScreenState extends State<FilterScreen> {
             ElevatedButton(
               style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(
-                      itemType != 'ทั้งหมด'
+                      filter.itemType != 'ทั้งหมด'
                           ? Colors.white
                           : Theme.of(context).primaryColor)),
               onPressed: (() {
                 setState(() {
-                  itemType = 'ทั้งหมด';
+                  filter.itemType = 'ทั้งหมด';
                   print('ทั้งหมด');
                 });
               }),
@@ -192,7 +197,7 @@ class _FilterScreenState extends State<FilterScreen> {
                 height: 30,
                 child: Text(
                   "ทั้งหมด",
-                  style: itemType == 'ทั้งหมด'
+                  style: filter.itemType == 'ทั้งหมด'
                       ? Theme.of(context).textTheme.bodyText2
                       : Theme.of(context).textTheme.bodyText1,
                   textAlign: TextAlign.center,
@@ -202,21 +207,21 @@ class _FilterScreenState extends State<FilterScreen> {
             ElevatedButton(
               style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(
-                      itemType != 'แลกเปลื่ยน'
+                      filter.itemType != 'แลก'
                           ? Colors.white
                           : Theme.of(context).primaryColor)),
               onPressed: (() {
                 setState(() {
-                  itemType = 'แลกเปลื่ยน';
-                  print('แลกเปลื่ยน');
+                  filter.itemType = 'แลก';
+                  print('แลก');
                 });
               }),
               child: Container(
                 width: 100,
                 height: 30,
                 child: Text(
-                  "แลกเปลี่ยน",
-                  style: itemType == 'แลกเปลื่ยน'
+                  "แลก",
+                  style: filter.itemType == 'แลก'
                       ? Theme.of(context).textTheme.bodyText2
                       : Theme.of(context).textTheme.bodyText1,
                   textAlign: TextAlign.center,
@@ -226,21 +231,21 @@ class _FilterScreenState extends State<FilterScreen> {
             ElevatedButton(
               style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(
-                      itemType != 'บริจาค'
+                      filter.itemType != 'ให้'
                           ? Colors.white
                           : Theme.of(context).primaryColor)),
               onPressed: (() {
                 setState(() {
-                  itemType = 'บริจาค';
-                  print('บริจาค');
+                  filter.itemType = 'ให้';
+                  print('ให้');
                 });
               }),
               child: Container(
                 width: 100,
                 height: 30,
                 child: Text(
-                  "บริจาค",
-                  style: itemType == 'บริจาค'
+                  "ให้",
+                  style: filter.itemType == 'ให้'
                       ? Theme.of(context).textTheme.bodyText2
                       : Theme.of(context).textTheme.bodyText1,
                   textAlign: TextAlign.center,
@@ -250,16 +255,22 @@ class _FilterScreenState extends State<FilterScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomAppBar(
-        color: Theme.of(context).primaryColor,
-        child: Container(
-          height: 40,
-          child: Text(
-            "ตกลง",
-            style: Theme.of(context).textTheme.bodyText2,
-            textAlign: TextAlign.center,
+      bottomNavigationBar: GestureDetector(
+        child: BottomAppBar(
+          color: Theme.of(context).primaryColor,
+          child: Container(
+            height: 40,
+            child: Text(
+              "ตกลง",
+              style: Theme.of(context).textTheme.bodyText2,
+              textAlign: TextAlign.center,
+            ),
           ),
         ),
+        onTap: () {
+          filter.noti();
+          Navigator.pop(context);
+        },
       ),
     );
   }

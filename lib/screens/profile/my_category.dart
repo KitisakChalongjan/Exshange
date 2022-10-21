@@ -1,7 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:exshange/helpers/categories.dart';
+import 'package:exshange/providers/authentication.dart';
+import 'package:exshange/providers/user_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:provider/provider.dart';
 
 class MyCategoriesScreen extends StatefulWidget {
   const MyCategoriesScreen({Key? key}) : super(key: key);
@@ -12,10 +16,16 @@ class MyCategoriesScreen extends StatefulWidget {
 }
 
 class _MyCategoriesScreenState extends State<MyCategoriesScreen> {
+  FirebaseFirestore db = FirebaseFirestore.instance;
   List<String> categories = Categories().allCategory.keys.toList().sublist(1);
-  List<String> selectedCategory = [];
+  List<dynamic> selectedCategory = [];
+
+  
   @override
   Widget build(BuildContext context) {
+    var user = context.read<Authentication>().currentUser!;
+    var userData = context.read<UserData>();
+    selectedCategory = userData.userModel!.favoriteCategories;
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
@@ -67,14 +77,25 @@ class _MyCategoriesScreenState extends State<MyCategoriesScreen> {
           ),
         ),
       ),
-      bottomNavigationBar: BottomAppBar(
-        color: Theme.of(context).primaryColor,
-        child: Container(
-          height: 40,
-          child: Text(
-            "ตกลง",
-            style: Theme.of(context).textTheme.bodyText2,
-            textAlign: TextAlign.center,
+      bottomNavigationBar: GestureDetector(
+        onTap: () async {
+          await db
+              .collection('users')
+              .doc(user.uid)
+              .update({'favoriteCategories': selectedCategory});
+          print(selectedCategory);
+          await userData.fetchUserData(user.uid);
+          Navigator.pop(context);
+        },
+        child: BottomAppBar(
+          color: Theme.of(context).primaryColor,
+          child: Container(
+            height: 40,
+            child: Text(
+              "ตกลง",
+              style: Theme.of(context).textTheme.bodyText2,
+              textAlign: TextAlign.center,
+            ),
           ),
         ),
       ),

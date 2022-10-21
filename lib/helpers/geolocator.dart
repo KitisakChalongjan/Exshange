@@ -29,4 +29,8 @@ class GeolocatorHelper {
     // continue accessing the position of the device.
     return await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
   }
+
+  double getDistanceBetween(la1, lo1, la2, lo2){
+    return Geolocator.distanceBetween(la1, lo1, la2, lo2);
+  }
 }

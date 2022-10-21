@@ -16,7 +16,7 @@ import '../providers/auth.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
-
+  final routeName = '/home';
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }

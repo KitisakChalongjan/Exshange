@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:exshange/models/offer.dart';
 import 'package:exshange/providers/authentication.dart';
+import 'package:exshange/providers/offers.dart';
+import 'package:exshange/screens/home_screen.dart';
+import 'package:exshange/screens/profile/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -235,12 +238,14 @@ class _MyHistoryDetailScreenState extends State<MyHistoryDetailScreen> {
         child: GestureDetector(
           child: Container(
             decoration: BoxDecoration(
-              color: Theme.of(context).primaryColor,
+              color: offer.status == 'accepted'
+                  ? Theme.of(context).primaryColor
+                  : Theme.of(context).hintColor,
             ),
             height: 60,
             child: Center(
               child: Text(
-                'ให้คะแนน',
+                offer.status == 'accepted' ? 'ให้คะแนน' : 'ให้คะแนนแล้ว',
                 style: Theme.of(context).textTheme.bodyText2,
               ),
             ),
@@ -291,6 +296,7 @@ class _RatingState extends State<Rating> {
 
   @override
   Widget build(BuildContext context) {
+    var offers = context.read<Offers>();
     var user = context.read<Authentication>().currentUser!;
     return Container(
       margin: EdgeInsets.symmetric(
@@ -304,13 +310,28 @@ class _RatingState extends State<Rating> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Material(
-            color: Colors.white,
-            child: Text(
-              'ให้คะแนน',
-              style: TextStyle(
-                color: Color.fromARGB(255, 230, 186, 8),
-                fontSize: 28,
+          SizedBox(height: 10),
+          Container(
+            margin: EdgeInsets.symmetric(horizontal: 10),
+            width: double.infinity,
+            decoration: BoxDecoration(
+              border: Border(
+                bottom: BorderSide(
+                  color: Theme.of(context).hintColor,
+                  width: 1.0,
+                ),
+              ),
+            ),
+            child: Material(
+              color: Colors.white,
+              child: Center(
+                child: Text(
+                  'ให้คะแนน',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 24,
+                  ),
+                ),
               ),
             ),
           ),
@@ -328,7 +349,46 @@ class _RatingState extends State<Rating> {
                   ),
           ),
           SizedBox(
-            height: 20,
+            height: 10,
+          ),
+          Material(
+            color: Colors.white,
+            child: widget.offer.firstUser.userId == user.uid
+                ? Text(
+                    widget.offer.secondOfferItem.name,
+                    style: Theme.of(context).textTheme.subtitle2,
+                  )
+                : Text(
+                    widget.offer.firstOfferItem.name,
+                    style: Theme.of(context).textTheme.subtitle2,
+                  ),
+          ),
+          SizedBox(
+            height: 4,
+          ),
+          Material(
+            color: Colors.white,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.person,
+                  size: 20,
+                ),
+                widget.offer.firstUser.userId == user.uid
+                    ? Text(
+                        widget.offer.secondUser.name,
+                        style: Theme.of(context).textTheme.subtitle2,
+                      )
+                    : Text(
+                        widget.offer.firstUser.name,
+                        style: Theme.of(context).textTheme.subtitle2,
+                      ),
+              ],
+            ),
+          ),
+          SizedBox(
+            height: 10,
           ),
           Container(
             child: Material(
@@ -354,10 +414,26 @@ class _RatingState extends State<Rating> {
                 borderRadius: BorderRadius.vertical(
                   bottom: Radius.circular(10),
                 ),
-                color: Color.fromARGB(255, 230, 186, 8),
-                child: Center(
-                  child: Container(
-                    child: Text('ให้คะแนน'),
+                color: Colors.white,
+                child: Container(
+                  margin: EdgeInsets.symmetric(horizontal: 10),
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    border: Border(
+                      top: BorderSide(
+                        color: Theme.of(context).hintColor,
+                        width: 1.0,
+                      ),
+                    ),
+                  ),
+                  child: Center(
+                    child: Text(
+                      'ให้คะแนน',
+                      style: TextStyle(
+                        color: Theme.of(context).primaryColor,
+                        fontSize: 24,
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -374,15 +450,27 @@ class _RatingState extends State<Rating> {
               userDoc = await db.collection('users').doc(userIdRef).get();
               var userDataMap = userDoc.data()!;
               var oldRating = userDataMap['rating'];
-              if(oldRating == 0){
+              if (oldRating == 0) {
                 newRating = _stars;
-              }
-              else{
-                newRating = (_stars + oldRating)/2;
+              } else {
+                newRating = (_stars + oldRating) / 2;
               }
               newRating = double.parse(newRating.toStringAsFixed(2));
-              await db.collection('users').doc(userIdRef).update({'rating' : newRating});
+              await db
+                  .collection('users')
+                  .doc(userIdRef)
+                  .update({'rating': newRating});
+              await db
+                  .collection('offers')
+                  .doc(widget.offer.id)
+                  .update({'status': 'done'});
               print('Rating Updated!');
+              offers.fetchMyOffersData();
+              offers.notify();
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                HomeScreen().routeName,
+                (route) => false,
+              );
             }),
           )
           // Column(

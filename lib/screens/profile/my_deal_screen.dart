@@ -145,8 +145,10 @@ class _OfferListWidgetState extends State<OfferListWidget> {
       builder: ((context, snapshot) {
         if (!snapshot.hasData) {
           print('circle');
-          return Center(
-            child: CircularProgressIndicator(),
+          return Expanded(
+            child: Center(
+              child: CircularProgressIndicator(),
+            ),
           );
         } else {
           var offers = context.read<Offers>();

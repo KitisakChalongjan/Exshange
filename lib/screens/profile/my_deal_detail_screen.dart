@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:exshange/providers/authentication.dart';
 import 'package:exshange/providers/offers.dart';
+import 'package:exshange/providers/user_data.dart';
 import 'package:exshange/screens/profile/my_deal_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
@@ -21,6 +23,8 @@ class _MyDealDetailScreenState extends State<MyDealDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var user = context.read<Authentication>().currentUser!;
+    var userData = context.read<UserData>();
     var offers = context.read<Offers>();
     final offerArg = ModalRoute.of(context)!.settings.arguments as OfferArge;
     var offer = offerArg.offer;
@@ -229,10 +233,8 @@ class _MyDealDetailScreenState extends State<MyDealDetailScreen> {
         ),
       ),
       bottomNavigationBar: BottomAppBar(
-        child: Row(
-          children: [
-            Expanded(
-              child: GestureDetector(
+        child: tab == true
+            ? GestureDetector(
                 child: Container(
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
@@ -240,58 +242,127 @@ class _MyDealDetailScreenState extends State<MyDealDetailScreen> {
                   ),
                   height: 60,
                   child: Text(
-                    'ปฏิเสธ',
-                    style: Theme.of(context).textTheme.bodyText2,
-                  ),
-                ),
-                onTap: (() {
-                  Navigator.of(context).pop();
-                }),
-              ),
-            ),
-            Expanded(
-              child: GestureDetector(
-                child: Container(
-                  alignment: Alignment.center,
-                  decoration:
-                      offer.firstOfferItem.itemType == 'ให้' && tab == true
-                          ? BoxDecoration(
-                              color: Theme.of(context).colorScheme.secondary,
-                            )
-                          : BoxDecoration(
-                              color: Theme.of(context).primaryColor,
-                            ),
-                  height: 60,
-                  child: Text(
-                    'ยอมรับ',
+                    'ยกเลิกข้อเสนอ',
                     style: Theme.of(context).textTheme.bodyText2,
                   ),
                 ),
                 onTap: (() async {
-                  print(offer.id);
-                  var updateOfferStatus =
-                      await db.collection('offers').doc(offer.id).update({
-                    'status': 'accepted',
-                  });
-                  var responseOffer =
-                      await db.collection('offers').doc(offer.id).get();
-                  var responseOfferData = responseOffer.data();
-                  if (responseOfferData!['status'] == 'accepted') {
-                    print('Offer Id : ${responseOffer.id} Updated!');
-                    print(
-                        'Status From : \'offer\' ==> ${responseOfferData['status']}');
-                    offers.fetchMyOffersData();
-                  } else {
-                    print('Update Offer Status Failed :');
-                  }
-                  if (!mounted) return;
-                  offers.notify();
-                  Navigator.pop(context);
+                  await db.collection('offers').doc(offer.id).delete();
+                  print('Delete Offer:(${offer.id}) Successful!');
+                  Navigator.of(context).pop();
                 }),
+              )
+            : Row(
+                children: [
+                  Expanded(
+                    child: GestureDetector(
+                      child: Container(
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                        ),
+                        height: 60,
+                        child: Text(
+                          'ปฏิเสธ',
+                          style: Theme.of(context).textTheme.bodyText2,
+                        ),
+                      ),
+                      onTap: (() {
+                        Navigator.of(context).pop();
+                      }),
+                    ),
+                  ),
+                  Expanded(
+                    child: GestureDetector(
+                      child: Container(
+                        alignment: Alignment.center,
+                        decoration: offer.firstOfferItem.itemType == 'ให้'
+                            ? BoxDecoration(
+                                color: Theme.of(context).focusColor,
+                              )
+                            : BoxDecoration(
+                                color: Theme.of(context).primaryColor,
+                              ),
+                        height: 60,
+                        child: Text(
+                          'ยอมรับ',
+                          style: Theme.of(context).textTheme.bodyText2,
+                        ),
+                      ),
+                      onTap: (() async {
+                        print(offer.id);
+                        var updateOfferStatus =
+                            await db.collection('offers').doc(offer.id).update({
+                          'status': 'accepted',
+                        });
+                        var responseOffer =
+                            await db.collection('offers').doc(offer.id).get();
+                        var responseOfferData = responseOffer.data();
+                        if (responseOfferData!['status'] == 'accepted') {
+                          var newCount;
+                          var otherUserId;
+                          if (offer.firstUser.userId == user.uid) {
+                            otherUserId = offer.secondUser.userId;
+                          } else {
+                            otherUserId = offer.firstUser.userId;
+                          }
+                          var otherUser = await db
+                              .collection('users')
+                              .doc(otherUserId)
+                              .get();
+                          var otherUserData = otherUser.data();
+                          if (offer.firstOfferItem.itemType == 'ให้') {
+                            if (offer.firstUser.userId == user.uid) {
+                              newCount = userData.userModel!.donateCount + 1;
+                              await db
+                                  .collection('users')
+                                  .doc(offer.firstUser.userId)
+                                  .update({'donateCount': newCount});
+                            }
+                          } else {
+                            var firstUserNewCount;
+                            var secondUserNewCount;
+                            if (offer.firstUser.userId == user.uid) {
+                              firstUserNewCount =
+                                  userData.userModel!.tradeCount + 1;
+                              secondUserNewCount =
+                                  otherUserData!['tradeCount'] + 1;
+                            } else {
+                              firstUserNewCount =
+                                  otherUserData!['tradeCount'] + 1;
+                              secondUserNewCount =
+                                  userData.userModel!.tradeCount + 1;
+                            }
+                            await db
+                                .collection('users')
+                                .doc(offer.firstUser.userId)
+                                .update(
+                              {'tradeCount': firstUserNewCount},
+                            );
+                            await db
+                                .collection('users')
+                                .doc(offer.secondUser.userId)
+                                .update(
+                              {'tradeCount': secondUserNewCount},
+                            );
+                          }
+
+                          print('Offer Id : ${responseOffer.id} Updated!');
+                          print(
+                              'Status From : \'offer\' ==> ${responseOfferData['status']}');
+                          await offers.fetchMyOffersData();
+                          await userData.fetchUserData(user.uid);
+                        } else {
+                          print('Update Offer Status Failed :');
+                        }
+                        if (!mounted) return;
+                        offers.notify();
+                        Navigator.pop(context);
+                      }),
+                    ),
+                  ),
+                ],
               ),
-            ),
-          ],
-        ),
       ),
     );
   }

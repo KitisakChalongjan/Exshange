@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:exshange/providers/authentication.dart';
+import 'package:exshange/providers/filter.dart';
 import 'package:exshange/providers/items.dart';
 import 'package:exshange/providers/offers.dart';
 import 'package:exshange/providers/user_data.dart';
@@ -20,6 +21,7 @@ import 'package:exshange/screens/profile/my_deal_screen.dart';
 import 'package:exshange/screens/profile/my_history_detail_screen.dart';
 import 'package:exshange/screens/profile/my_history_screen.dart';
 import 'package:exshange/screens/profile/my_item_screen.dart';
+import 'package:exshange/screens/profile/profile_screen.dart';
 import 'package:exshange/screens/splash_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -55,6 +57,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider<UserData>(
           create: (ctx) => UserData(),
+        ),
+        ChangeNotifierProvider<Filter>(
+          create: (ctx) => Filter(),
         ),
       ],
       child: MaterialApp(
@@ -139,7 +144,8 @@ class MyApp extends StatelessWidget {
           EditProfileScreen().routeName: (context) => EditProfileScreen(),
           MyItemsScreen().routeName: (context) => MyItemsScreen(),
           MyHistoryScreen().routeName: (context) => MyHistoryScreen(),
-          MyHistoryDetailScreen().routeName: (context) => MyHistoryDetailScreen(),
+          MyHistoryDetailScreen().routeName: (context) =>
+              MyHistoryDetailScreen(),
           MyDealScreen().routeName: (context) => MyDealScreen(),
           MyCategoriesScreen().routeName: (context) => MyCategoriesScreen(),
           MyAddressScreen().routeName: (context) => MyAddressScreen(),
@@ -147,6 +153,8 @@ class MyApp extends StatelessWidget {
           DonateScreen().routeName: (context) => DonateScreen(),
           EditAddressScreen().routeName: (context) => EditAddressScreen(),
           MyDealDetailScreen().routeName: (context) => MyDealDetailScreen(),
+          ProfileScreen().routeName: (context) => ProfileScreen(),
+          HomeScreen().routeName: (context) => HomeScreen(),
         },
       ),
     );
