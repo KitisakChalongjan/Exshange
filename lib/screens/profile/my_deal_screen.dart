@@ -144,13 +144,14 @@ class _OfferListWidgetState extends State<OfferListWidget> {
       future: context.watch<Offers>().fetchMyOffersData(),
       builder: ((context, snapshot) {
         if (!snapshot.hasData) {
-          print('circle');
+          print('has no data');
           return Expanded(
             child: Center(
               child: CircularProgressIndicator(),
             ),
           );
-        } else {
+        } 
+        else {
           var offers = context.read<Offers>();
           var user = context.read<Authentication>().currentUser;
           var myOffers = offers.offers;
@@ -210,6 +211,7 @@ class _OfferListWidgetState extends State<OfferListWidget> {
                                           : selectedOffer[index]
                                               .firstOfferItem
                                               .name,
+                                              maxLines: 1,
                                       style:
                                           Theme.of(context).textTheme.subtitle2,
                                     ),
@@ -284,6 +286,7 @@ class _OfferListWidgetState extends State<OfferListWidget> {
                                           : selectedOffer[index]
                                               .secondOfferItem
                                               .name,
+                                              maxLines: 1,
                                       style:
                                           Theme.of(context).textTheme.subtitle2,
                                     ),
@@ -298,7 +301,7 @@ class _OfferListWidgetState extends State<OfferListWidget> {
                                             offset: Offset(1, 3),
                                           ),
                                         ]),
-                                        width: double.infinity,
+                                        width: 140,
                                         child: ClipRRect(
                                           borderRadius:
                                               BorderRadius.circular(10),

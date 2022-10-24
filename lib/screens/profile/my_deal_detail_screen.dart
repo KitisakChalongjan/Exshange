@@ -87,12 +87,14 @@ class _MyDealDetailScreenState extends State<MyDealDetailScreen> {
                 margin: EdgeInsets.symmetric(vertical: 20),
                 child: Icon(
                   Icons.loop_sharp,
-                  color: Colors.black,
+                  color: offer.firstOfferItem.itemType == 'แลก'
+                      ? Theme.of(context).primaryColor
+                      : Theme.of(context).accentColor,
                   size: 60,
                 ),
               ),
               Text(
-                'อีกคน',
+                tab == true ? offer.secondUser.name : offer.firstUser.name,
                 style: Theme.of(context).textTheme.bodyText1,
               ),
               SizedBox(
@@ -281,7 +283,7 @@ class _MyDealDetailScreenState extends State<MyDealDetailScreen> {
                                 color: Theme.of(context).focusColor,
                               )
                             : BoxDecoration(
-                                color: Theme.of(context).primaryColor,
+                                color: Theme.of(context).primaryColorLight,
                               ),
                         height: 60,
                         child: Text(

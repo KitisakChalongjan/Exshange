@@ -81,7 +81,9 @@ class _MyItemsScreenState extends State<MyItemsScreen> {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
-                                        '${myItems[index].name}',
+                                        myItems[index].name.length > 16
+                                            ? '${myItems[index].name.substring(0, 16)}...'
+                                            : '${myItems[index].name}',
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodyText1,

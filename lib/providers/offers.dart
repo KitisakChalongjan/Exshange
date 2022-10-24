@@ -16,30 +16,36 @@ class Offers with ChangeNotifier {
   }
 
   Future<String> fetchMyOffersData() async {
+    print('startFetchMyOffersData');
     user = FirebaseAuth.instance.currentUser;
     List<Offer> tempOffers = [];
     var loadedOffers = await db.collection("offers").get();
     for (var offerSnapshot in loadedOffers.docs) {
+      print('a');
       var offerData = offerSnapshot.data();
-
+      print('1');
       String firstUserId = offerData['firstUserId'];
       var firstUser = await db.collection('users').doc(firstUserId).get();
       var firstUserAddressesSnapshot = await db.collection('userAddress').get();
       var firstUserAddress = firstUserAddressesSnapshot.docs
           .where((address) => address.data()['userId'] == firstUserId)
           .toList();
+      print('2');
       String secondUserId = offerData['secondUserId'];
       var secondUser = await db.collection('users').doc(secondUserId).get();
-      var secondUserAddressesSnapshot = await db.collection('userAddress').get();
+      var secondUserAddressesSnapshot =
+          await db.collection('userAddress').get();
       var secondUserAddress = secondUserAddressesSnapshot.docs
           .where((address) => address.data()['userId'] == secondUserId)
           .toList();
+      print('3');
       String firstItemId = offerData['firstOfferItemId'];
       var firstItem = await db.collection('items').doc(firstItemId).get();
       String secondItemId = offerData['secondOfferItemId'];
       var secondItem = await db.collection('items').doc(secondItemId).get();
       String status = offerData['status'];
       int createdTimestamp = offerData['createdTimestamp'];
+      print('4');
       var offer = Offer(
         id: offerSnapshot.id,
         firstUser: UserModel.fromMap(
@@ -51,14 +57,16 @@ class Offers with ChangeNotifier {
         status: status,
         createdTimestamp: createdTimestamp,
       );
+      print('createOffer');
       tempOffers.add(offer);
+      print('add');
     }
-    _offers = tempOffers;
     print('Fetch Offers Data Successful!');
+    _offers = tempOffers;
     return 'done';
   }
 
-  void notify(){
+  void notify() {
     notifyListeners();
   }
 
@@ -67,14 +75,14 @@ class Offers with ChangeNotifier {
     String secondUserId,
     String firstOfferItemId,
     String secondOfferItemId,
-    String userStatus,
+    String status,
   ) async {
     final offer = Offer.toMap(
       firstUserId,
       secondUserId,
       firstOfferItemId,
       secondOfferItemId,
-      userStatus,
+      status,
       DateTime.now().millisecondsSinceEpoch,
     );
 

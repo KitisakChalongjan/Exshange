@@ -117,8 +117,12 @@ class _AddItemScreenState extends State<AddItemScreen> {
                                 child: Stack(
                                   alignment: Alignment.topRight,
                                   children: [
-                                    Image.file(
-                                      File(imageSelected[index].path),
+                                    Container(
+                                      width: 120,
+                                      child: Image.file(
+                                        File(imageSelected[index].path),
+                                        fit: BoxFit.cover,
+                                      ),
                                     ),
                                     ElevatedButton(
                                       style: ElevatedButton.styleFrom(

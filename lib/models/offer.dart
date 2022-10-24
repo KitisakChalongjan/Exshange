@@ -26,7 +26,7 @@ class Offer {
     String secondUserId,
     String firstOfferItemId,
     String secondOfferItemId,
-    String userStatus,
+    String status,
     int createdTimestamp,
   ) {
     return {
@@ -34,7 +34,7 @@ class Offer {
       "secondUserId": secondUserId,
       "firstOfferItemId": firstOfferItemId,
       "secondOfferItemId": secondOfferItemId,
-      "userStatus": userStatus,
+      "status": status,
       "createdTimestamp": createdTimestamp,
     };
   }

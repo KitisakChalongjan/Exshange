@@ -110,10 +110,10 @@ class _MyHistoryScreenState extends State<MyHistoryScreen> {
                                       selectedOffer[index].firstUser.userId ==
                                               user.uid
                                           ? selectedOffer[index]
-                                              .secondOfferItem
+                                              .firstOfferItem
                                               .name
                                           : selectedOffer[index]
-                                              .firstOfferItem
+                                              .secondOfferItem
                                               .name,
                                       style:
                                           Theme.of(context).textTheme.subtitle2,
