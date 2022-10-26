@@ -19,6 +19,8 @@ class MyDealDetailScreen extends StatefulWidget {
 }
 
 class _MyDealDetailScreenState extends State<MyDealDetailScreen> {
+  var isLoading = false;
+
   FirebaseFirestore db = FirebaseFirestore.instance;
 
   @override
@@ -35,205 +37,218 @@ class _MyDealDetailScreenState extends State<MyDealDetailScreen> {
         centerTitle: true,
         title: const Text('รายละเอียดข้อเสนอ'),
       ),
-      body: SingleChildScrollView(
-        child: Center(
-          child: Column(
-            children: [
-              SizedBox(
-                height: 20,
-              ),
-              Text(
-                'คุณ',
-                style: Theme.of(context).textTheme.bodyText1,
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Container(
-                decoration: BoxDecoration(
-                  color: Color.fromARGB(255, 57, 57, 57),
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.25),
-                      spreadRadius: 1,
-                      blurRadius: 3,
-                      offset: Offset(1, 3),
-                    ),
-                  ],
-                ),
-                height: 240,
-                width: 240,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(20),
-                  child: Image.network(
-                    tab == true
-                        ? offer.secondOfferItem.imagesUrl[0]
-                        : offer.firstOfferItem.imagesUrl[0],
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Text(
-                tab == true
-                    ? offer.secondOfferItem.name
-                    : offer.firstOfferItem.name,
-                style: Theme.of(context).textTheme.bodyText1,
-              ),
-              Container(
-                margin: EdgeInsets.symmetric(vertical: 20),
-                child: Icon(
-                  Icons.loop_sharp,
-                  color: offer.firstOfferItem.itemType == 'แลก'
-                      ? Theme.of(context).primaryColor
-                      : Theme.of(context).accentColor,
-                  size: 60,
-                ),
-              ),
-              Text(
-                tab == true ? offer.secondUser.name : offer.firstUser.name,
-                style: Theme.of(context).textTheme.bodyText1,
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Container(
-                decoration: BoxDecoration(
-                  color: Color.fromARGB(255, 57, 57, 57),
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.25),
-                      spreadRadius: 1,
-                      blurRadius: 3,
-                      offset: Offset(1, 3),
-                    ),
-                  ],
-                ),
-                height: 240,
-                width: 240,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(20),
-                  child: Image.network(
-                    tab == true
-                        ? offer.firstOfferItem.imagesUrl[0]
-                        : offer.secondOfferItem.imagesUrl[0],
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 40),
+      body: isLoading
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
+          : SingleChildScrollView(
+              child: Center(
                 child: Column(
                   children: [
-                    Container(
-                      child: tab == true
-                          ? Text(
-                              offer.firstOfferItem.name,
-                              style: Theme.of(context).textTheme.bodyText1,
-                            )
-                          : Text(
-                              offer.secondOfferItem.name,
-                              style: Theme.of(context).textTheme.bodyText1,
-                            ),
-                    ),
                     SizedBox(
                       height: 20,
                     ),
-                    Container(
-                      padding: EdgeInsets.symmetric(horizontal: 20),
-                      constraints: const BoxConstraints(minHeight: 200),
-                      alignment: Alignment.topLeft,
-                      child: tab == true
-                          ? Text(
-                              offer.firstOfferItem.detail,
-                              style: Theme.of(context).textTheme.bodyText1,
-                            )
-                          : Text(
-                              offer.secondOfferItem.detail,
-                              style: Theme.of(context).textTheme.bodyText1,
-                            ),
+                    Text(
+                      'คุณ',
+                      style: Theme.of(context).textTheme.bodyText1,
                     ),
-                    Row(
-                      children: [
-                        SizedBox(
-                          width: 20,
-                        ),
-                        Icon(
-                          Icons.location_on,
-                          color: Theme.of(context).hintColor,
-                        ),
-                        Expanded(
-                          child: tab == true
-                              ? Text(
-                                  offer.firstOfferItem.address,
-                                  style: Theme.of(context).textTheme.caption,
-                                )
-                              : Text(
-                                  offer.secondOfferItem.address,
-                                  style: Theme.of(context).textTheme.caption,
-                                ),
-                        ),
-                      ],
+                    SizedBox(
+                      height: 10,
                     ),
                     Container(
-                      margin: EdgeInsets.symmetric(vertical: 10),
-                      child: Divider(
-                        height: 5,
-                        color: Colors.grey,
+                      decoration: BoxDecoration(
+                        color: Color.fromARGB(255, 57, 57, 57),
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.25),
+                            spreadRadius: 1,
+                            blurRadius: 3,
+                            offset: Offset(1, 3),
+                          ),
+                        ],
+                      ),
+                      height: 240,
+                      width: 240,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(20),
+                        child: Image.network(
+                          tab == true
+                              ? offer.secondOfferItem.imagesUrl[0]
+                              : offer.firstOfferItem.imagesUrl[0],
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
                     SizedBox(
-                      height: 60,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      height: 10,
+                    ),
+                    Text(
+                      tab == true
+                          ? offer.secondOfferItem.name
+                          : offer.firstOfferItem.name,
+                      style: Theme.of(context).textTheme.bodyText1,
+                    ),
+                    Container(
+                      margin: EdgeInsets.symmetric(vertical: 20),
+                      child: Icon(
+                        Icons.loop_sharp,
+                        color: offer.firstOfferItem.itemType == 'แลก'
+                            ? Theme.of(context).primaryColor
+                            : Theme.of(context).accentColor,
+                        size: 60,
+                      ),
+                    ),
+                    Text(
+                      tab == true
+                          ? offer.secondUser.name
+                          : offer.firstUser.name,
+                      style: Theme.of(context).textTheme.bodyText1,
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Color.fromARGB(255, 57, 57, 57),
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.25),
+                            spreadRadius: 1,
+                            blurRadius: 3,
+                            offset: Offset(1, 3),
+                          ),
+                        ],
+                      ),
+                      height: 240,
+                      width: 240,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(20),
+                        child: Image.network(
+                          tab == true
+                              ? offer.firstOfferItem.imagesUrl[0]
+                              : offer.secondOfferItem.imagesUrl[0],
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 40),
+                      child: Column(
                         children: [
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              CircleAvatar(
-                                radius: 40,
-                                child: ClipOval(
-                                  child: Image.network(
-                                    offer.firstUser.profileImageUrl,
+                          Container(
+                            child: tab == true
+                                ? Text(
+                                    offer.firstOfferItem.name,
+                                    style:
+                                        Theme.of(context).textTheme.bodyText1,
+                                  )
+                                : Text(
+                                    offer.secondOfferItem.name,
+                                    style:
+                                        Theme.of(context).textTheme.bodyText1,
                                   ),
-                                ),
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Container(
+                            padding: EdgeInsets.symmetric(horizontal: 20),
+                            constraints: const BoxConstraints(minHeight: 200),
+                            alignment: Alignment.topLeft,
+                            child: tab == true
+                                ? Text(
+                                    offer.firstOfferItem.detail,
+                                    style:
+                                        Theme.of(context).textTheme.bodyText1,
+                                  )
+                                : Text(
+                                    offer.secondOfferItem.detail,
+                                    style:
+                                        Theme.of(context).textTheme.bodyText1,
+                                  ),
+                          ),
+                          Row(
+                            children: [
+                              SizedBox(
+                                width: 20,
                               ),
-                              Text(
-                                offer.firstUser.name,
-                                style: Theme.of(context).textTheme.bodyText1,
+                              Icon(
+                                Icons.location_on,
+                                color: Theme.of(context).hintColor,
+                              ),
+                              Expanded(
+                                child: tab == true
+                                    ? Text(
+                                        offer.firstOfferItem.address,
+                                        style:
+                                            Theme.of(context).textTheme.caption,
+                                      )
+                                    : Text(
+                                        offer.secondOfferItem.address,
+                                        style:
+                                            Theme.of(context).textTheme.caption,
+                                      ),
                               ),
                             ],
                           ),
                           Container(
-                            margin: EdgeInsets.symmetric(horizontal: 10),
-                            padding: EdgeInsets.all(5),
-                            child: Icon(
-                              size: 30,
-                              color: Theme.of(context).hintColor,
-                              Icons.chat_bubble,
+                            margin: EdgeInsets.symmetric(vertical: 10),
+                            child: Divider(
+                              height: 5,
+                              color: Colors.grey,
                             ),
+                          ),
+                          SizedBox(
+                            height: 60,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    CircleAvatar(
+                                      radius: 40,
+                                      child: ClipOval(
+                                        child: Image.network(
+                                          offer.firstUser.profileImageUrl,
+                                        ),
+                                      ),
+                                    ),
+                                    Text(
+                                      offer.firstUser.name,
+                                      style:
+                                          Theme.of(context).textTheme.bodyText1,
+                                    ),
+                                  ],
+                                ),
+                                Container(
+                                  margin: EdgeInsets.symmetric(horizontal: 10),
+                                  padding: EdgeInsets.all(5),
+                                  child: Icon(
+                                    size: 30,
+                                    color: Theme.of(context).hintColor,
+                                    Icons.chat_bubble,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            height: 20,
                           ),
                         ],
                       ),
                     ),
-                    SizedBox(
-                      height: 20,
-                    ),
                   ],
                 ),
               ),
-            ],
-          ),
-        ),
-      ),
+            ),
       bottomNavigationBar: BottomAppBar(
         child: tab == true
             ? GestureDetector(
@@ -250,7 +265,15 @@ class _MyDealDetailScreenState extends State<MyDealDetailScreen> {
                 ),
                 onTap: (() async {
                   await db.collection('offers').doc(offer.id).delete();
+                  await db
+                      .collection('items')
+                      .doc(offer.secondOfferItem.id)
+                      .delete();
                   print('Delete Offer:(${offer.id}) Successful!');
+                  print(
+                      'Delete Item:(${offer.secondOfferItem.id}) Successful!');
+                  await offers.fetchMyOffersData();
+                  offers.notify();
                   Navigator.of(context).pop();
                 }),
               )
@@ -292,6 +315,9 @@ class _MyDealDetailScreenState extends State<MyDealDetailScreen> {
                         ),
                       ),
                       onTap: (() async {
+                        setState(() {
+                          isLoading = true;
+                        });
                         print(offer.id);
                         var updateOfferStatus =
                             await db.collection('offers').doc(offer.id).update({
@@ -357,6 +383,7 @@ class _MyDealDetailScreenState extends State<MyDealDetailScreen> {
                         } else {
                           print('Update Offer Status Failed :');
                         }
+                        isLoading = false;
                         if (!mounted) return;
                         offers.notify();
                         Navigator.pop(context);

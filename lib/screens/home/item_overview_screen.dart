@@ -121,13 +121,14 @@ class _ItemOverviewScreenState extends State<ItemOverviewScreen> {
               padding: EdgeInsets.all(5),
               child: filteredItems.isEmpty
                   ? Center(
-                      child: CircularProgressIndicator(),
+                      child: Text('ไม่พบสิ่งของที่ต้องการ',
+                          style: Theme.of(context).textTheme.subtitle2),
                     )
                   : FutureBuilder(
                       future: GeolocatorHelper().determinePosition(),
                       builder: ((context, snapshot) {
                         if (!snapshot.hasData) {
-                          print('loading');
+                          print('loading position');
                           return Center(
                             child: CircularProgressIndicator(),
                           );

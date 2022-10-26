@@ -52,6 +52,11 @@ class Authentication with ChangeNotifier {
   }
 
   Future<void> signOut() async {
-    await _firebaseAuth.signOut();
+    try {
+      await _firebaseAuth.signOut();
+      print('signout');
+    } catch (e) {
+      print(e.toString());
+    }
   }
 }

@@ -213,12 +213,13 @@ class _AddItemScreenState extends State<AddItemScreen> {
                       padding: EdgeInsets.symmetric(horizontal: 20),
                       child: TextFormField(
                         decoration: InputDecoration(
-                            border: InputBorder.none,
-                            focusedBorder: InputBorder.none,
-                            enabledBorder: InputBorder.none,
-                            errorBorder: InputBorder.none,
-                            disabledBorder: InputBorder.none,
-                            hintText: "ชื่อสิ่งของ"),
+                          border: InputBorder.none,
+                          focusedBorder: InputBorder.none,
+                          enabledBorder: InputBorder.none,
+                          errorBorder: InputBorder.none,
+                          disabledBorder: InputBorder.none,
+                          hintText: "ชื่อสิ่งของ",
+                        ),
                         minLines: 1,
                         maxLines: 2,
                         controller: _itemNameController,
@@ -245,12 +246,13 @@ class _AddItemScreenState extends State<AddItemScreen> {
                       padding: EdgeInsets.symmetric(horizontal: 20),
                       child: TextFormField(
                         decoration: InputDecoration(
-                            border: InputBorder.none,
-                            focusedBorder: InputBorder.none,
-                            enabledBorder: InputBorder.none,
-                            errorBorder: InputBorder.none,
-                            disabledBorder: InputBorder.none,
-                            hintText: "รายละเอียดสิ่งของ"),
+                          border: InputBorder.none,
+                          focusedBorder: InputBorder.none,
+                          enabledBorder: InputBorder.none,
+                          errorBorder: InputBorder.none,
+                          disabledBorder: InputBorder.none,
+                          hintText: "รายละเอียดสิ่งของ",
+                        ),
                         minLines: 3,
                         maxLines: 40,
                         controller: _itemDetailController,
@@ -494,19 +496,18 @@ class _AddItemScreenState extends State<AddItemScreen> {
                 imagesSelectedUrl =
                     await itemsData.addImageToStorage(imageSelected);
                 await itemsData.addItemToFireStore(
-                  user!.uid,
-                  _itemNameController.text,
-                  _itemDetailController.text,
-                  _selectedAddress,
-                  province,
-                  _selectedCategory,
-                  _selectedSubCategory,
-                  imagesSelectedUrl,
-                  selectedType!,
-                  latitude!,
-                  longitude!,
-                  'on'
-                );
+                    user!.uid,
+                    _itemNameController.text,
+                    _itemDetailController.text,
+                    _selectedAddress,
+                    province,
+                    _selectedCategory,
+                    _selectedSubCategory,
+                    imagesSelectedUrl,
+                    selectedType!,
+                    latitude!,
+                    longitude!,
+                    'on');
 
                 setState(() {
                   isAddItemLoading = false;

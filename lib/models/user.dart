@@ -76,12 +76,16 @@ class UserModel {
     Map<String, dynamic> data,
     List<QueryDocumentSnapshot<Map<String, dynamic>>> dataAddress,
   ) {
+    print('startFromMap');
     List<Map<String, dynamic>> addresses = [];
     for (var element in dataAddress) {
+      print('startFromMapFor');
       var addressData = element.data();
       addressData.addEntries(<String, dynamic>{'addressId': element.id}.entries);
       addresses.add(addressData);
+      print('endFromMapFor');
     }
+    print('endFromMap');
     return UserModel(
         uid,
         data['email'],
@@ -90,7 +94,7 @@ class UserModel {
         addresses,
         data['tradeCount'],
         data['donateCount'],
-        data['rating'],
+        (data['rating'] as int).toDouble(),
         data['favoriteCategories'],
         data['favoriteItems'],
         data['profileImageUrl'],

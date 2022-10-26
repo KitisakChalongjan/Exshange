@@ -166,7 +166,7 @@ class Authenticate extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final firebaseUser = Provider.of<User?>(context);
+    final firebaseUser = context.watch<User?>();
     if (firebaseUser != null) {
       return FutureBuilder(
         future: Future.wait([

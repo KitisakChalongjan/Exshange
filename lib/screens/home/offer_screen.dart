@@ -27,7 +27,7 @@ class OfferScreen extends StatefulWidget {
 
 class _OfferScreenState extends State<OfferScreen> {
   User? user;
-  var isAddItemLoading = false;
+  var isLoading = false;
 
   TextEditingController _itemNameController = TextEditingController();
   TextEditingController _itemDetailController = TextEditingController();
@@ -71,7 +71,7 @@ class _OfferScreenState extends State<OfferScreen> {
         title: Text('เสนอ'),
         centerTitle: true,
       ),
-      body: isAddItemLoading
+      body: isLoading
           ? Center(
               child: CircularProgressIndicator(),
             )
@@ -480,7 +480,7 @@ class _OfferScreenState extends State<OfferScreen> {
                 ),
                 onTap: (() async {
                   setState(() {
-                    isAddItemLoading = true;
+                    isLoading = true;
                   });
 
                   province = addresses.firstWhere((element) =>
@@ -520,11 +520,12 @@ class _OfferScreenState extends State<OfferScreen> {
                   );
 
                   setState(() {
-                    isAddItemLoading = false;
+                    isLoading = false;
                   });
-
                   Navigator.of(context).pushNamedAndRemoveUntil(
-                      HomeScreen().routeName, (route) => false);
+                    HomeScreen().routeName,
+                    ModalRoute.withName('/home'),
+                  );
                 }),
               ),
             ),

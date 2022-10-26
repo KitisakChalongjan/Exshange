@@ -5,6 +5,7 @@ import 'package:exshange/providers/offers.dart';
 import 'package:exshange/providers/user_data.dart';
 import 'package:exshange/screens/home/add_address_screen.dart';
 import 'package:exshange/screens/home/item_overview_screen.dart';
+import 'package:exshange/screens/home_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
@@ -37,7 +38,7 @@ class _DonateScreenState extends State<DonateScreen> {
   List<String> allAddress = [];
 
   User? user;
-  var isAddItemLoading = false;
+  var isLoading = false;
   @override
   Widget build(BuildContext context) {
     user = context.read<Authentication>().currentUser;
@@ -57,138 +58,145 @@ class _DonateScreenState extends State<DonateScreen> {
         title: Text('บริจาค'),
         centerTitle: true,
       ),
-      body: SingleChildScrollView(
-        child: Center(
-          child: Column(
-            children: [
-              SizedBox(
-                height: 40,
-              ),
-              Container(
-                decoration: BoxDecoration(
-                    color: Color.fromARGB(255, 57, 57, 57),
-                    borderRadius: BorderRadius.circular(20)),
-                height: 280,
-                width: 280,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(20),
-                  child: Hero(
-                    tag: 'heroItem${args.index}',
-                    child: Image.network(
-                      item.imagesUrl[0],
-                      fit: BoxFit.cover,
+      body: isLoading
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
+          : SingleChildScrollView(
+              child: Center(
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: 40,
                     ),
-                  ),
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.symmetric(vertical: 20),
-                child: Icon(
-                  Icons.loop_sharp,
-                  color: Colors.black,
-                  size: 40,
-                ),
-              ),
-              Container(
-                height: 280,
-                width: 280,
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(20),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.25),
-                        spreadRadius: 1,
-                        blurRadius: 3,
-                        offset: Offset(1, 3),
+                    Container(
+                      decoration: BoxDecoration(
+                          color: Color.fromARGB(255, 57, 57, 57),
+                          borderRadius: BorderRadius.circular(20)),
+                      height: 280,
+                      width: 280,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(20),
+                        child: Hero(
+                          tag: 'heroItem${args.index}',
+                          child: Image.network(
+                            item.imagesUrl[0],
+                            fit: BoxFit.cover,
+                          ),
+                        ),
                       ),
-                    ]),
-                padding: EdgeInsets.all(10),
-                child: TextFormField(
-                  decoration: InputDecoration(
-                      border: InputBorder.none,
-                      focusedBorder: InputBorder.none,
-                      enabledBorder: InputBorder.none,
-                      errorBorder: InputBorder.none,
-                      disabledBorder: InputBorder.none,
-                      hintText: "คำอธิบายเพิ่มเติม..."),
-                  minLines: 1,
-                  maxLines: 2,
-                  controller: _donateDescController,
-                  style: Theme.of(context).textTheme.subtitle2,
-                ),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Container(
-                margin: EdgeInsets.only(
-                  top: 10,
-                ),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.25),
-                      spreadRadius: 1,
-                      blurRadius: 3,
-                      offset: Offset(1, 3),
+                    ),
+                    Container(
+                      margin: EdgeInsets.symmetric(vertical: 20),
+                      child: Icon(
+                        Icons.loop_sharp,
+                        color: Colors.black,
+                        size: 40,
+                      ),
+                    ),
+                    Container(
+                      height: 280,
+                      width: 280,
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(20),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.25),
+                              spreadRadius: 1,
+                              blurRadius: 3,
+                              offset: Offset(1, 3),
+                            ),
+                          ]),
+                      padding: EdgeInsets.all(10),
+                      child: TextFormField(
+                        decoration: InputDecoration(
+                            border: InputBorder.none,
+                            focusedBorder: InputBorder.none,
+                            enabledBorder: InputBorder.none,
+                            errorBorder: InputBorder.none,
+                            disabledBorder: InputBorder.none,
+                            hintText: "คำอธิบายเพิ่มเติม..."),
+                        minLines: 1,
+                        maxLines: 2,
+                        controller: _donateDescController,
+                        style: Theme.of(context).textTheme.subtitle2,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(
+                        top: 10,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.25),
+                            spreadRadius: 1,
+                            blurRadius: 3,
+                            offset: Offset(1, 3),
+                          ),
+                        ],
+                      ),
+                      width: 360,
+                      height: 40,
+                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      child: DropdownButtonHideUnderline(
+                        child: DropdownButton<String>(
+                          dropdownColor: Colors.white,
+                          value: _selectedAddress,
+                          items: allAddress
+                              .map(
+                                (address) => DropdownMenuItem<String>(
+                                  value: address,
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        address.length > 30
+                                            ? '${address.substring(0, 30)}...'
+                                            : address,
+                                        textAlign: TextAlign.center,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .subtitle2,
+                                      ),
+                                      address == 'เพิ่มที่อยู่ใหม่'
+                                          ? Icon(Icons.add_home_rounded)
+                                          : const SizedBox(
+                                              width: 0,
+                                              height: 0,
+                                            ),
+                                    ],
+                                  ),
+                                ),
+                              )
+                              .toList(),
+                          onChanged: (address) {
+                            if (address == 'เพิ่มที่อยู่ใหม่') {
+                              Navigator.of(context)
+                                  .pushNamed(AddAdressScreen().routeName);
+                            } else {
+                              setState(() {
+                                _selectedAddress = address!;
+                              });
+                            }
+                          },
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 40,
                     ),
                   ],
                 ),
-                width: 360,
-                height: 40,
-                padding: EdgeInsets.symmetric(horizontal: 20),
-                child: DropdownButtonHideUnderline(
-                  child: DropdownButton<String>(
-                    dropdownColor: Colors.white,
-                    value: _selectedAddress,
-                    items: allAddress
-                        .map(
-                          (address) => DropdownMenuItem<String>(
-                            value: address,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  address.length > 30
-                                      ? '${address.substring(0, 30)}...'
-                                      : address,
-                                  textAlign: TextAlign.center,
-                                  style: Theme.of(context).textTheme.subtitle2,
-                                ),
-                                address == 'เพิ่มที่อยู่ใหม่'
-                                    ? Icon(Icons.add_home_rounded)
-                                    : const SizedBox(
-                                        width: 0,
-                                        height: 0,
-                                      ),
-                              ],
-                            ),
-                          ),
-                        )
-                        .toList(),
-                    onChanged: (address) {
-                      if (address == 'เพิ่มที่อยู่ใหม่') {
-                        Navigator.of(context)
-                            .pushNamed(AddAdressScreen().routeName);
-                      } else {
-                        setState(() {
-                          _selectedAddress = address!;
-                        });
-                      }
-                    },
-                  ),
-                ),
               ),
-              SizedBox(
-                height: 40,
-              ),
-            ],
-          ),
-        ),
-      ),
+            ),
       bottomNavigationBar: BottomAppBar(
         child: Row(
           children: [
@@ -222,7 +230,7 @@ class _DonateScreenState extends State<DonateScreen> {
                 ),
                 onTap: (() async {
                   setState(() {
-                    isAddItemLoading = true;
+                    isLoading = true;
                   });
 
                   province = addresses.firstWhere((element) =>
@@ -263,8 +271,12 @@ class _DonateScreenState extends State<DonateScreen> {
                   );
 
                   setState(() {
-                    isAddItemLoading = false;
+                    isLoading = false;
                   });
+                  Navigator.of(context).pushNamedAndRemoveUntil(
+                    HomeScreen().routeName,
+                    ModalRoute.withName('/home'),
+                  );
                 }),
               ),
             ),
