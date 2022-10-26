@@ -91,7 +91,134 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               ],
             ),
           ),
-          Container(),
+          Container(
+            margin: EdgeInsets.only(
+              top: 20,
+              left: 20,
+            ),
+            decoration: BoxDecoration(
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.25),
+                  spreadRadius: 1,
+                  blurRadius: 3,
+                  offset: Offset(1, 3),
+                ),
+              ],
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            width: 360,
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: TextFormField(
+              decoration: InputDecoration(
+                  border: InputBorder.none,
+                  focusedBorder: InputBorder.none,
+                  enabledBorder: InputBorder.none,
+                  errorBorder: InputBorder.none,
+                  disabledBorder: InputBorder.none,
+                  hintText: "ชื่อ"),
+              minLines: 1,
+              maxLines: 2,
+              style: Theme.of(context).textTheme.subtitle2,
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.only(
+              top: 20,
+              left: 20,
+            ),
+            decoration: BoxDecoration(
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.25),
+                  spreadRadius: 1,
+                  blurRadius: 3,
+                  offset: Offset(1, 3),
+                ),
+              ],
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            width: 360,
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: TextFormField(
+              decoration: InputDecoration(
+                  border: InputBorder.none,
+                  focusedBorder: InputBorder.none,
+                  enabledBorder: InputBorder.none,
+                  errorBorder: InputBorder.none,
+                  disabledBorder: InputBorder.none,
+                  hintText: "นามสกุล"),
+              minLines: 1,
+              maxLines: 2,
+              style: Theme.of(context).textTheme.subtitle2,
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.only(
+              top: 20,
+              left: 20,
+            ),
+            decoration: BoxDecoration(
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.25),
+                  spreadRadius: 1,
+                  blurRadius: 3,
+                  offset: Offset(1, 3),
+                ),
+              ],
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            width: 360,
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: TextFormField(
+              decoration: InputDecoration(
+                  border: InputBorder.none,
+                  focusedBorder: InputBorder.none,
+                  enabledBorder: InputBorder.none,
+                  errorBorder: InputBorder.none,
+                  disabledBorder: InputBorder.none,
+                  hintText: "อีเมล"),
+              minLines: 1,
+              maxLines: 2,
+              style: Theme.of(context).textTheme.subtitle2,
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.only(
+              top: 20,
+              left: 20,
+            ),
+            decoration: BoxDecoration(
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.25),
+                  spreadRadius: 1,
+                  blurRadius: 3,
+                  offset: Offset(1, 3),
+                ),
+              ],
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            width: 360,
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: TextFormField(
+              decoration: InputDecoration(
+                  border: InputBorder.none,
+                  focusedBorder: InputBorder.none,
+                  enabledBorder: InputBorder.none,
+                  errorBorder: InputBorder.none,
+                  disabledBorder: InputBorder.none,
+                  hintText: "เบอร์มือถือ"),
+              minLines: 1,
+              maxLines: 2,
+              style: Theme.of(context).textTheme.subtitle2,
+            ),
+          ),
         ],
       ),
       bottomNavigationBar: GestureDetector(
