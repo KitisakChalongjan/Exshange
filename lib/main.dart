@@ -20,6 +20,7 @@ import 'package:exshange/screens/profile/my_deal_detail_screen.dart';
 import 'package:exshange/screens/profile/my_deal_screen.dart';
 import 'package:exshange/screens/profile/my_history_detail_screen.dart';
 import 'package:exshange/screens/profile/my_history_screen.dart';
+import 'package:exshange/screens/profile/my_item_detail_screen.dart';
 import 'package:exshange/screens/profile/my_item_screen.dart';
 import 'package:exshange/screens/profile/profile_screen.dart';
 import 'package:exshange/screens/splash_screen.dart';
@@ -137,6 +138,7 @@ class MyApp extends StatelessWidget {
         //   ),
         initialRoute: '/',
         routes: {
+          Authenticate().routeName: (context) => Authenticate(),
           FilterScreen().routeName: (context) => FilterScreen(),
           AddItemScreen().routeName: (context) => AddItemScreen(),
           AddAdressScreen().routeName: (context) => AddAdressScreen(),
@@ -155,6 +157,7 @@ class MyApp extends StatelessWidget {
           MyDealDetailScreen().routeName: (context) => MyDealDetailScreen(),
           ProfileScreen().routeName: (context) => ProfileScreen(),
           HomeScreen().routeName: (context) => HomeScreen(),
+          MyItemDetailScreen().routeName: (context) => MyItemDetailScreen(),
         },
       ),
     );
@@ -163,6 +166,7 @@ class MyApp extends StatelessWidget {
 
 class Authenticate extends StatelessWidget {
   const Authenticate({Key? key}) : super(key: key);
+  final routeName = '/authenticate';
 
   @override
   Widget build(BuildContext context) {

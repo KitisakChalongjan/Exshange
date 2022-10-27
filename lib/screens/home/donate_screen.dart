@@ -241,7 +241,7 @@ class _DonateScreenState extends State<DonateScreen> {
                   longitude = geo.longitude;
 
                   imagesSelectedUrl = [
-                    'https://www.pngitem.com/pimgs/m/72-724263_donate-icon-investment-thenounproject-hd-png-download.png'
+                    'https://firebasestorage.googleapis.com/v0/b/exshange-project.appspot.com/o/images%2F72-724263_donate-icon-investment-thenounproject-hd-png-download.png?alt=media&token=cfeb6f6a-69c4-4089-8eef-797ad439bc1e'
                   ];
 
                   var docId = await itemsData.addItemToFireStore(
@@ -275,7 +275,7 @@ class _DonateScreenState extends State<DonateScreen> {
                   });
                   Navigator.of(context).pushNamedAndRemoveUntil(
                     HomeScreen().routeName,
-                    ModalRoute.withName('/home'),
+                    ModalRoute.withName('/authenticate'),
                   );
                 }),
               ),

@@ -157,13 +157,18 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
-                                  CircleAvatar(
-                                    radius: 40,
-                                    child: ClipOval(
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(30),
+                                    child: Container(
+                                      width: 60,
                                       child: Image.network(
                                         snapshot.data!['profileImageUrl'],
+                                        fit: BoxFit.cover,
                                       ),
                                     ),
+                                  ),
+                                  SizedBox(
+                                    width: 10,
                                   ),
                                   Text(
                                     snapshot.data!['name'],
@@ -196,8 +201,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                               children: [
                                 CircleAvatar(
                                   radius: 40,
-                                  child: CircleAvatar(
-                                      child: null),
+                                  child: CircleAvatar(child: null),
                                 ),
                                 Text(
                                   'loading',

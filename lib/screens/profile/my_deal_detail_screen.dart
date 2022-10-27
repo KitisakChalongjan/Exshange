@@ -3,6 +3,7 @@ import 'package:exshange/providers/authentication.dart';
 import 'package:exshange/providers/offers.dart';
 import 'package:exshange/providers/user_data.dart';
 import 'package:exshange/screens/profile/my_deal_screen.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -22,6 +23,7 @@ class _MyDealDetailScreenState extends State<MyDealDetailScreen> {
   var isLoading = false;
 
   FirebaseFirestore db = FirebaseFirestore.instance;
+  Reference storage = FirebaseStorage.instance.ref();
 
   @override
   Widget build(BuildContext context) {
@@ -212,13 +214,18 @@ class _MyDealDetailScreenState extends State<MyDealDetailScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
-                                    CircleAvatar(
-                                      radius: 40,
-                                      child: ClipOval(
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(30),
+                                      child: Container(
+                                        width: 60,
                                         child: Image.network(
                                           offer.firstUser.profileImageUrl,
+                                          fit: BoxFit.cover,
                                         ),
                                       ),
+                                    ),
+                                    SizedBox(
+                                      width: 10,
                                     ),
                                     Text(
                                       offer.firstUser.name,
@@ -264,16 +271,29 @@ class _MyDealDetailScreenState extends State<MyDealDetailScreen> {
                   ),
                 ),
                 onTap: (() async {
+                  setState(() {
+                    isLoading = true;
+                  });
                   await db.collection('offers').doc(offer.id).delete();
+                  print('Delete Offer:(${offer.id}) Successful!');
                   await db
                       .collection('items')
                       .doc(offer.secondOfferItem.id)
                       .delete();
-                  print('Delete Offer:(${offer.id}) Successful!');
                   print(
                       'Delete Item:(${offer.secondOfferItem.id}) Successful!');
+                  offer.secondOfferItem.imagesUrl.forEach((element) async {
+                    if (element ==
+                        'https://firebasestorage.googleapis.com/v0/b/exshange-project.appspot.com/o/images%2F72-724263_donate-icon-investment-thenounproject-hd-png-download.png?alt=media&token=cfeb6f6a-69c4-4089-8eef-797ad439bc1e') {
+                      return;
+                    }
+                    await storage.child('images').child(element).delete();
+                    print('Delete Image:(${element}) Successful!');
+                  });
+
                   await offers.fetchMyOffersData();
                   offers.notify();
+                  isLoading = false;
                   Navigator.of(context).pop();
                 }),
               )
@@ -329,6 +349,9 @@ class _MyDealDetailScreenState extends State<MyDealDetailScreen> {
                         if (responseOfferData!['status'] == 'accepted') {
                           var newCount;
                           var otherUserId;
+
+                          await db.collection('items').doc(offer.firstOfferItem.id).update({'status' : 'off'});
+
                           if (offer.firstUser.userId == user.uid) {
                             otherUserId = offer.secondUser.userId;
                           } else {

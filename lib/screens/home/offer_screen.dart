@@ -524,7 +524,7 @@ class _OfferScreenState extends State<OfferScreen> {
                   });
                   Navigator.of(context).pushNamedAndRemoveUntil(
                     HomeScreen().routeName,
-                    ModalRoute.withName('/home'),
+                    ModalRoute.withName('/authenticate'),
                   );
                 }),
               ),
