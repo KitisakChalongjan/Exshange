@@ -203,6 +203,9 @@ class _LoginScreenState extends State<LoginScreen>
         actions: <Widget>[
           TextButton(
             onPressed: () {
+              setState(() {
+                _isLoading = false;
+              });
               Navigator.of(context).pop();
             },
             child: Text('Okay'),

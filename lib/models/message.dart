@@ -1,35 +1,76 @@
+import 'dart:convert';
+
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 class Message {
-  String messageId;
+  String senderProfileUrl;
   String chatId;
   String content;
   int messageTimeStamp;
-  
   Message({
-    required this.messageId,
+    required this.senderProfileUrl,
     required this.chatId,
-    required this.messageTimeStamp,
     required this.content,
+    required this.messageTimeStamp,
   });
   
-  get getMessageId => this.messageId;
 
- set setMessageId( messageId) => this.messageId = messageId;
+  Message copyWith({
+    String? senderProfileUrl,
+    String? chatId,
+    String? content,
+    int? messageTimeStamp,
+  }) {
+    return Message(
+      senderProfileUrl: senderProfileUrl ?? this.senderProfileUrl,
+      chatId: chatId ?? this.chatId,
+      content: content ?? this.content,
+      messageTimeStamp: messageTimeStamp ?? this.messageTimeStamp,
+    );
+  }
 
-  get getChatId => this.chatId;
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'senderProfileUrl': senderProfileUrl,
+      'chatId': chatId,
+      'content': content,
+      'messageTimeStamp': messageTimeStamp,
+    };
+  }
 
- set setChatId( chatId) => this.chatId = chatId;
+  factory Message.fromMap(Map<String, dynamic> map) {
+    return Message(
+      senderProfileUrl: map['senderProfileUrl'] as String,
+      chatId: map['chatId'] as String,
+      content: map['content'] as String,
+      messageTimeStamp: map['messageTimeStamp'] as int,
+    );
+  }
 
-  get getMessageTimeStamp => this.messageTimeStamp;
+  String toJson() => json.encode(toMap());
 
- set setMessageTimeStamp( messageTimeStamp) => this.messageTimeStamp = messageTimeStamp;
-
-  get getContent => this.content;
-
- set setContent( content) => this.content = content;
+  factory Message.fromJson(String source) => Message.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {
-    return 'Message(messageId: $messageId, chatId: $chatId, messageTimeStamp: $messageTimeStamp, content: $content)';
+    return 'Message(senderProfileUrl: $senderProfileUrl, chatId: $chatId, content: $content, messageTimeStamp: $messageTimeStamp)';
+  }
+
+  @override
+  bool operator ==(covariant Message other) {
+    if (identical(this, other)) return true;
+  
+    return 
+      other.senderProfileUrl == senderProfileUrl &&
+      other.chatId == chatId &&
+      other.content == content &&
+      other.messageTimeStamp == messageTimeStamp;
+  }
+
+  @override
+  int get hashCode {
+    return senderProfileUrl.hashCode ^
+      chatId.hashCode ^
+      content.hashCode ^
+      messageTimeStamp.hashCode;
   }
 }

@@ -1,13 +1,16 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:exshange/models/user.dart';
-import 'package:exshange/providers/items.dart';
-import 'package:exshange/screens/home/donate_screen.dart';
-import 'package:exshange/screens/home/item_overview_screen.dart';
-import 'package:exshange/screens/home/offer_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:provider/provider.dart';
+
+import 'package:exshange/models/user.dart';
+import 'package:exshange/providers/items.dart';
+import 'package:exshange/screens/chat/chat_message_screen.dart';
+import 'package:exshange/screens/home/donate_screen.dart';
+import 'package:exshange/screens/home/item_overview_screen.dart';
+import 'package:exshange/screens/home/offer_screen.dart';
 
 class ItemDetailScreen extends StatefulWidget {
   const ItemDetailScreen({super.key});
@@ -17,13 +20,26 @@ class ItemDetailScreen extends StatefulWidget {
   State<ItemDetailScreen> createState() => _ItemDetailScreenState();
 }
 
+class UserChatArg {
+  String userId;
+  String userName;
+  String userImageUrl;
+
+  UserChatArg({
+    required this.userId,
+    required this.userName,
+    required this.userImageUrl,
+  });
+}
+
 class _ItemDetailScreenState extends State<ItemDetailScreen> {
   FirebaseFirestore db = FirebaseFirestore.instance;
 
   Future<Map<String, dynamic>?> getItemOwnerData(String id) async {
     var docItemOwner = await db.collection('users').doc('${id}').get();
     var dataItemOwner = docItemOwner.data();
-    await Future.delayed(const Duration(seconds: 3));
+    dataItemOwner!.addAll({'id': '${docItemOwner.id}'});
+    await Future.delayed(const Duration(seconds: 1));
     return dataItemOwner;
   }
 
@@ -148,6 +164,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                       AsyncSnapshot<Map<String, dynamic>?> snapshot,
                     ) {
                       if (snapshot.hasData) {
+                        var itemOwnerData = snapshot.data!;
                         return SizedBox(
                           height: 60,
                           child: Row(
@@ -162,7 +179,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                                     child: Container(
                                       width: 60,
                                       child: Image.network(
-                                        snapshot.data!['profileImageUrl'],
+                                        itemOwnerData['profileImageUrl'],
                                         fit: BoxFit.cover,
                                       ),
                                     ),
@@ -171,20 +188,34 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                                     width: 10,
                                   ),
                                   Text(
-                                    snapshot.data!['name'],
+                                    itemOwnerData['name'],
                                     style:
                                         Theme.of(context).textTheme.bodyText1,
                                   ),
                                 ],
                               ),
-                              Container(
-                                margin: EdgeInsets.symmetric(horizontal: 10),
-                                padding: EdgeInsets.all(5),
-                                child: Icon(
-                                  size: 30,
-                                  color: Theme.of(context).hintColor,
-                                  Icons.chat_bubble,
+                              GestureDetector(
+                                child: Container(
+                                  margin: EdgeInsets.symmetric(horizontal: 10),
+                                  padding: EdgeInsets.all(5),
+                                  child: Icon(
+                                    size: 30,
+                                    color: Theme.of(context).hintColor,
+                                    Icons.chat_bubble,
+                                  ),
                                 ),
+                                onTap: (() {
+                                  Navigator.pushNamed(
+                                    context,
+                                    ChatMessageScreen().routeName,
+                                    arguments: UserChatArg(
+                                      userId: itemOwnerData['id'],
+                                      userName: itemOwnerData['name'],
+                                      userImageUrl:
+                                          itemOwnerData['profileImageUrl'],
+                                    ),
+                                  );
+                                }),
                               ),
                             ],
                           ),

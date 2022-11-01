@@ -129,10 +129,6 @@ class _MyAddressScreenState extends State<MyAddressScreen> {
                                 addresses[index]['address'],
                                 style: Theme.of(context).textTheme.subtitle2,
                               ),
-                              Text(
-                                addresses[index]['addressId'],
-                                style: Theme.of(context).textTheme.subtitle2,
-                              ),
                             ],
                           ),
                         ),
