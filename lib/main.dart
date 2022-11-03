@@ -109,7 +109,7 @@ class MyApp extends StatelessWidget {
             ),
             caption: TextStyle(
               fontSize: 16,
-              color: Color.fromARGB(255, 80, 80, 80),
+              color: Color.fromARGB(255, 110, 110, 110),
               decoration: TextDecoration.none,
             ),
           ),

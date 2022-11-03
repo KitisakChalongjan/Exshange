@@ -30,7 +30,8 @@ class Messages {
       senderProfileUrl: profileUrl,
       chatId: mychatId,
       content: content,
-      messageTimeStamp: DateTime.now().millisecondsSinceEpoch,
+      senderId: myId,
+      messageTimeStamp: FieldValue.serverTimestamp(),
     );
 
     await db.collection('messages').add(newMessage.toMap());
@@ -43,6 +44,7 @@ class Messages {
   ) async* {
     var db = FirebaseFirestore.instance;
     String chatId = '';
+    print('get chatId');
     await db
         .collection('chats')
         .where('member', arrayContainsAny: [myId, otherUserId])
@@ -53,9 +55,11 @@ class Messages {
           }
         });
     print(chatId);
+    print('get message');
     yield* db
         .collection('messages')
         .where('chatId', isEqualTo: chatId)
+        .orderBy('messageTimeStamp', descending: true)
         .snapshots();
   }
 }

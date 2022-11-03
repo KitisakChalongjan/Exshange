@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:exshange/models/message.dart';
 import 'package:exshange/providers/authentication.dart';
@@ -7,6 +9,7 @@ import 'package:exshange/screens/home/item_detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class ChatMessageScreen extends StatefulWidget {
@@ -58,9 +61,8 @@ class _ChatMessageScreenState extends State<ChatMessageScreen> {
                       Messages.getMessage(currentUser.uid, userChatArg.userId),
                   builder: ((context, snapshot) {
                     if (!snapshot.hasData) {
-                      return Text(
-                        'ไม่มีรายการแชท',
-                        style: Theme.of(context).textTheme.bodyText1,
+                      return Center(
+                        child: CircularProgressIndicator(),
                       );
                     } else {
                       return ListView.builder(
@@ -69,16 +71,69 @@ class _ChatMessageScreenState extends State<ChatMessageScreen> {
                         reverse: true,
                         itemBuilder: ((context, index) {
                           var message = snapshot.data!.docs[index].data();
-                          return ListTile(
-                            hoverColor: Theme.of(context).primaryColor,
-                            leading: CircleAvatar(
-                              radius: 20,
-                              backgroundColor: Colors.grey,
-                            ),
-                            title: Text(
-                              message['content'],
-                              style: Theme.of(context).textTheme.bodyText1,
-                            ),
+                          var isMe = message['senderId'] == currentUser.uid;
+                          var timestamp = message['messageTimeStamp'] as Timestamp;
+                          var datetime = timestamp.toDate();
+                          var dt = DateFormat('d MMM, HH:mm').format(datetime);
+                          return Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment: isMe
+                                    ? MainAxisAlignment.start
+                                    : MainAxisAlignment.end,
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color:
+                                          Theme.of(context).primaryColorLight,
+                                      borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(16),
+                                        topRight: Radius.circular(16),
+                                        bottomLeft:
+                                            Radius.circular(isMe ? 0 : 16),
+                                        bottomRight:
+                                            Radius.circular(isMe ? 16 : 0),
+                                      ),
+                                    ),
+                                    padding: EdgeInsets.all(8),
+                                    child: Text(
+                                      message['content'],
+                                      style:
+                                          Theme.of(context).textTheme.bodyText1,
+                                    ),
+                                  ),
+                                  isMe
+                                      ? SizedBox(
+                                          width: 0,
+                                        )
+                                      : SizedBox(
+                                          width: 10,
+                                        ),
+                                  isMe
+                                      ? SizedBox()
+                                      : CircleAvatar(
+                                          radius: 20,
+                                          backgroundImage: NetworkImage(
+                                            message['senderProfileUrl'],
+                                          ),
+                                        ),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment: isMe
+                                    ? MainAxisAlignment.start
+                                    : MainAxisAlignment.end,
+                                children: [
+                                  Text(
+                                    dt,
+                                    style: Theme.of(context).textTheme.caption,
+                                  ),
+                                  SizedBox(
+                                    width: isMe ? 0 : 50,
+                                  ),
+                                ],
+                              ),
+                            ],
                           );
                         }),
                       );
