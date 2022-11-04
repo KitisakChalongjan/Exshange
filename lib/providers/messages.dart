@@ -5,26 +5,29 @@ import 'package:exshange/models/message.dart';
 import 'package:exshange/providers/authentication.dart';
 
 class Messages {
-  static Future<void> uploadMessage(
-      String myId, String userId, String profileUrl, String content) async {
+  static Future<void> uploadMessage(String myId, String otherUserId,
+      String profileUrl, String content) async {
     var db = FirebaseFirestore.instance;
     String mychatId = '';
     await db
         .collection('chats')
-        .where('member', arrayContainsAny: [myId, userId])
+        .where('member', arrayContains: myId)
         .get()
         .then((chats) async {
-          if (chats.docs.isEmpty) {
-            Map<String, dynamic> chat = {
-              'member': [myId, userId]
-            };
-            var a = await db.collection('chats').add(chat);
-            var b = await a.get();
-            mychatId = b.id;
-          } else {
-            mychatId = chats.docs.first.id;
-          }
-        });
+      chats.docs.forEach((chatQuery) async {
+        var chatQueryData = chatQuery.data()['member'] as List;
+        if (chatQueryData.contains(otherUserId)) {
+          mychatId = chatQuery.id;
+        } else {
+          Map<String, dynamic> chat = {
+            'member': [myId, otherUserId]
+          };
+          var a = await db.collection('chats').add(chat);
+          var b = await a.get();
+          mychatId = b.id;
+        }
+      });
+    });
 
     var newMessage = Message(
       senderProfileUrl: profileUrl,
@@ -38,28 +41,37 @@ class Messages {
     print('sendMessage(chatID = ${mychatId})');
   }
 
-  static Stream<QuerySnapshot<Map<String, dynamic>>> getMessage(
+  static Future<QuerySnapshot<Map<String, dynamic>>> getMessage(
     String myId,
     String otherUserId,
-  ) async* {
+  ) async {
     var db = FirebaseFirestore.instance;
     String chatId = '';
+    print(myId);
+    print(otherUserId);
     print('get chatId');
-    await db
-        .collection('chats')
-        .where('member', arrayContainsAny: [myId, otherUserId])
-        .get()
-        .then((chats) {
-          if (chats.docs.first.exists) {
-            chatId = chats.docs.first.id;
-          }
+    try {
+      await db
+          .collection('chats')
+          .where('member', arrayContains: myId)
+          .get()
+          .then((chats) {
+        var chatResult = chats.docs.firstWhere((chatQuery) {
+          var chat = chatQuery.data();
+          var member = chat['member'] as List;
+          return member.contains(otherUserId);
         });
-    print(chatId);
+        print(chatResult.id);
+        chatId = chatResult.id;
+      });
+    } catch (e) {
+      print(e);
+    }
     print('get message');
-    yield* db
+    return db
         .collection('messages')
         .where('chatId', isEqualTo: chatId)
         .orderBy('messageTimeStamp', descending: true)
-        .snapshots();
+        .get();
   }
 }

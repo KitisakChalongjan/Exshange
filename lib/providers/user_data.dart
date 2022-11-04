@@ -21,24 +21,28 @@ class UserData with ChangeNotifier {
   }
 
   Future<String> fetchUserData(String uid) async {
-    print('startFetchUserData');
-    String userId = uid;
+    try {
+      print('startFetchUserData');
+      String userId = uid;
 
-    var usersRef = db.collection('users').doc('${userId}');
-    var userAddressRef =
-        db.collection('userAddress').where('userId', isEqualTo: userId);
+      var usersRef = db.collection('users').doc('${userId}');
+      var userAddressRef =
+          db.collection('userAddress').where('userId', isEqualTo: userId);
 
-    var usersSnapshot = await usersRef.get();
-    print('usersSnapshotOk');
-    var userAddresSnapshot = await userAddressRef.get();
-    print('userAddresSnapshotOk');
-    var usersData = usersSnapshot.data()!;
-    var userAddresData = userAddresSnapshot.docs;
-    print('convertDataOk');
-    _userModel = UserModel.fromMap(userId, usersData, userAddresData);
-    print('_userModelOk');
-    print('UserId(${_userModel!.userId})');
-    print('Fetch User\'s Data Successful!');
+      var usersSnapshot = await usersRef.get();
+      print('usersSnapshotOk');
+      var userAddresSnapshot = await userAddressRef.get();
+      print('userAddresSnapshotOk');
+      var usersData = usersSnapshot.data()!;
+      var userAddresData = userAddresSnapshot.docs;
+      print('convertDataOk');
+      _userModel = UserModel.fromMap(userId, usersData, userAddresData);
+      print('_userModelOk');
+      print('UserId(${_userModel!.userId})');
+      print('Fetch User\'s Data Successful!');
+    } catch (e) {
+      print('${e}dsada');
+    }
     notifyListeners();
     return 'done';
   }

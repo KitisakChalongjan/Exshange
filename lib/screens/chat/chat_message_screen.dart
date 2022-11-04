@@ -24,7 +24,7 @@ class _ChatMessageScreenState extends State<ChatMessageScreen> {
   var _messageController = TextEditingController();
   var message;
 
-  void sendMessage(
+  Future<void> sendMessage(
     BuildContext ctx,
     String myId,
     String userId,
@@ -56,23 +56,22 @@ class _ChatMessageScreenState extends State<ChatMessageScreen> {
             Expanded(
               child: Container(
                 padding: EdgeInsets.all(12),
-                child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                  stream:
+                child: FutureBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                  future:
                       Messages.getMessage(currentUser.uid, userChatArg.userId),
                   builder: ((context, snapshot) {
-                    if (!snapshot.hasData) {
-                      return Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    } else {
+                    if (snapshot.hasData) {
+                      print(snapshot.data!.size);
                       return ListView.builder(
                         physics: BouncingScrollPhysics(),
                         itemCount: snapshot.data!.docs.length,
                         reverse: true,
                         itemBuilder: ((context, index) {
+                          print('build message');
                           var message = snapshot.data!.docs[index].data();
                           var isMe = message['senderId'] == currentUser.uid;
-                          var timestamp = message['messageTimeStamp'] as Timestamp;
+                          var timestamp =
+                              message['messageTimeStamp'] as Timestamp;
                           var datetime = timestamp.toDate();
                           var dt = DateFormat('d MMM, HH:mm').format(datetime);
                           return Column(
@@ -137,6 +136,10 @@ class _ChatMessageScreenState extends State<ChatMessageScreen> {
                           );
                         }),
                       );
+                    } else {
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
                     }
                   }),
                 ),
@@ -174,18 +177,19 @@ class _ChatMessageScreenState extends State<ChatMessageScreen> {
                     width: 10,
                   ),
                   GestureDetector(
-                    onTap: (() {
+                    onTap: (() async{
                       if (_messageController.text.trim().isEmpty) {
                         print('error');
                         return;
                       } else {
-                        sendMessage(
+                        await sendMessage(
                           context,
                           currentUser.uid,
                           userChatArg.userId,
                           myData.profileImageUrl,
                           _messageController.text,
                         );
+                        setState(() {});
                       }
                     }),
                     child: Container(

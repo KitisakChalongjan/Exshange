@@ -20,10 +20,18 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  var isLoading = false;
   @override
   Widget build(BuildContext context) {
     var userData = context.watch<UserData>().userModel;
-    var userProfileUrl = userData!.profileImageUrl;
+    if (userData == null) {
+      return Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+    var userProfileUrl = userData.profileImageUrl;
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
