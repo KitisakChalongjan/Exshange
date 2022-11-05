@@ -44,7 +44,7 @@ class Authentication with ChangeNotifier {
         'rating': 0.0,
         'favoriteCategories': [],
         'favoriteItems': [],
-        'profileImageUrl': '',
+        'profileImageUrl': 'https://firebasestorage.googleapis.com/v0/b/exshange-project.appspot.com/o/images%2Fperson-icon.png?alt=media&token=e32d807b-eeaa-42cb-89e1-291c0af9e852',
       },
     );
     print('Registered : ${currentUser!.email}');

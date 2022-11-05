@@ -19,10 +19,12 @@ import 'package:provider/provider.dart';
 class ItemArgs {
   String itemId;
   int index;
+  String from;
 
   ItemArgs({
     required this.itemId,
     required this.index,
+    required this.from,
   });
 }
 
@@ -121,7 +123,7 @@ class _ItemOverviewScreenState extends State<ItemOverviewScreen> {
               padding: EdgeInsets.all(5),
               child: filteredItems.isEmpty
                   ? Center(
-                      child: Text('ไม่พบสิ่งของที่ต้องการ',
+                      child: Text('ไม่พบรายการสิ่งของที่ต้องการ',
                           style: Theme.of(context).textTheme.subtitle2),
                     )
                   : FutureBuilder(
@@ -186,6 +188,7 @@ class _ItemOverviewScreenState extends State<ItemOverviewScreen> {
                                         arguments: ItemArgs(
                                           itemId: filteredItems[index].id,
                                           index: index,
+                                          from: 'overview',
                                         ),
                                       );
                                     },
@@ -296,13 +299,7 @@ class _ItemOverviewScreenState extends State<ItemOverviewScreen> {
                                                       ),
                                                       Text(
                                                         filteredItems[index]
-                                                                    .address
-                                                                    .length >
-                                                                16
-                                                            ? '${filteredItems[index].address.substring(0, 16)}...'
-                                                            : filteredItems[
-                                                                    index]
-                                                                .address,
+                                                            .province,
                                                         style: Theme.of(context)
                                                             .textTheme
                                                             .caption,

@@ -29,7 +29,8 @@ class _FilterScreenState extends State<FilterScreen> {
     if (filter.filterCategory != 'หมวดหมู่ทั้งหมด') {
       category2 = allCategory['${filter.filterCategory}']!.toList();
       category2.insert(0, 'หมวดหมู่รองทั้งหมด');
-    }if(filter.filterCategory == 'หมวดหมู่ทั้งหมด'){
+    }
+    if (filter.filterCategory == 'หมวดหมู่ทั้งหมด') {
       category2 = ['หมวดหมู่รองทั้งหมด'];
     }
     return Scaffold(
@@ -158,19 +159,23 @@ class _FilterScreenState extends State<FilterScreen> {
               'กรองตามระยะทาง',
               style: Theme.of(context).textTheme.bodyText1,
             ),
-            Slider(
-              min: 1.0,
-              max: 1000.0,
-              value: filter.filterDistance,
-              onChanged: ((value) {
-                setState(() {
-                  filter.filterDistance = value;
-                  print(filter.filterDistance);
-                });
-              }),
+            Container(
+              child: Slider(
+                min: 1.0,
+                max: 500.0,
+                value: filter.filterDistance,
+                onChanged: ((value) {
+                  setState(() {
+                    filter.filterDistance = value;
+                    print(filter.filterDistance);
+                  });
+                }),
+              ),
             ),
             Text(
-              '${filter.filterDistance.toInt()}',
+              filter.filterDistance.toInt() != 1
+                  ? '${filter.filterDistance.toInt()} กม'
+                  : 'ไม่กำหนด',
               style: Theme.of(context).textTheme.bodyText1,
             ),
             SizedBox(

@@ -196,12 +196,10 @@ class _MyHistoryDetailScreenState extends State<MyHistoryDetailScreen> {
                             children: [
                               CircleAvatar(
                                 radius: 40,
-                                child: ClipOval(
-                                  child: Image.network(
-                                    offer.firstUser.userId == user.uid
-                                        ? offer.secondUser.profileImageUrl
-                                        : offer.firstUser.profileImageUrl,
-                                  ),
+                                backgroundImage: NetworkImage(
+                                  offer.firstUser.userId == user.uid
+                                      ? offer.secondUser.profileImageUrl
+                                      : offer.firstUser.profileImageUrl,
                                 ),
                               ),
                               Text(

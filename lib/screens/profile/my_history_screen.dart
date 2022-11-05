@@ -23,6 +23,9 @@ class _MyHistoryScreenState extends State<MyHistoryScreen> {
     var user = context.read<Authentication>().currentUser!;
     var selectedOffer = offer
         .where((offer) => offer.status == 'accepted' || offer.status == 'done')
+        .where((offer) =>
+            offer.firstUser.userId == user.uid ||
+            offer.secondUser.userId == user.uid)
         .toList();
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,

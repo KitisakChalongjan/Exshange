@@ -61,7 +61,9 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
               height: 400,
               width: double.infinity,
               child: Hero(
-                tag: 'heroItem${args.index}',
+                tag: args.from == 'overview'
+                    ? 'heroItem${args.index}'
+                    : 'heroItemRec${args.index}',
                 child: Image.network(
                   item.imagesUrl[0],
                   fit: BoxFit.cover,
@@ -269,6 +271,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
             arguments: ItemArgs(
               itemId: args.itemId,
               index: args.index,
+              from: args.from,
             ),
           );
         }),
