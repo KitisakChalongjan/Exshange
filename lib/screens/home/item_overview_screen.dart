@@ -156,15 +156,17 @@ class _ItemOverviewScreenState extends State<ItemOverviewScreen> {
                                         value.filterSubCategory)
                                     .toList();
                               }
-                              filteredItems = filteredItems
-                                  .where((item) =>
-                                      GeolocatorHelper().getDistanceBetween(
-                                          currentPos.latitude,
-                                          currentPos.longitude,
-                                          item.latitude,
-                                          item.longitude) <
-                                      filter.filterDistance * 1000)
-                                  .toList();
+                              if (filter.filterDistance != 1.0) {
+                                filteredItems = filteredItems
+                                    .where((item) =>
+                                        GeolocatorHelper().getDistanceBetween(
+                                            currentPos.latitude,
+                                            currentPos.longitude,
+                                            item.latitude,
+                                            item.longitude) <
+                                        filter.filterDistance * 1000)
+                                    .toList();
+                              }
                               if (filter.itemType != 'ทั้งหมด') {
                                 filteredItems = filteredItems
                                     .where((item) =>

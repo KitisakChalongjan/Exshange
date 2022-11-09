@@ -19,14 +19,14 @@ class MyHistoryScreen extends StatefulWidget {
 class _MyHistoryScreenState extends State<MyHistoryScreen> {
   @override
   Widget build(BuildContext context) {
-    var offer = context.read<Offers>().offers;
+    // var offer = context.read<Offers>().offers;
     var user = context.read<Authentication>().currentUser!;
-    var selectedOffer = offer
-        .where((offer) => offer.status == 'accepted' || offer.status == 'done')
-        .where((offer) =>
-            offer.firstUser.userId == user.uid ||
-            offer.secondUser.userId == user.uid)
-        .toList();
+    // var selectedOffer = offer
+    //     .where((offer) => offer.status == 'accepted' || offer.status == 'done')
+    //     .where((offer) =>
+    //         offer.firstUser.userId == user.uid ||
+    //         offer.secondUser.userId == user.uid)
+    //     .toList();
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
@@ -37,6 +37,14 @@ class _MyHistoryScreenState extends State<MyHistoryScreen> {
         future: context.read<Offers>().fetchMyOffersData(),
         builder: ((context, snapshot) {
           if (snapshot.hasData) {
+            var offer = context.watch<Offers>().offers;
+            var selectedOffer = offer
+                .where((offer) =>
+                    offer.status == 'accepted' || offer.status == 'done')
+                .where((offer) =>
+                    offer.firstUser.userId == user.uid ||
+                    offer.secondUser.userId == user.uid)
+                .toList();
             return ListView.builder(
               itemCount: selectedOffer.length,
               itemBuilder: ((context, index) {

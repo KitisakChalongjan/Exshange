@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:exshange/models/offer.dart';
 import 'package:exshange/providers/authentication.dart';
 import 'package:exshange/providers/offers.dart';
+import 'package:exshange/screens/chat/chat_message_screen.dart';
+import 'package:exshange/screens/home/item_detail_screen.dart';
 import 'package:exshange/screens/home_screen.dart';
 import 'package:exshange/screens/profile/profile_screen.dart';
 import 'package:flutter/material.dart';
@@ -210,13 +212,34 @@ class _MyHistoryDetailScreenState extends State<MyHistoryDetailScreen> {
                               ),
                             ],
                           ),
-                          Container(
-                            margin: EdgeInsets.symmetric(horizontal: 10),
-                            padding: EdgeInsets.all(5),
-                            child: Icon(
-                              size: 30,
-                              color: Theme.of(context).hintColor,
-                              Icons.chat_bubble,
+                          GestureDetector(
+                            onTap: (() {
+                              Navigator.pushNamed(
+                                context,
+                                ChatMessageScreen().routeName,
+                                arguments: offer.firstUser.userId == user.uid
+                                    ? UserChatArg(
+                                        userId: offer.secondUser.userId,
+                                        userName: offer.secondUser.name,
+                                        userImageUrl:
+                                            offer.secondUser.profileImageUrl,
+                                      )
+                                    : UserChatArg(
+                                        userId: offer.firstUser.userId,
+                                        userName: offer.firstUser.name,
+                                        userImageUrl:
+                                            offer.firstUser.profileImageUrl,
+                                      ),
+                              );
+                            }),
+                            child: Container(
+                              margin: EdgeInsets.symmetric(horizontal: 10),
+                              padding: EdgeInsets.all(5),
+                              child: Icon(
+                                size: 30,
+                                color: Theme.of(context).hintColor,
+                                Icons.chat_bubble,
+                              ),
                             ),
                           ),
                         ],

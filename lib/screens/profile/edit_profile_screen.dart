@@ -46,6 +46,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   @override
   Widget build(BuildContext context) {
     var currentUser = context.read<Authentication>().currentUser!;
+    var usermodel = ModalRoute.of(context)!.settings.arguments as UserModel;
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
@@ -128,7 +129,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         enabledBorder: InputBorder.none,
                         errorBorder: InputBorder.none,
                         disabledBorder: InputBorder.none,
-                        hintText: "ชื่อ",
+                        hintText: usermodel.name,
                       ),
                       minLines: 1,
                       maxLines: 2,
@@ -162,7 +163,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         enabledBorder: InputBorder.none,
                         errorBorder: InputBorder.none,
                         disabledBorder: InputBorder.none,
-                        hintText: "เบอร์โทร",
+                        hintText: usermodel.phone,
                       ),
                       minLines: 1,
                       maxLines: 2,

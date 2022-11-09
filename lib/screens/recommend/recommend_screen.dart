@@ -38,8 +38,7 @@ class _RecommendScreenState extends State<RecommendScreen> {
         title: Text('แนะนำสำหรับคุณ'),
       ),
       body: Center(
-        child: Container(
-          height: double.infinity, // card height
+        child: SizedBox( // card height
           child: itemsData.isEmpty
               ? Center(
                   child: Text(

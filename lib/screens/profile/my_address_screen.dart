@@ -122,10 +122,6 @@ class _MyAddressScreenState extends State<MyAddressScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                index.toString(),
-                                style: Theme.of(context).textTheme.subtitle2,
-                              ),
-                              Text(
                                 addresses[index]['address'],
                                 style: Theme.of(context).textTheme.subtitle2,
                               ),

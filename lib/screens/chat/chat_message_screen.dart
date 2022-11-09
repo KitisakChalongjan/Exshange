@@ -92,8 +92,8 @@ class _ChatMessageScreenState extends State<ChatMessageScreen> {
                             children: [
                               Row(
                                 mainAxisAlignment: isMe
-                                    ? MainAxisAlignment.start
-                                    : MainAxisAlignment.end,
+                                    ? MainAxisAlignment.end
+                                    : MainAxisAlignment.start,
                                 children: [
                                   Container(
                                     decoration: BoxDecoration(
@@ -103,9 +103,9 @@ class _ChatMessageScreenState extends State<ChatMessageScreen> {
                                         topLeft: Radius.circular(16),
                                         topRight: Radius.circular(16),
                                         bottomLeft:
-                                            Radius.circular(isMe ? 0 : 16),
-                                        bottomRight:
                                             Radius.circular(isMe ? 16 : 0),
+                                        bottomRight:
+                                            Radius.circular(isMe ? 0 : 16),
                                       ),
                                     ),
                                     padding: EdgeInsets.all(8),
@@ -117,32 +117,32 @@ class _ChatMessageScreenState extends State<ChatMessageScreen> {
                                   ),
                                   isMe
                                       ? SizedBox(
-                                          width: 0,
+                                          width: 10,
                                         )
                                       : SizedBox(
-                                          width: 10,
+                                          width: 0,
                                         ),
                                   isMe
-                                      ? SizedBox()
-                                      : CircleAvatar(
+                                      ? CircleAvatar(
                                           radius: 20,
                                           backgroundImage: NetworkImage(
                                             message['senderProfileUrl'],
                                           ),
-                                        ),
+                                        )
+                                      : SizedBox(),
                                 ],
                               ),
                               Row(
                                 mainAxisAlignment: isMe
-                                    ? MainAxisAlignment.start
-                                    : MainAxisAlignment.end,
+                                    ? MainAxisAlignment.end
+                                    : MainAxisAlignment.start,
                                 children: [
                                   Text(
                                     dt,
                                     style: Theme.of(context).textTheme.caption,
                                   ),
                                   SizedBox(
-                                    width: isMe ? 0 : 50,
+                                    width: isMe ? 50 : 0,
                                   ),
                                 ],
                               ),

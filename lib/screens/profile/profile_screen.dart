@@ -251,7 +251,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             GestureDetector(
               onTap: (() {
-                Navigator.of(context).pushNamed(EditProfileScreen().routeName);
+                Navigator.of(context).pushNamed(EditProfileScreen().routeName, arguments: userData);
               }),
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
