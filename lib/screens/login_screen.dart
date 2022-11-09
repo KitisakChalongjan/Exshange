@@ -25,13 +25,15 @@ class _LoginScreenState extends State<LoginScreen>
 
   var db;
 
+  bool _obscurePassword = true;
+
   AuthMode _authMode = AuthMode.login;
 
   String? errorMessage = '';
 
   final GlobalKey<FormState> _formKey = GlobalKey();
 
-  Map<String, String> _authData = {
+  final Map<String, String> _authData = {
     'email': '',
     'password': '',
   };
@@ -41,6 +43,7 @@ class _LoginScreenState extends State<LoginScreen>
   Widget _textFormField(
     String fieldTitle,
     TextEditingController textController,
+    bool isObscured,
     IconData icon,
     TextInputType inputType,
     String? Function(String?)? validateFunc,
@@ -52,6 +55,7 @@ class _LoginScreenState extends State<LoginScreen>
         keyboardType: inputType,
         style: Theme.of(context).textTheme.bodyText1,
         controller: textController,
+        obscureText: fieldTitle == 'Password' ? _obscurePassword : false,
         decoration: InputDecoration(
           prefixIcon: Icon(icon),
           filled: true,
@@ -63,6 +67,18 @@ class _LoginScreenState extends State<LoginScreen>
             borderRadius: BorderRadius.circular(40),
             borderSide: BorderSide.none,
           ),
+          suffixIcon: fieldTitle == 'Password'
+              ? IconButton(
+                  icon: Icon(
+                    _obscurePassword ? Icons.visibility : Icons.visibility_off,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _obscurePassword = !_obscurePassword;
+                    });
+                  },
+                )
+              : null,
         ),
         textAlign: TextAlign.left,
         onSaved: onSaveFunc,
@@ -272,6 +288,7 @@ class _LoginScreenState extends State<LoginScreen>
                       _textFormField(
                         'Email',
                         _emailController,
+                        _obscurePassword,
                         Icons.email_rounded,
                         TextInputType.emailAddress,
                         (emailInput) {
@@ -289,6 +306,7 @@ class _LoginScreenState extends State<LoginScreen>
                       _textFormField(
                         'Password',
                         _pwController,
+                        _obscurePassword,
                         Icons.lock_rounded,
                         TextInputType.text,
                         (pwInput) {

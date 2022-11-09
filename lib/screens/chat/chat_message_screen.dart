@@ -5,6 +5,7 @@ import 'package:exshange/models/message.dart';
 import 'package:exshange/providers/authentication.dart';
 import 'package:exshange/providers/messages.dart';
 import 'package:exshange/providers/user_data.dart';
+import 'package:exshange/screens/chat/chat_user_info.dart';
 import 'package:exshange/screens/home/item_detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
@@ -49,6 +50,19 @@ class _ChatMessageScreenState extends State<ChatMessageScreen> {
           style: Theme.of(context).textTheme.bodyText2,
         ),
         centerTitle: true,
+        actions: [
+          IconButton(
+            icon: CircleAvatar(
+              backgroundImage: NetworkImage(userChatArg.userImageUrl),
+              radius: 42,
+            ),
+            onPressed: () {
+              print('User Info');
+              Navigator.pushNamed(context, ChatUserInfo().routeName,
+                  arguments: userChatArg);
+            },
+          ),
+        ],
       ),
       body: Container(
         child: Column(
@@ -177,7 +191,7 @@ class _ChatMessageScreenState extends State<ChatMessageScreen> {
                     width: 10,
                   ),
                   GestureDetector(
-                    onTap: (() async{
+                    onTap: (() async {
                       if (_messageController.text.trim().isEmpty) {
                         print('error');
                         return;
