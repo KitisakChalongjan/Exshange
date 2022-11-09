@@ -255,33 +255,36 @@ class _MyHistoryDetailScreenState extends State<MyHistoryDetailScreen> {
           ),
         ),
       ),
-      bottomNavigationBar: BottomAppBar(
-        child: GestureDetector(
-          child: Container(
-            decoration: BoxDecoration(
-              color: offer.status == 'accepted'
-                  ? Theme.of(context).primaryColor
-                  : Theme.of(context).hintColor,
-            ),
-            height: 60,
-            child: Center(
-              child: Text(
-                offer.status == 'accepted' ? 'ให้คะแนน' : 'ให้คะแนนแล้ว',
-                style: Theme.of(context).textTheme.bodyText2,
+      bottomNavigationBar: offer.firstOfferItem.itemType == 'ให้' &&
+              offer.firstUser.userId != user.uid
+          ? BottomAppBar(
+              child: GestureDetector(
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: offer.status == 'accepted'
+                        ? Theme.of(context).primaryColor
+                        : Theme.of(context).hintColor,
+                  ),
+                  height: 60,
+                  child: Center(
+                    child: Text(
+                      offer.status == 'accepted' ? 'ให้คะแนน' : 'ให้คะแนนแล้ว',
+                      style: Theme.of(context).textTheme.bodyText2,
+                    ),
+                  ),
+                ),
+                onTap: (() {
+                  showDialog(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (_) {
+                      return Rating(offer: offer);
+                    },
+                  );
+                }),
               ),
-            ),
-          ),
-          onTap: (() {
-            showDialog(
-              context: context,
-              barrierDismissible: false,
-              builder: (_) {
-                return Rating(offer: offer);
-              },
-            );
-          }),
-        ),
-      ),
+            )
+          : null,
     );
   }
 }

@@ -90,7 +90,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                     ),
                   ),
                   Flexible(
-                    flex: 2,
+                    flex: 3,
                     child: Container(
                       decoration: BoxDecoration(
                         color: item.itemType == 'แลก'
@@ -100,7 +100,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                       ),
                       alignment: Alignment.center,
                       child: Text(
-                        item.itemType == 'แลก' ? 'แลก' : 'ให้',
+                        item.itemType == 'แลก' ? 'แลกเปลี่ยน' : 'บริจาค',
                         style: Theme.of(context).textTheme.bodyText2,
                       ),
                     ),

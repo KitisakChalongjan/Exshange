@@ -95,6 +95,21 @@ class _ChatMessageScreenState extends State<ChatMessageScreen> {
                                     ? MainAxisAlignment.end
                                     : MainAxisAlignment.start,
                                 children: [
+                                  isMe
+                                      ? SizedBox()
+                                      : CircleAvatar(
+                                          radius: 20,
+                                          backgroundImage: NetworkImage(
+                                            message['senderProfileUrl'],
+                                          ),
+                                        ),
+                                  isMe
+                                      ? SizedBox(
+                                          width: 0,
+                                        )
+                                      : SizedBox(
+                                          width: 10,
+                                        ),
                                   Container(
                                     decoration: BoxDecoration(
                                       color:
@@ -122,14 +137,6 @@ class _ChatMessageScreenState extends State<ChatMessageScreen> {
                                       : SizedBox(
                                           width: 0,
                                         ),
-                                  isMe
-                                      ? CircleAvatar(
-                                          radius: 20,
-                                          backgroundImage: NetworkImage(
-                                            message['senderProfileUrl'],
-                                          ),
-                                        )
-                                      : SizedBox(),
                                 ],
                               ),
                               Row(

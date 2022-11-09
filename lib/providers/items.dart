@@ -8,7 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart';
 
 class Items with ChangeNotifier {
-  List<String> itemType = ['ทั้งหมด', 'ให้', 'แลก'];
+  List<String> itemType = ['ทั้งหมด', 'บริจาค', 'แลกเปลี่ยน'];
 
   FirebaseFirestore db = FirebaseFirestore.instance;
 

@@ -399,8 +399,15 @@ class _AddItemScreenState extends State<AddItemScreen> {
                               )
                               .toList(),
                           onChanged: (type) {
+                            String? tempType;
+                            if (type == 'แลกเปลี่ยน') {
+                              tempType = 'แลกเปลี่ยน';
+                            }
+                            if (type == 'บริจาค') {
+                              tempType = 'บริจาค';
+                            }
                             setState(() {
-                              selectedType = type;
+                              selectedType = tempType;
                               print('${selectedType}');
                             });
                           },
@@ -504,7 +511,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
                     _selectedCategory,
                     _selectedSubCategory,
                     imagesSelectedUrl,
-                    selectedType!,
+                    selectedType == 'แลกเปลี่ยน' ? 'แลก' : 'ให้',
                     latitude!,
                     longitude!,
                     'on');

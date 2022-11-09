@@ -61,11 +61,28 @@ class _ItemOverviewScreenState extends State<ItemOverviewScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Text(
-                      "Logo",
-                      style: Theme.of(context).textTheme.headline1,
+                      "EX",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 30,
+                      ),
+                    ),
+                    Text(
+                      "SH",
+                      style: TextStyle(
+                        color: Color(0xFF1DD6B0),
+                        fontSize: 30,
+                      ),
+                    ),
+                    Text(
+                      "ANGE",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 30,
+                      ),
                     ),
                   ],
                 ),
