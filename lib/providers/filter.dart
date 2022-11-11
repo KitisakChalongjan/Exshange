@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class Filter with ChangeNotifier {
+  String searchText = '';
   String filterCategory = 'หมวดหมู่ทั้งหมด';
   String filterSubCategory = 'หมวดหมู่รองทั้งหมด';
   double filterDistance = 1;

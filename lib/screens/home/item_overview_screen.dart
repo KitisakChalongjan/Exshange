@@ -38,6 +38,7 @@ class ItemOverviewScreen extends StatefulWidget {
 class _ItemOverviewScreenState extends State<ItemOverviewScreen> {
   final User? user = FirebaseAuth.instance.currentUser;
   late Position userPos;
+  TextEditingController _searchTextController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +63,7 @@ class _ItemOverviewScreenState extends State<ItemOverviewScreen> {
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
+                  children: const [
                     Text(
                       "EX",
                       style: TextStyle(
@@ -89,19 +90,27 @@ class _ItemOverviewScreenState extends State<ItemOverviewScreen> {
                 SizedBox(
                   height: 30,
                   child: TextField(
+                    controller: _searchTextController,
                     style: Theme.of(context).textTheme.bodyText1,
+                    autofocus: false,
                     decoration: InputDecoration(
-                      contentPadding: EdgeInsets.symmetric(horizontal: 20),
+                      contentPadding:
+                          const EdgeInsets.symmetric(horizontal: 20),
                       filled: true,
                       fillColor: Theme.of(context).backgroundColor,
                       isDense: true,
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(40),
+                        borderRadius: BorderRadius.circular(15),
                         borderSide: BorderSide.none,
                       ),
-                      suffixIcon: Icon(Icons.search),
+                      suffixIcon: const Icon(Icons.search),
                     ),
                     textAlign: TextAlign.left,
+                    onSubmitted: (_) {
+                      filter.searchText = _searchTextController.text.trim();
+                      filter.noti();
+                      print(_searchTextController.text);
+                    },
                   ),
                 ),
               ],
@@ -148,7 +157,7 @@ class _ItemOverviewScreenState extends State<ItemOverviewScreen> {
                       builder: ((context, snapshot) {
                         if (!snapshot.hasData) {
                           print('loading position');
-                          return Center(
+                          return const Center(
                             child: CircularProgressIndicator(),
                           );
                         } else {
@@ -158,6 +167,13 @@ class _ItemOverviewScreenState extends State<ItemOverviewScreen> {
                               Position currentPos = snapshot.data as Position;
                               print(
                                   '${currentPos.latitude} - ${currentPos.longitude}');
+
+                              if (filter.searchText != '') {
+                                filteredItems = filteredItems
+                                    .where(
+                                        (item) => item.name.contains(filter.searchText))
+                                    .toList();
+                              }
 
                               if (filter.filterCategory != 'หมวดหมู่ทั้งหมด') {
                                 filteredItems = filteredItems
@@ -264,17 +280,10 @@ class _ItemOverviewScreenState extends State<ItemOverviewScreen> {
                                                         children: [
                                                           Text(
                                                             filteredItems[index]
-                                                                        .name
-                                                                        .length >
-                                                                    8
-                                                                ? filteredItems[
-                                                                        index]
-                                                                    .name
-                                                                    .substring(
-                                                                        0, 8)
-                                                                : filteredItems[
-                                                                        index]
-                                                                    .name,
+                                                                .name,
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
                                                             style: Theme.of(
                                                                     context)
                                                                 .textTheme
