@@ -94,7 +94,7 @@ class UserModel {
         addresses,
         data['tradeCount'],
         data['donateCount'],
-        (data['rating'] as int).toDouble(),
+        (data['rating'] as double),
         data['favoriteCategories'],
         data['favoriteItems'],
         data['profileImageUrl'],
