@@ -81,23 +81,26 @@ class UserModel {
     for (var element in dataAddress) {
       print('startFromMapFor');
       var addressData = element.data();
-      addressData.addEntries(<String, dynamic>{'addressId': element.id}.entries);
+      addressData
+          .addEntries(<String, dynamic>{'addressId': element.id}.entries);
       addresses.add(addressData);
       print('endFromMapFor');
     }
     print('endFromMap');
     return UserModel(
-        uid,
-        data['email'],
-        data['name'],
-        data['phone'],
-        addresses,
-        data['tradeCount'],
-        data['donateCount'],
-        (data['rating'] as double),
-        data['favoriteCategories'],
-        data['favoriteItems'],
-        data['profileImageUrl'],
+      uid,
+      data['email'],
+      data['name'],
+      data['phone'],
+      addresses,
+      data['tradeCount'],
+      data['donateCount'],
+      data['rating'] % 1 == 0
+          ? (data['rating'] as int).toDouble()
+          : data['rating'] as double,
+      data['favoriteCategories'],
+      data['favoriteItems'],
+      data['profileImageUrl'],
     );
   }
 }

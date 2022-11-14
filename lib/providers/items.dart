@@ -22,13 +22,17 @@ class Items with ChangeNotifier {
 
   Future<String> initItemsData() async {
     List<Item> tempItems = [];
-    var loadedItems = await db.collection("items").get();
-    for (var item in loadedItems.docs) {
-      tempItems.add(
-        Item.fromQueryDocumentSnapshot(item),
-      );
+    try {
+      var loadedItems = await db.collection("items").get();
+      for (var item in loadedItems.docs) {
+        tempItems.add(
+          Item.fromQueryDocumentSnapshot(item),
+        );
+      }
+      _items = tempItems;
+    } catch (e) {
+      print(e);
     }
-    _items = tempItems;
     print('Initialize Items Data Successful!');
     notifyListeners();
     return 'done';
@@ -62,6 +66,7 @@ class Items with ChangeNotifier {
     double latitude,
     double longitude,
     String status,
+    String isDone,
   ) async {
     final item = Item.toMap(
       ownerId,
@@ -77,6 +82,7 @@ class Items with ChangeNotifier {
       longitude,
       status,
       DateTime.now().millisecondsSinceEpoch,
+      isDone,
     );
 
     DocumentReference doc = await db.collection('items').add(item);

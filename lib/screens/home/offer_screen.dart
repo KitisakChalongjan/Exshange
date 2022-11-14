@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:exshange/helpers/categories.dart';
 import 'package:exshange/helpers/geolocator.dart';
+import 'package:exshange/main.dart';
 import 'package:exshange/providers/authentication.dart';
 import 'package:exshange/providers/items.dart';
 import 'package:exshange/providers/offers.dart';
@@ -494,18 +495,20 @@ class _OfferScreenState extends State<OfferScreen> {
                       await itemsData.addImageToStorage(imageSelected);
 
                   var docId = await itemsData.addItemToFireStore(
-                      user!.uid,
-                      _itemNameController.text,
-                      _itemDetailController.text,
-                      _selectedAddress,
-                      province,
-                      _selectedCategory,
-                      _selectedSubCategory,
-                      imagesSelectedUrl,
-                      item.itemType,
-                      latitude!,
-                      longitude!,
-                      'off');
+                    user!.uid,
+                    _itemNameController.text,
+                    _itemDetailController.text,
+                    _selectedAddress,
+                    province,
+                    _selectedCategory,
+                    _selectedSubCategory,
+                    imagesSelectedUrl,
+                    item.itemType,
+                    latitude!,
+                    longitude!,
+                    'off',
+                    'false',
+                  );
                   var firstOfferItemId = item.id;
                   var firstUserId = item.ownerid;
                   var secondOfferItemId = docId;
@@ -522,10 +525,7 @@ class _OfferScreenState extends State<OfferScreen> {
                   setState(() {
                     isLoading = false;
                   });
-                  Navigator.of(context).pushNamedAndRemoveUntil(
-                    HomeScreen().routeName,
-                    ModalRoute.withName('/authenticate'),
-                  );
+                  Navigator.of(context).pop();
                 }),
               ),
             ),

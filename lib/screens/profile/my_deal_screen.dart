@@ -150,8 +150,7 @@ class _OfferListWidgetState extends State<OfferListWidget> {
               child: CircularProgressIndicator(),
             ),
           );
-        } 
-        else {
+        } else {
           var offers = context.read<Offers>();
           var user = context.read<Authentication>().currentUser;
           var myOffers = offers.offers;
@@ -211,7 +210,7 @@ class _OfferListWidgetState extends State<OfferListWidget> {
                                           : selectedOffer[index]
                                               .firstOfferItem
                                               .name,
-                                              maxLines: 1,
+                                      maxLines: 1,
                                       style:
                                           Theme.of(context).textTheme.subtitle2,
                                     ),
@@ -261,7 +260,15 @@ class _OfferListWidgetState extends State<OfferListWidget> {
                               flex: 1,
                               child: Container(
                                 margin: EdgeInsets.symmetric(horizontal: 20),
-                                child: Icon(Icons.loop_sharp,
+                                child: Icon(
+                                    selectedOffer[index]
+                                                .firstOfferItem
+                                                .itemType ==
+                                            'ให้'
+                                        ? widget.offerTab == true
+                                            ? Icons.arrow_back_rounded
+                                            : Icons.arrow_forward_rounded
+                                        : Icons.loop_sharp,
                                     size: 40,
                                     color: selectedOffer[index]
                                                 .firstOfferItem
@@ -286,7 +293,7 @@ class _OfferListWidgetState extends State<OfferListWidget> {
                                           : selectedOffer[index]
                                               .secondOfferItem
                                               .name,
-                                              maxLines: 1,
+                                      maxLines: 1,
                                       style:
                                           Theme.of(context).textTheme.subtitle2,
                                     ),

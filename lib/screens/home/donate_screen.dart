@@ -245,18 +245,20 @@ class _DonateScreenState extends State<DonateScreen> {
                   ];
 
                   var docId = await itemsData.addItemToFireStore(
-                      user!.uid,
-                      'ขอรับบริจาค',
-                      _donateDescController.text,
-                      _selectedAddress,
-                      province,
-                      'หมวดหมู่ทั้งหมด',
-                      '_selectedSubCategory',
-                      imagesSelectedUrl,
-                      item.itemType,
-                      latitude!,
-                      longitude!,
-                      'off');
+                    user!.uid,
+                    'ขอรับบริจาค',
+                    _donateDescController.text,
+                    _selectedAddress,
+                    province,
+                    'หมวดหมู่ทั้งหมด',
+                    '_selectedSubCategory',
+                    imagesSelectedUrl,
+                    item.itemType,
+                    latitude!,
+                    longitude!,
+                    'off',
+                    'false',
+                  );
                   var firstOfferItemId = item.id;
                   var firstUserId = item.ownerid;
                   var secondOfferItemId = docId;
@@ -273,10 +275,7 @@ class _DonateScreenState extends State<DonateScreen> {
                   setState(() {
                     isLoading = false;
                   });
-                  Navigator.of(context).pushNamedAndRemoveUntil(
-                    HomeScreen().routeName,
-                    ModalRoute.withName('/authenticate'),
-                  );
+                  Navigator.of(context).pop();
                 }),
               ),
             ),

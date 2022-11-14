@@ -85,7 +85,7 @@ class _MyHistoryDetailScreenState extends State<MyHistoryDetailScreen> {
                   margin: EdgeInsets.symmetric(vertical: 20),
                   child: Icon(
                     Icons.loop_sharp,
-                    color: Colors.black,
+                    color: Theme.of(context).primaryColor,
                     size: 60,
                   ),
                 ),

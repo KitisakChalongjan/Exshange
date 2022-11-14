@@ -103,8 +103,8 @@ class _MyDealDetailScreenState extends State<MyDealDetailScreen> {
                     ),
                     Text(
                       tab == true
-                          ? offer.secondUser.name
-                          : offer.firstUser.name,
+                          ? offer.firstUser.name
+                          : offer.secondUser.name,
                       style: Theme.of(context).textTheme.bodyText1,
                     ),
                     SizedBox(
@@ -339,10 +339,32 @@ class _MyDealDetailScreenState extends State<MyDealDetailScreen> {
                           isLoading = true;
                         });
                         print(offer.id);
+                        //change offer status
                         var updateOfferStatus =
                             await db.collection('offers').doc(offer.id).update({
                           'status': 'accepted',
                         });
+
+                        //delete other offers and items from this item
+                        var deleteOtherOffer = await db
+                            .collection('offers')
+                            .where('firstOfferItemId',
+                                isEqualTo: offer.firstOfferItem.id)
+                            .where('secondOfferItemId',
+                                isNotEqualTo: offer.secondOfferItem.id)
+                            .get();
+                        for (var tempOffer in deleteOtherOffer.docs) {
+                          await db
+                              .collection('offers')
+                              .doc(tempOffer.id)
+                              .delete();
+                          await db
+                              .collection('items')
+                              .doc(tempOffer.data()['secondOfferItemId'])
+                              .delete();
+                        }
+
+                        //update user donate/trade count
                         var responseOffer =
                             await db.collection('offers').doc(offer.id).get();
                         var responseOfferData = responseOffer.data();
@@ -350,7 +372,11 @@ class _MyDealDetailScreenState extends State<MyDealDetailScreen> {
                           var newCount;
                           var otherUserId;
 
-                          await db.collection('items').doc(offer.firstOfferItem.id).update({'status' : 'off'});
+                          //change item status
+                          await db
+                              .collection('items')
+                              .doc(offer.firstOfferItem.id)
+                              .update({'status': 'off'});
 
                           if (offer.firstUser.userId == user.uid) {
                             otherUserId = offer.secondUser.userId;
@@ -397,7 +423,7 @@ class _MyDealDetailScreenState extends State<MyDealDetailScreen> {
                               {'tradeCount': secondUserNewCount},
                             );
                           }
-
+                          //success
                           print('Offer Id : ${responseOffer.id} Updated!');
                           print(
                               'Status From : \'offer\' ==> ${responseOfferData['status']}');

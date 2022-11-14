@@ -15,6 +15,7 @@ class Item {
   double longitude;
   String status;
   int timestamp;
+  String isDone;
 
   Item({
     required this.id,
@@ -31,9 +32,11 @@ class Item {
     required this.longitude,
     required this.status,
     required this.timestamp,
+    required this.isDone,
   });
 
-  factory Item.fromQueryDocumentSnapshot(QueryDocumentSnapshot<Map<String, dynamic>> item) {
+  factory Item.fromQueryDocumentSnapshot(
+      QueryDocumentSnapshot<Map<String, dynamic>> item) {
     var itemMap = item.data();
     return Item(
       id: item.id,
@@ -50,10 +53,12 @@ class Item {
       longitude: itemMap['longitude'],
       status: itemMap['status'],
       timestamp: itemMap['timestamp'],
+      isDone: itemMap['isDone'],
     );
   }
 
-    factory Item.fromDocumentSnapshot(DocumentSnapshot<Map<String, dynamic>>? item) {
+  factory Item.fromDocumentSnapshot(
+      DocumentSnapshot<Map<String, dynamic>>? item) {
     var itemMap = item!.data()!;
     return Item(
       id: item.id,
@@ -70,6 +75,7 @@ class Item {
       longitude: itemMap['longitude'],
       status: itemMap['status'],
       timestamp: itemMap['timestamp'],
+      isDone: itemMap['isDone'],
     );
   }
 
@@ -87,6 +93,7 @@ class Item {
     double longitude,
     String status,
     int timestamp,
+    String isDone,
   ) {
     return {
       'ownerId': ownerId,
@@ -102,6 +109,7 @@ class Item {
       "longitude": longitude,
       "status": status,
       "timestamp": timestamp,
+      "isDone": isDone,
     };
   }
 }

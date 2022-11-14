@@ -254,6 +254,7 @@ class _LoginScreenState extends State<LoginScreen>
 
   @override
   Widget build(BuildContext context) {
+    print('build login');
     final deviceSize = MediaQuery.of(context).size;
     return Scaffold(
       body: Form(

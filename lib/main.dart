@@ -9,6 +9,7 @@ import 'package:exshange/screens/chat/chat_user_info.dart';
 import 'package:exshange/screens/home/add_address_screen.dart';
 import 'package:exshange/screens/home/add_item_screen.dart';
 import 'package:exshange/screens/home/donate_screen.dart';
+import 'package:exshange/screens/home/item_overview_screen.dart';
 import 'package:exshange/screens/home/offer_screen.dart';
 import 'package:exshange/screens/profile/edit_address_screen.dart';
 import 'package:exshange/screens/profile/edit_profile_screen.dart';
@@ -162,6 +163,7 @@ class MyApp extends StatelessWidget {
           MyItemDetailScreen().routeName: (context) => MyItemDetailScreen(),
           ChatMessageScreen().routeName: (context) => ChatMessageScreen(),
           ChatUserInfo().routeName: (context) => ChatUserInfo(),
+          ItemOverviewScreen().routeName: (context) => ItemOverviewScreen(),
         },
       ),
     );

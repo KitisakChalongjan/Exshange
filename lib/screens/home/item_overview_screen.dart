@@ -30,6 +30,7 @@ class ItemArgs {
 
 class ItemOverviewScreen extends StatefulWidget {
   const ItemOverviewScreen({Key? key}) : super(key: key);
+  final routeName = 'itemoverviewscreen';
 
   @override
   State<ItemOverviewScreen> createState() => _ItemOverviewScreenState();
@@ -236,7 +237,7 @@ class _ItemOverviewScreenState extends State<ItemOverviewScreen> {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.stretch,
                                           children: [
-                                            Flexible(
+                                            Expanded(
                                               flex: 3,
                                               child: SizedBox(
                                                 child: Hero(
@@ -258,7 +259,7 @@ class _ItemOverviewScreenState extends State<ItemOverviewScreen> {
                                                 ),
                                               ),
                                             ),
-                                            Flexible(
+                                            Expanded(
                                               flex: 1,
                                               child: Container(
                                                 padding: EdgeInsets.symmetric(

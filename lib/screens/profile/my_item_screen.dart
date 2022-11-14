@@ -32,7 +32,6 @@ class _MyItemsScreenState extends State<MyItemsScreen> {
   var datetimeHelper = DateTimeHelper();
   @override
   Widget build(BuildContext context) {
-    
     User? user = context.watch<Authentication>().currentUser;
     List<Item> myItems = context
         .read<Items>()
@@ -40,6 +39,7 @@ class _MyItemsScreenState extends State<MyItemsScreen> {
         .where(
           (item) => item.ownerid == user!.uid,
         )
+        .where((item) => item.isDone == false)
         .toList();
 
     return Scaffold(

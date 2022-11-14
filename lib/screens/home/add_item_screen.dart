@@ -503,18 +503,20 @@ class _AddItemScreenState extends State<AddItemScreen> {
                 imagesSelectedUrl =
                     await itemsData.addImageToStorage(imageSelected);
                 await itemsData.addItemToFireStore(
-                    user!.uid,
-                    _itemNameController.text,
-                    _itemDetailController.text,
-                    _selectedAddress,
-                    province,
-                    _selectedCategory,
-                    _selectedSubCategory,
-                    imagesSelectedUrl,
-                    selectedType == 'แลกเปลี่ยน' ? 'แลก' : 'ให้',
-                    latitude!,
-                    longitude!,
-                    'on');
+                  user!.uid,
+                  _itemNameController.text,
+                  _itemDetailController.text,
+                  _selectedAddress,
+                  province,
+                  _selectedCategory,
+                  _selectedSubCategory,
+                  imagesSelectedUrl,
+                  selectedType == 'แลกเปลี่ยน' ? 'แลก' : 'ให้',
+                  latitude!,
+                  longitude!,
+                  'on',
+                  'false',
+                );
 
                 setState(() {
                   isAddItemLoading = false;
