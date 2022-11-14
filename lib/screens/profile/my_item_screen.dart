@@ -39,7 +39,7 @@ class _MyItemsScreenState extends State<MyItemsScreen> {
         .where(
           (item) => item.ownerid == user!.uid,
         )
-        .where((item) => item.isDone == false)
+        .where((item) => item.isDone == 'false')
         .toList();
 
     return Scaffold(

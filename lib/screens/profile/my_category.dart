@@ -19,13 +19,21 @@ class _MyCategoriesScreenState extends State<MyCategoriesScreen> {
   FirebaseFirestore db = FirebaseFirestore.instance;
   List<String> categories = Categories().allCategory.keys.toList().sublist(1);
   List<dynamic> selectedCategory = [];
+  @override
+  void initState() {
+    var favList =
+        context.read<UserData>().userModel!.favoriteCategories as List<dynamic>;
+    favList.forEach((fav) {
+      selectedCategory.add(fav);
+    });
+    super.initState();
+  }
 
-  
   @override
   Widget build(BuildContext context) {
     var user = context.read<Authentication>().currentUser!;
     var userData = context.read<UserData>();
-    selectedCategory = userData.userModel!.favoriteCategories;
+    print(selectedCategory);
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(

@@ -73,7 +73,7 @@ class _RecommendScreenState extends State<RecommendScreen> {
                             child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: [
-                                  Flexible(
+                                  Expanded(
                                     flex: 3,
                                     child: Hero(
                                       tag: 'heroItemRec${i}',
@@ -90,7 +90,7 @@ class _RecommendScreenState extends State<RecommendScreen> {
                                       ),
                                     ),
                                   ),
-                                  Flexible(
+                                  Expanded(
                                     flex: 1,
                                     child: ClipRRect(
                                       borderRadius: BorderRadius.vertical(
