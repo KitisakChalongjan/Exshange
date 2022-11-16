@@ -36,7 +36,7 @@ class _MyCategoriesScreenState extends State<MyCategoriesScreen> {
         .read<Categories>()
         .categories
         .keys.skip(1)
-        .map((categoryKey) => categoryKey as String)
+        .map((categoryKey) => categoryKey)
         .toList();
     var user = context.read<Authentication>().currentUser!;
     var userData = context.read<UserData>();

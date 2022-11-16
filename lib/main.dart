@@ -3,6 +3,7 @@ import 'package:exshange/providers/categories.dart';
 import 'package:exshange/providers/authentication.dart';
 import 'package:exshange/providers/filter.dart';
 import 'package:exshange/providers/items.dart';
+import 'package:exshange/providers/messages.dart';
 import 'package:exshange/providers/offers.dart';
 import 'package:exshange/providers/user_data.dart';
 import 'package:exshange/screens/chat/chat_message_screen.dart';
@@ -26,6 +27,8 @@ import 'package:exshange/screens/profile/my_history_detail_screen.dart';
 import 'package:exshange/screens/profile/my_history_screen.dart';
 import 'package:exshange/screens/profile/my_item_detail_screen.dart';
 import 'package:exshange/screens/profile/my_item_screen.dart';
+import 'package:exshange/screens/profile/my_pending_detail_screen.dart';
+import 'package:exshange/screens/profile/my_pending_screen.dart';
 import 'package:exshange/screens/profile/profile_screen.dart';
 import 'package:exshange/screens/splash_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -68,6 +71,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider<Categories>(
           create: (ctx) => Categories(),
+        ),
+        ChangeNotifierProvider<Messages>(
+          create: (ctx) => Messages(),
         ),
       ],
       child: MaterialApp(
@@ -168,6 +174,9 @@ class MyApp extends StatelessWidget {
           ChatMessageScreen().routeName: (context) => ChatMessageScreen(),
           ChatUserInfo().routeName: (context) => ChatUserInfo(),
           ItemOverviewScreen().routeName: (context) => ItemOverviewScreen(),
+          MyPendingScreen().routeName: (context) => MyPendingScreen(),
+          MyPendingDetailScreen().routeName: (context) =>
+              MyPendingDetailScreen(),
         },
       ),
     );

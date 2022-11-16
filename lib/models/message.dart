@@ -8,7 +8,7 @@ class Message {
   String chatId;
   String content;
   String senderId;
-  FieldValue messageTimeStamp;
+  Timestamp messageTimeStamp;
 
   Message({
     required this.senderProfileUrl,
@@ -23,7 +23,7 @@ class Message {
     String? chatId,
     String? content,
     String? senderId,
-    FieldValue? messageTimeStamp,
+    Timestamp? messageTimeStamp,
   }) {
     return Message(
       senderProfileUrl: senderProfileUrl ?? this.senderProfileUrl,
@@ -50,7 +50,7 @@ class Message {
       chatId: map['chatId'] as String,
       content: map['content'] as String,
       senderId: map['senderId'] as String,
-      messageTimeStamp: map['messageTimeStamp'],
+      messageTimeStamp: map['messageTimeStamp'] ,
     );
   }
 

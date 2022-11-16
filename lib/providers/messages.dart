@@ -3,21 +3,33 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:exshange/models/message.dart';
 import 'package:exshange/providers/authentication.dart';
+import 'package:flutter/material.dart';
 
-class Messages {
-  static Future<void> uploadMessage(String myId, String otherUserId,
-      String profileUrl, String content) async {
+class Messages with ChangeNotifier {
+  List<Message> _messages = [];
+  List<Message> get messages => _messages;
+
+  Future<void> uploadMessage(
+    String myId,
+    String otherUserId,
+    String profileUrl,
+    String content,
+  ) async {
     var db = FirebaseFirestore.instance;
     String mychatId = '';
-    await db
-        .collection('chats')
-        .where('member', arrayContains: myId)
-        .get()
-        .then((chats) async {
-      chats.docs.forEach((chatQuery) async {
-        var chatQueryData = chatQuery.data()['member'] as List;
-        if (chatQueryData.contains(otherUserId)) {
-          mychatId = chatQuery.id;
+    try {
+      await db
+          .collection('chats')
+          .where('member', arrayContains: myId)
+          .get()
+          .then((chats) async {
+        if (chats.docs.isNotEmpty) {
+          chats.docs.forEach((chatQuery) async {
+            var chatQueryData = chatQuery.data()['member'] as List;
+            if (chatQueryData.contains(otherUserId)) {
+              mychatId = chatQuery.id;
+            }
+          });
         } else {
           Map<String, dynamic> chat = {
             'member': [myId, otherUserId]
@@ -27,26 +39,31 @@ class Messages {
           mychatId = b.id;
         }
       });
-    });
+    } catch (e) {
+      print(e);
+    }
 
     var newMessage = Message(
       senderProfileUrl: profileUrl,
       chatId: mychatId,
       content: content,
       senderId: myId,
-      messageTimeStamp: FieldValue.serverTimestamp(),
+      messageTimeStamp: Timestamp.now(),
     );
 
     await db.collection('messages').add(newMessage.toMap());
+    _messages.insert(0, newMessage);
     print('sendMessage(chatID = ${mychatId})');
+    notifyListeners();
   }
 
-  static Future<QuerySnapshot<Map<String, dynamic>>> getMessage(
+  Future<void> fetchMessage(
     String myId,
     String otherUserId,
   ) async {
     var db = FirebaseFirestore.instance;
     String chatId = '';
+    _messages = [];
     print(myId);
     print(otherUserId);
     print('get chatId');
@@ -67,11 +84,26 @@ class Messages {
     } catch (e) {
       print(e);
     }
-    print('get message');
-    return db
+    print('fetch message');
+    var messagesLoad = await db
         .collection('messages')
         .where('chatId', isEqualTo: chatId)
         .orderBy('messageTimeStamp', descending: true)
         .get();
+    try {
+      messagesLoad.docs.forEach((message) {
+        print(message.data()['content']);
+        var newMessage = Message.fromMap(message.data());
+        print(newMessage);
+        _messages.add(newMessage);
+      });
+    } catch (e) {
+      print(e);
+    }
+    // return db
+    //     .collection('messages')
+    //     .where('chatId', isEqualTo: chatId)
+    //     .orderBy('messageTimeStamp', descending: true)
+    //     .get();
   }
 }
