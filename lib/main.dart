@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:exshange/providers/categories.dart';
 import 'package:exshange/providers/authentication.dart';
 import 'package:exshange/providers/filter.dart';
 import 'package:exshange/providers/items.dart';
@@ -64,6 +65,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider<Filter>(
           create: (ctx) => Filter(),
+        ),
+        ChangeNotifierProvider<Categories>(
+          create: (ctx) => Categories(),
         ),
       ],
       child: MaterialApp(
@@ -182,6 +186,7 @@ class Authenticate extends StatelessWidget {
         future: Future.wait([
           context.read<Items>().initItemsData(),
           context.read<UserData>().fetchUserData(firebaseUser.uid),
+          context.read<Categories>().fetchCategories(),
         ]),
         builder: ((context, snapshot) {
           if (!snapshot.hasData) {

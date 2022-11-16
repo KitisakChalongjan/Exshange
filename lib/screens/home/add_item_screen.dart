@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:exshange/helpers/geolocator.dart';
 import 'package:exshange/helpers/provinces.dart';
 import 'package:exshange/providers/authentication.dart';
-import 'package:exshange/helpers/categories.dart';
+import 'package:exshange/providers/categories.dart';
 import 'package:exshange/providers/items.dart';
 import 'package:exshange/providers/user_data.dart';
 import 'package:exshange/screens/home/add_address_screen.dart';
@@ -40,7 +40,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
 
   final storageRef = FirebaseStorage.instance.ref();
 
-  final allCategory = Categories().allCategory;
+  Map<String, List<String>> allCategory = {};
 
   String _selectedCategory = 'หมวดหมู่ทั้งหมด';
   List<String> category2 = ['หมวดหมู่รองทั้งหมด'];
@@ -67,8 +67,15 @@ class _AddItemScreenState extends State<AddItemScreen> {
   }
 
   @override
+  void initState() {
+    super.initState();
+
+  }
+
+  @override
   Widget build(BuildContext context) {
     user = FirebaseAuth.instance.currentUser;
+    allCategory = context.read<Categories>().categories;
     var itemsData = context.read<Items>();
     var userModel = context.watch<UserData>().userModel;
     List<Map<String, dynamic>> addresses = userModel!.addresses;

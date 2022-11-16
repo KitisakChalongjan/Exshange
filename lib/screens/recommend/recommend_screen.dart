@@ -42,7 +42,7 @@ class _RecommendScreenState extends State<RecommendScreen> {
           child: itemsData.isEmpty
               ? Center(
                   child: Text(
-                    'ไม่มีรายกรแนะนำ',
+                    'ไม่มีรายการแนะนำ',
                     style: Theme.of(context).textTheme.subtitle2,
                   ),
                 )

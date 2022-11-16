@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:exshange/helpers/categories.dart';
+import 'package:exshange/providers/categories.dart';
 import 'package:exshange/providers/authentication.dart';
 import 'package:exshange/providers/user_data.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +17,8 @@ class MyCategoriesScreen extends StatefulWidget {
 
 class _MyCategoriesScreenState extends State<MyCategoriesScreen> {
   FirebaseFirestore db = FirebaseFirestore.instance;
-  List<String> categories = Categories().allCategory.keys.toList().sublist(1);
+
+  List<String> allCategory = [];
   List<dynamic> selectedCategory = [];
   @override
   void initState() {
@@ -31,6 +32,12 @@ class _MyCategoriesScreenState extends State<MyCategoriesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    allCategory = context
+        .read<Categories>()
+        .categories
+        .keys.skip(1)
+        .map((categoryKey) => categoryKey as String)
+        .toList();
     var user = context.read<Authentication>().currentUser!;
     var userData = context.read<UserData>();
     print(selectedCategory);
@@ -44,7 +51,7 @@ class _MyCategoriesScreenState extends State<MyCategoriesScreen> {
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 70, vertical: 30),
           child: ListView.builder(
-            itemCount: categories.length,
+            itemCount: allCategory.length,
             itemBuilder: ((context, index) {
               return ElevatedButton(
                 style: ButtonStyle(
@@ -54,17 +61,17 @@ class _MyCategoriesScreenState extends State<MyCategoriesScreen> {
                     ),
                   ),
                   backgroundColor: MaterialStateProperty.all(
-                      selectedCategory.contains(categories[index])
+                      selectedCategory.contains(allCategory[index])
                           ? Theme.of(context).primaryColor
                           : Colors.white),
                 ),
                 onPressed: (() {
                   setState(() {
-                    if (selectedCategory.contains(categories[index])) {
-                      selectedCategory.remove(categories[index]);
+                    if (selectedCategory.contains(allCategory[index])) {
+                      selectedCategory.remove(allCategory[index]);
                       print('remove');
                     } else {
-                      selectedCategory.add(categories[index]);
+                      selectedCategory.add(allCategory[index]);
                       print('add');
                     }
                   });
@@ -73,8 +80,8 @@ class _MyCategoriesScreenState extends State<MyCategoriesScreen> {
                   width: double.infinity,
                   height: 30,
                   child: Text(
-                    categories[index],
-                    style: selectedCategory.contains(categories[index])
+                    allCategory[index],
+                    style: selectedCategory.contains(allCategory[index])
                         ? Theme.of(context).textTheme.bodyText2
                         : Theme.of(context).textTheme.bodyText1,
                     textAlign: TextAlign.center,
