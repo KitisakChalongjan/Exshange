@@ -40,7 +40,7 @@ class Message {
       'chatId': chatId,
       'content': content,
       'senderId': senderId,
-      'messageTimeStamp': FieldValue.serverTimestamp(),
+      'messageTimeStamp': Timestamp.now(),
     };
   }
 
@@ -50,7 +50,7 @@ class Message {
       chatId: map['chatId'] as String,
       content: map['content'] as String,
       senderId: map['senderId'] as String,
-      messageTimeStamp: map['messageTimeStamp'] ,
+      messageTimeStamp: map['messageTimeStamp'] as Timestamp ,
     );
   }
 

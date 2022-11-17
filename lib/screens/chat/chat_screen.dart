@@ -16,17 +16,7 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  List<Map<String, dynamic>> chatUsers = [
-    {
-      'name': 'kitisak',
-    },
-    {
-      'name': 'teerapat',
-    },
-    {
-      'name': 'kasempan',
-    },
-  ];
+ 
   @override
   Widget build(BuildContext context) {
     var currentUser = context.read<Authentication>().currentUser!;

@@ -51,10 +51,10 @@ class Messages with ChangeNotifier {
       messageTimeStamp: Timestamp.now(),
     );
 
-    await db.collection('messages').add(newMessage.toMap());
-    _messages.insert(0, newMessage);
-    print('sendMessage(chatID = ${mychatId})');
-    notifyListeners();
+    await db.collection('messages').add(newMessage.toMap()).then((value) {
+      print('sendMessage(chatID = ${mychatId})');
+      _messages.insert(0, newMessage);
+    });
   }
 
   Future<void> fetchMessage(
@@ -105,5 +105,33 @@ class Messages with ChangeNotifier {
     //     .where('chatId', isEqualTo: chatId)
     //     .orderBy('messageTimeStamp', descending: true)
     //     .get();
+  }
+
+  Stream<QuerySnapshot<Map<String, dynamic>>> getMessage(
+    String myId,
+    String otherUserId,
+  ) async* {
+    var db = FirebaseFirestore.instance;
+    String chatId = '';
+    _messages = [];
+    await db
+        .collection('chats')
+        .where('member', arrayContains: myId)
+        .get()
+        .then((chats) {
+      var chatResult = chats.docs.firstWhere((chatQuery) {
+        var chat = chatQuery.data();
+        var member = chat['member'] as List;
+        return member.contains(otherUserId);
+      });
+      print(chatResult.id);
+      chatId = chatResult.id;
+    });
+    
+    yield* db
+        .collection('messages')
+        .where('chatId', isEqualTo: chatId)
+        .orderBy('messageTimeStamp', descending: true)
+        .snapshots();
   }
 }
