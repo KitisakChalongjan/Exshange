@@ -1,10 +1,9 @@
 # Exshange
 
-Flutter Project
-แอพลิเคชั่นแลกเปลื่ยนและบริจาคสิ่งของ
+## โปรเจคนี้เป็นเป็นส่วนหนึ่งของวิชา SP403 โครงงาน
 
-## This project is a starting point for a Flutter application.
+Exshange แอพลิเคชั่นสำหรับแลกเปลี่ยนและบริจาคสิ่งของ
+พัฒนาด้วย Flutter และ Firebase
 
-โปรเจคนี้เป็นเป็นส่วนหนึ่งของวิชา SP403 โครงงาน
 
 
