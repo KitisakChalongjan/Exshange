@@ -40,7 +40,8 @@ class _MyHistoryScreenState extends State<MyHistoryScreen> {
             var offer = context.watch<Offers>().offers;
             var selectedOffer = offer
                 .where((offer) =>
-                    offer.status == 'accepted' || offer.status == 'done')
+                    offer.status == 'pendingdone' ||
+                    offer.status == 'rejecteddone')
                 .where((offer) =>
                     offer.firstUser.userId == user.uid ||
                     offer.secondUser.userId == user.uid)
@@ -58,6 +59,9 @@ class _MyHistoryScreenState extends State<MyHistoryScreen> {
                     margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                     height: 140,
                     child: Card(
+                      color: selectedOffer[index].status == 'pendingdone'
+                          ? Theme.of(context).canvasColor
+                          : Theme.of(context).splashColor,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15),
                       ),
@@ -80,6 +84,7 @@ class _MyHistoryScreenState extends State<MyHistoryScreen> {
                                           : selectedOffer[index]
                                               .secondUser
                                               .name,
+                                      overflow: TextOverflow.ellipsis,
                                       style:
                                           Theme.of(context).textTheme.subtitle2,
                                     ),
@@ -126,6 +131,7 @@ class _MyHistoryScreenState extends State<MyHistoryScreen> {
                                           : selectedOffer[index]
                                               .secondOfferItem
                                               .name,
+                                      overflow: TextOverflow.ellipsis,
                                       style:
                                           Theme.of(context).textTheme.subtitle2,
                                     ),
@@ -137,14 +143,11 @@ class _MyHistoryScreenState extends State<MyHistoryScreen> {
                               flex: 1,
                               child: Container(
                                 margin: EdgeInsets.symmetric(horizontal: 20),
-                                child: Icon(Icons.loop_sharp,
-                                    size: 40,
-                                    color: selectedOffer[index]
-                                                .firstOfferItem
-                                                .itemType ==
-                                            'ให้'
-                                        ? Theme.of(context).accentColor
-                                        : Theme.of(context).primaryColor),
+                                child: Icon(
+                                  Icons.loop_sharp,
+                                  size: 40,
+                                  color: Colors.grey[100],
+                                ),
                               ),
                             ),
                             Expanded(
@@ -159,6 +162,7 @@ class _MyHistoryScreenState extends State<MyHistoryScreen> {
                                               user.uid
                                           ? selectedOffer[index].secondUser.name
                                           : selectedOffer[index].firstUser.name,
+                                      overflow: TextOverflow.ellipsis,
                                       style:
                                           Theme.of(context).textTheme.subtitle2,
                                     ),
@@ -205,6 +209,7 @@ class _MyHistoryScreenState extends State<MyHistoryScreen> {
                                           : selectedOffer[index]
                                               .firstOfferItem
                                               .name,
+                                      overflow: TextOverflow.ellipsis,
                                       style:
                                           Theme.of(context).textTheme.subtitle2,
                                     ),

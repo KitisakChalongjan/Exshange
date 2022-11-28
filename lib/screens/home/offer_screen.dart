@@ -520,6 +520,10 @@ class _OfferScreenState extends State<OfferScreen> {
                     firstOfferItemId,
                     secondOfferItemId,
                     'offer',
+                    false,
+                    false,
+                    false,
+                    false,
                   );
 
                   setState(() {

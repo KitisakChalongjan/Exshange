@@ -44,6 +44,10 @@ class Offers with ChangeNotifier {
       String secondItemId = offerData['secondOfferItemId'];
       var secondItem = await db.collection('items').doc(secondItemId).get();
       String status = offerData['status'];
+      bool firstUserAccepted = offerData['firstUserAccepted'];
+      bool secondUserAccepted = offerData['secondUserAccepted'];
+      bool isFirstUserRating = offerData['isFirstUserRating'];
+      bool isSecondUserRating = offerData['isSecondUserRating'];
       int createdTimestamp = offerData['createdTimestamp'];
       print('4');
       var offer = Offer(
@@ -55,6 +59,10 @@ class Offers with ChangeNotifier {
         firstOfferItem: Item.fromDocumentSnapshot(firstItem),
         secondOfferItem: Item.fromDocumentSnapshot(secondItem),
         status: status,
+        firstUserAccepted: firstUserAccepted,
+        secondUserAccepted: secondUserAccepted,
+        isFirstUserRating: isFirstUserRating,
+        isSecondUserRating: isSecondUserRating,
         createdTimestamp: createdTimestamp,
       );
       print('createOffer');
@@ -76,6 +84,10 @@ class Offers with ChangeNotifier {
     String firstOfferItemId,
     String secondOfferItemId,
     String status,
+    bool firstUserAccepted,
+    bool secondUserAccepted,
+    bool isFirstUserRating,
+    bool isSecondUserRating,
   ) async {
     final offer = Offer.toMap(
       firstUserId,
@@ -83,6 +95,10 @@ class Offers with ChangeNotifier {
       firstOfferItemId,
       secondOfferItemId,
       status,
+      firstUserAccepted,
+      secondUserAccepted,
+      isFirstUserRating,
+      isSecondUserRating,
       DateTime.now().millisecondsSinceEpoch,
     );
 

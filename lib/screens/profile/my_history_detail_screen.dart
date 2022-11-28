@@ -25,6 +25,7 @@ class _MyHistoryDetailScreenState extends State<MyHistoryDetailScreen> {
   Widget build(BuildContext context) {
     var offer = ModalRoute.of(context)!.settings.arguments as Offer;
     var user = context.read<Authentication>().currentUser!;
+    var offers = context.watch<Offers>();
     return Scaffold(
         backgroundColor: Theme.of(context).backgroundColor,
         appBar: AppBar(
@@ -256,20 +257,31 @@ class _MyHistoryDetailScreenState extends State<MyHistoryDetailScreen> {
           ),
         ),
         bottomNavigationBar: offer.firstOfferItem.itemType == 'ให้' &&
-                offer.firstUser.userId == user.uid
+                    offer.firstUser.userId == user.uid ||
+                offer.status == 'rejecteddone'
             ? null
             : BottomAppBar(
                 child: GestureDetector(
                   child: Container(
                     decoration: BoxDecoration(
-                      color: offer.status == 'accepted'
+                      color: offer.status == 'pendingdone' &&
+                                  offer.firstUser.userId == user.uid &&
+                                  offer.isFirstUserRating == false ||
+                              offer.status == 'pendingdone' &&
+                                  offer.secondUser.userId == user.uid &&
+                                  offer.isSecondUserRating == false
                           ? Theme.of(context).primaryColor
                           : Theme.of(context).hintColor,
                     ),
                     height: 60,
                     child: Center(
                       child: Text(
-                        offer.status == 'accepted'
+                        offer.status == 'pendingdone' &&
+                                    offer.firstUser.userId == user.uid &&
+                                    offer.isFirstUserRating == false ||
+                                offer.status == 'pendingdone' &&
+                                    offer.secondUser.userId == user.uid &&
+                                    offer.isSecondUserRating == false
                             ? 'ให้คะแนน'
                             : 'ให้คะแนนแล้ว',
                         style: Theme.of(context).textTheme.bodyText2,
@@ -277,13 +289,20 @@ class _MyHistoryDetailScreenState extends State<MyHistoryDetailScreen> {
                     ),
                   ),
                   onTap: (() {
-                    showDialog(
-                      context: context,
-                      barrierDismissible: false,
-                      builder: (_) {
-                        return Rating(offer: offer);
-                      },
-                    );
+                    offer.status == 'pendingdone' &&
+                                offer.firstUser.userId == user.uid &&
+                                offer.isFirstUserRating == false ||
+                            offer.status == 'pendingdone' &&
+                                offer.secondUser.userId == user.uid &&
+                                offer.isSecondUserRating == false
+                        ? showDialog(
+                            context: context,
+                            barrierDismissible: false,
+                            builder: (_) {
+                              return Rating(offer: offer);
+                            },
+                          )
+                        : null;
                   }),
                 ),
               ));
@@ -464,38 +483,55 @@ class _RatingState extends State<Rating> {
               ),
             ),
             onTap: (() async {
-              DocumentSnapshot<Map<String, dynamic>> userDoc;
-              String userIdRef;
+              DocumentSnapshot<Map<String, dynamic>> targetUserDoc;
+              String targetUserId;
               double newRating;
+
+              //set targetUserId
               if (widget.offer.firstUser.userId == user.uid) {
-                userIdRef = widget.offer.secondUser.userId;
+                targetUserId = widget.offer.secondUser.userId;
               } else {
-                userIdRef = widget.offer.firstUser.userId;
+                targetUserId = widget.offer.firstUser.userId;
               }
-              userDoc = await db.collection('users').doc(userIdRef).get();
-              var userDataMap = userDoc.data()!;
+              //get targetUserDoc
+              targetUserDoc =
+                  await db.collection('users').doc(targetUserId).get();
+              var userDataMap = targetUserDoc.data()!;
+
+              //get oldRating
               var oldRating = userDataMap['rating'];
+              //calculate new Rating
               if (oldRating == 0) {
                 newRating = _stars;
               } else {
                 newRating = (_stars + oldRating) / 2;
               }
+              //parse double to 2 decimal
               newRating = double.parse(newRating.toStringAsFixed(2));
+
+              //update rating to database
               await db
                   .collection('users')
-                  .doc(userIdRef)
+                  .doc(targetUserId)
                   .update({'rating': newRating});
-              await db
-                  .collection('offers')
-                  .doc(widget.offer.id)
-                  .update({'status': 'done'});
               print('Rating Updated!');
-              offers.fetchMyOffersData();
+              //update offer status for this rating
+              if (widget.offer.firstUser.userId == user.uid) {
+                await db
+                    .collection('offers')
+                    .doc(widget.offer.id)
+                    .update({'isFirstUserRating': true});
+                print('FirstUserRated! (Offer : ${widget.offer.id})');
+              } else {
+                await db
+                    .collection('offers')
+                    .doc(widget.offer.id)
+                    .update({'isSecondUserRating': true});
+                print('SecondUserRated! (Offer : ${widget.offer.id})');
+              }
+              await offers.fetchMyOffersData();
               offers.notify();
-              Navigator.of(context).pushNamedAndRemoveUntil(
-                HomeScreen().routeName,
-                (route) => false,
-              );
+              Navigator.of(context).pop();
             }),
           )
           // Column(

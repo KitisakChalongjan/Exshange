@@ -27,7 +27,7 @@ class _MyDealScreenState extends State<MyDealScreen> {
       backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
         centerTitle: true,
-        title: Text('ข้อเสนอทั้งหมด'),
+        title: Text('ข้อเสนอ'),
       ),
       body: Column(
         children: [

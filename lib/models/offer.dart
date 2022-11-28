@@ -9,6 +9,10 @@ class Offer {
   Item firstOfferItem;
   Item secondOfferItem;
   String status;
+  bool firstUserAccepted;
+  bool secondUserAccepted;
+  bool isFirstUserRating;
+  bool isSecondUserRating;
   int createdTimestamp;
 
   Offer({
@@ -18,6 +22,10 @@ class Offer {
     required this.firstOfferItem,
     required this.secondOfferItem,
     required this.status,
+    required this.firstUserAccepted,
+    required this.secondUserAccepted,
+    required this.isFirstUserRating,
+    required this.isSecondUserRating,
     required this.createdTimestamp,
   });
 
@@ -27,6 +35,10 @@ class Offer {
     String firstOfferItemId,
     String secondOfferItemId,
     String status,
+    bool firstUserAccepted,
+    bool secondUserAccepted,
+    bool isFirstUserRating,
+    bool isSecondUserRating,
     int createdTimestamp,
   ) {
     return {
@@ -35,6 +47,10 @@ class Offer {
       "firstOfferItemId": firstOfferItemId,
       "secondOfferItemId": secondOfferItemId,
       "status": status,
+      "firstUserAccepted": firstUserAccepted,
+      "secondUserAccepted": secondUserAccepted,
+      "isFirstUserRating": isFirstUserRating,
+      "isSecondUserRating": isSecondUserRating,
       "createdTimestamp": createdTimestamp,
     };
   }
@@ -61,6 +77,26 @@ class Offer {
   get getStatus => this.status;
 
   set setStatus(status) => this.status = status;
+
+  get getFirstUserAccepted => this.firstUserAccepted;
+
+  set setFirstUserAccepted(firstUserAccepted) =>
+      this.firstUserAccepted = firstUserAccepted;
+
+  get getSecondUserAccepted => this.secondUserAccepted;
+
+  set setSecondUserAccepted(secondUserAccepted) =>
+      this.secondUserAccepted = secondUserAccepted;
+
+  get getIsFirstUserRating => this.isFirstUserRating;
+
+  set setIsFirstUserRating(isFirstUserRating) =>
+      this.isFirstUserRating = isFirstUserRating;
+
+  get getIsSecondUserRating => this.isSecondUserRating;
+
+  set setIsSecondUserRating(isSecondUserRating) =>
+      this.isSecondUserRating = isSecondUserRating;
 
   get getCreatedTimestamp => this.createdTimestamp;
 

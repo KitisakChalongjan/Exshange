@@ -342,96 +342,95 @@ class _MyDealDetailScreenState extends State<MyDealDetailScreen> {
                         //change offer status
                         var updateOfferStatus =
                             await db.collection('offers').doc(offer.id).update({
-                          'status': 'accepted',
+                          'status': 'pending',
                         });
+                        print('Offer(${offer.id}) status => pending!');
 
-                        //delete other offers and items from this item
-                        var deleteOtherOffer = await db
+                        //update other offers status and items from this item
+                        var otherOffer = await db
                             .collection('offers')
                             .where('firstOfferItemId',
                                 isEqualTo: offer.firstOfferItem.id)
                             .where('secondOfferItemId',
                                 isNotEqualTo: offer.secondOfferItem.id)
                             .get();
-                        for (var tempOffer in deleteOtherOffer.docs) {
+                        for (var iOffer in otherOffer.docs) {
                           await db
                               .collection('offers')
-                              .doc(tempOffer.id)
-                              .delete();
-                          await db
-                              .collection('items')
-                              .doc(tempOffer.data()['secondOfferItemId'])
-                              .delete();
+                              .doc(iOffer.id)
+                              .update({'status': 'rejected'});
+                              print('Offer(${iOffer.id}) status => rejected!');
                         }
+
+                        //change item status
+                        await db
+                            .collection('items')
+                            .doc(offer.firstOfferItem.id)
+                            .update({'status': 'off'});
+                        print('Item${offer.firstOfferItem.id} status => off');
 
                         //update user donate/trade count
-                        var responseOffer =
-                            await db.collection('offers').doc(offer.id).get();
-                        var responseOfferData = responseOffer.data();
-                        if (responseOfferData!['status'] == 'accepted') {
-                          var newCount;
-                          var otherUserId;
+                        // var responseOffer =
+                        //     await db.collection('offers').doc(offer.id).get();
+                        // var responseOfferData = responseOffer.data();
+                        // if (responseOfferData!['status'] == 'accepted') {
+                        //   var newCount;
+                        //   var otherUserId;
 
-                          //change item status
-                          await db
-                              .collection('items')
-                              .doc(offer.firstOfferItem.id)
-                              .update({'status': 'off'});
-
-                          if (offer.firstUser.userId == user.uid) {
-                            otherUserId = offer.secondUser.userId;
-                          } else {
-                            otherUserId = offer.firstUser.userId;
-                          }
-                          var otherUser = await db
-                              .collection('users')
-                              .doc(otherUserId)
-                              .get();
-                          var otherUserData = otherUser.data();
-                          if (offer.firstOfferItem.itemType == 'ให้') {
-                            if (offer.firstUser.userId == user.uid) {
-                              newCount = userData.userModel!.donateCount + 1;
-                              await db
-                                  .collection('users')
-                                  .doc(offer.firstUser.userId)
-                                  .update({'donateCount': newCount});
-                            }
-                          } else {
-                            var firstUserNewCount;
-                            var secondUserNewCount;
-                            if (offer.firstUser.userId == user.uid) {
-                              firstUserNewCount =
-                                  userData.userModel!.tradeCount + 1;
-                              secondUserNewCount =
-                                  otherUserData!['tradeCount'] + 1;
-                            } else {
-                              firstUserNewCount =
-                                  otherUserData!['tradeCount'] + 1;
-                              secondUserNewCount =
-                                  userData.userModel!.tradeCount + 1;
-                            }
-                            await db
-                                .collection('users')
-                                .doc(offer.firstUser.userId)
-                                .update(
-                              {'tradeCount': firstUserNewCount},
-                            );
-                            await db
-                                .collection('users')
-                                .doc(offer.secondUser.userId)
-                                .update(
-                              {'tradeCount': secondUserNewCount},
-                            );
-                          }
-                          //success
-                          print('Offer Id : ${responseOffer.id} Updated!');
-                          print(
-                              'Status From : \'offer\' ==> ${responseOfferData['status']}');
-                          await offers.fetchMyOffersData();
-                          await userData.fetchUserData(user.uid);
-                        } else {
-                          print('Update Offer Status Failed :');
-                        }
+                        //   if (offer.firstUser.userId == user.uid) {
+                        //     otherUserId = offer.secondUser.userId;
+                        //   } else {
+                        //     otherUserId = offer.firstUser.userId;
+                        //   }
+                        //   var otherUser = await db
+                        //       .collection('users')
+                        //       .doc(otherUserId)
+                        //       .get();
+                        //   var otherUserData = otherUser.data();
+                        //   if (offer.firstOfferItem.itemType == 'ให้') {
+                        //     if (offer.firstUser.userId == user.uid) {
+                        //       newCount = userData.userModel!.donateCount + 1;
+                        //       await db
+                        //           .collection('users')
+                        //           .doc(offer.firstUser.userId)
+                        //           .update({'donateCount': newCount});
+                        //     }
+                        //   } else {
+                        //     var firstUserNewCount;
+                        //     var secondUserNewCount;
+                        //     if (offer.firstUser.userId == user.uid) {
+                        //       firstUserNewCount =
+                        //           userData.userModel!.tradeCount + 1;
+                        //       secondUserNewCount =
+                        //           otherUserData!['tradeCount'] + 1;
+                        //     } else {
+                        //       firstUserNewCount =
+                        //           otherUserData!['tradeCount'] + 1;
+                        //       secondUserNewCount =
+                        //           userData.userModel!.tradeCount + 1;
+                        //     }
+                        //     await db
+                        //         .collection('users')
+                        //         .doc(offer.firstUser.userId)
+                        //         .update(
+                        //       {'tradeCount': firstUserNewCount},
+                        //     );
+                        //     await db
+                        //         .collection('users')
+                        //         .doc(offer.secondUser.userId)
+                        //         .update(
+                        //       {'tradeCount': secondUserNewCount},
+                        //     );
+                        //   }
+                        //   //success
+                        //   print('Offer Id : ${responseOffer.id} Updated!');
+                        //   print(
+                        //       'Status From : \'offer\' ==> ${responseOfferData['status']}');
+                        //   await offers.fetchMyOffersData();
+                        //   await userData.fetchUserData(user.uid);
+                        // } else {
+                        //   print('Update Offer Status Failed :');
+                        // }
                         isLoading = false;
                         if (!mounted) return;
                         offers.notify();

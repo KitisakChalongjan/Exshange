@@ -21,6 +21,7 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     var currentUser = context.read<Authentication>().currentUser!;
     return Scaffold(
+      backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
         title: Text('แชท'),
         centerTitle: true,

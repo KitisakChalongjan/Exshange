@@ -55,6 +55,7 @@ class _HomeScreenState extends State<HomeScreen> {
         index: _currentIndex,
       ),
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.white,
         type: BottomNavigationBarType.fixed,
         showUnselectedLabels: false,
         selectedFontSize: 16,

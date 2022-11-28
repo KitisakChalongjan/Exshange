@@ -18,6 +18,7 @@ class _ChatUserInfoState extends State<ChatUserInfo> {
     UserChatArg userChatArg =
         ModalRoute.of(context)!.settings.arguments as UserChatArg;
     return Scaffold(
+      backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
         title: Text('ข้อมูลผู้ใช้'),
         centerTitle: true,

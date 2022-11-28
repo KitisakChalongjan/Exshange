@@ -96,7 +96,7 @@ class UserModel {
       data['tradeCount'],
       data['donateCount'],
       data['rating'] % 1 == 0
-          ? (data['rating'] as int).toDouble()
+          ? (data['rating']).toDouble()
           : data['rating'] as double,
       data['favoriteCategories'],
       data['favoriteItems'],

@@ -45,6 +45,7 @@ class _ChatMessageScreenState extends State<ChatMessageScreen> {
     var currentUser = context.read<Authentication>().currentUser!;
     var myData = context.read<UserData>().userModel!;
     return Scaffold(
+      backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
         title: Text(
           userChatArg.userName,

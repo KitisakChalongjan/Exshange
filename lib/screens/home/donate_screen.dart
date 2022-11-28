@@ -270,6 +270,10 @@ class _DonateScreenState extends State<DonateScreen> {
                     firstOfferItemId,
                     secondOfferItemId,
                     'offer',
+                    false,
+                    false,
+                    false,
+                    false,
                   );
 
                   setState(() {

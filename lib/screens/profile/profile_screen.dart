@@ -6,6 +6,7 @@ import 'package:exshange/screens/profile/my_category.dart';
 import 'package:exshange/screens/profile/my_deal_screen.dart';
 import 'package:exshange/screens/profile/my_history_screen.dart';
 import 'package:exshange/screens/profile/my_item_screen.dart';
+import 'package:exshange/screens/profile/my_pending_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -55,7 +56,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         backgroundImage: userProfileUrl == '' ||
                                 userProfileUrl == null
                             ? NetworkImage(
-                                'https://firebasestorage.googleapis.com/v0/b/exshange-project.appspot.com/o/images%2Fperson-icon.png?alt=media&token=e32d807b-eeaa-42cb-89e1-291c0af9e852')
+                                'https://firebasestorage.googleapis.com/v0/b/exshange-project.appspot.com/o/images%2Fperson-icon.png?alt=media&token=b4f91dd9-770b-4383-9498-d55ef8903b8d')
                             : NetworkImage(userProfileUrl) as ImageProvider,
                       ),
                     ),
@@ -69,9 +70,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('ชื่อ : ${userData.name}'),
-                          Text('อีเมล์ : ${userData.email}'),
-                          Text('เบอร์ : ${userData.phone}'),
+                          Text(
+                            'ชื่อ : ${userData.name}',
+                            style: Theme.of(context).textTheme.bodyText1,
+                          ),
+                          Text(
+                            'อีเมล์ : ${userData.email}',
+                            style: Theme.of(context).textTheme.bodyText1,
+                          ),
+                          Text(
+                            'เบอร์ : ${userData.phone}',
+                            style: Theme.of(context).textTheme.bodyText1,
+                          ),
                           Container(
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -179,7 +189,38 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('ข้อเสนอทั้งหมด',
+                      Text('ข้อเสนอ',
+                          style: Theme.of(context).textTheme.subtitle2),
+                      Icon(Icons.arrow_forward),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            GestureDetector(
+              onTap: (() {
+                Navigator.of(context).pushNamed(MyPendingScreen().routeName);
+              }),
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.25),
+                      spreadRadius: 1,
+                      blurRadius: 3,
+                      offset: Offset(1, 3),
+                    ),
+                  ],
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Container(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('ข้อเสนอที่ได้รับการยืนยัน',
                           style: Theme.of(context).textTheme.subtitle2),
                       Icon(Icons.arrow_forward),
                     ],
@@ -251,7 +292,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             GestureDetector(
               onTap: (() {
-                Navigator.of(context).pushNamed(EditProfileScreen().routeName, arguments: userData);
+                Navigator.of(context).pushNamed(EditProfileScreen().routeName,
+                    arguments: userData);
               }),
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
