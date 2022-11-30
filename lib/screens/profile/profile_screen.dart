@@ -72,15 +72,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         children: [
                           Text(
                             'ชื่อ : ${userData.name}',
-                            style: Theme.of(context).textTheme.bodyText1,
+                            style: Theme.of(context).textTheme.bodyText2,
                           ),
                           Text(
                             'อีเมล์ : ${userData.email}',
-                            style: Theme.of(context).textTheme.bodyText1,
+                            style: Theme.of(context).textTheme.bodyText2,
                           ),
                           Text(
                             'เบอร์ : ${userData.phone}',
-                            style: Theme.of(context).textTheme.bodyText1,
+                            style: Theme.of(context).textTheme.bodyText2,
                           ),
                           Container(
                             child: Row(
@@ -95,7 +95,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         Icons.loop_sharp,
                                         color: Colors.white,
                                       ),
-                                      Text('${userData.tradeCount}'),
+                                      Text(
+                                        '${userData.tradeCount}',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText2,
+                                      ),
                                     ],
                                   ),
                                 ),
@@ -108,7 +113,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         Icons.handshake,
                                         color: Colors.white,
                                       ),
-                                      Text('${userData.donateCount}', style: Theme.of(context).textTheme.bodyText1,),
+                                      Text(
+                                        '${userData.donateCount}',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText2,
+                                      ),
                                     ],
                                   ),
                                 ),
@@ -121,7 +131,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         Icons.star_purple500_outlined,
                                         color: Colors.white,
                                       ),
-                                      Text('${userData.rating}', style: Theme.of(context).textTheme.bodyText1,),
+                                      Text(
+                                        '${userData.rating}',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText2,
+                                      ),
                                     ],
                                   ),
                                 ),
