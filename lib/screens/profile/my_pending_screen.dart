@@ -31,11 +31,15 @@ class _MyPendingScreenState extends State<MyPendingScreen> {
           if (snapshot.hasData) {
             var offer = context.watch<Offers>().offers;
             var selectedOffer = offer
-                .where((offer) =>
-                    offer.status == 'pending' || offer.status == 'rejected')
-                .where((offer) =>
-                    offer.firstUser.userId == user.uid ||
-                    offer.secondUser.userId == user.uid)
+                .where(
+                  (offer) =>
+                      offer.status == 'pending' || offer.status == 'rejected',
+                )
+                .where(
+                  (offer) =>
+                      offer.firstUser.userId == user.uid ||
+                      offer.secondUser.userId == user.uid,
+                )
                 .toList();
             return ListView.builder(
               itemCount: selectedOffer.length,
@@ -51,7 +55,7 @@ class _MyPendingScreenState extends State<MyPendingScreen> {
                     height: 140,
                     child: Card(
                       color: selectedOffer[index].status == 'pending'
-                          ? Theme.of(context).canvasColor
+                          ? Theme.of(context).disabledColor
                           : Theme.of(context).splashColor,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15),

@@ -88,7 +88,7 @@ class MyApp extends StatelessWidget {
           focusColor: Color(0xFF4BD9BC),
           hintColor: Color.fromARGB(255, 80, 80, 80),
           backgroundColor: Color(0xFFF4F0EF),
-          canvasColor: Color.fromARGB(255, 151, 208, 154),
+          disabledColor: Color.fromARGB(255, 151, 208, 154),
           splashColor: Color.fromARGB(255, 238, 137, 137),
           textTheme: const TextTheme(
             headline1: TextStyle(

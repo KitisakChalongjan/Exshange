@@ -312,8 +312,19 @@ class _MyDealDetailScreenState extends State<MyDealDetailScreen> {
                           style: Theme.of(context).textTheme.bodyText2,
                         ),
                       ),
-                      onTap: (() {
-                        Navigator.of(context).pop();
+                      onTap: (() async {
+                        setState(() {
+                          isLoading = true;
+                        });
+                        var updateOfferStatus =
+                            await db.collection('offers').doc(offer.id).update({
+                          'status': 'rejecteddone',
+                        });
+                        print('Offer(${offer.id}) status => rejected!');
+                        isLoading = false;
+                        if (!mounted) return;
+                        offers.notify();
+                        Navigator.pop(context);
                       }),
                     ),
                   ),
@@ -359,7 +370,7 @@ class _MyDealDetailScreenState extends State<MyDealDetailScreen> {
                               .collection('offers')
                               .doc(iOffer.id)
                               .update({'status': 'rejected'});
-                              print('Offer(${iOffer.id}) status => rejected!');
+                          print('Offer(${iOffer.id}) status => rejected!');
                         }
 
                         //change item status

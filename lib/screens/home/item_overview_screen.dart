@@ -289,17 +289,20 @@ class _ItemOverviewScreenState extends State<ItemOverviewScreen> {
                                                               MainAxisAlignment
                                                                   .spaceBetween,
                                                           children: [
-                                                            Text(
-                                                              filteredItems[
-                                                                      index]
-                                                                  .name,
-                                                              overflow:
-                                                                  TextOverflow
-                                                                      .ellipsis,
-                                                              style: Theme.of(
-                                                                      context)
-                                                                  .textTheme
-                                                                  .bodyText1,
+                                                            Expanded(
+                                                              flex: 6,
+                                                              child: Text(
+                                                                filteredItems[
+                                                                        index]
+                                                                    .name,
+                                                                overflow:
+                                                                    TextOverflow
+                                                                        .ellipsis,
+                                                                style: Theme.of(
+                                                                        context)
+                                                                    .textTheme
+                                                                    .bodyText1,
+                                                              ),
                                                             ),
                                                             Container(
                                                               padding: EdgeInsets

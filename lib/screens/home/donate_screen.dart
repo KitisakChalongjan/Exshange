@@ -54,6 +54,7 @@ class _DonateScreenState extends State<DonateScreen> {
       allAddress.insert(1, addressSnapshot['address']);
     }
     return Scaffold(
+      backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
         title: Text('บริจาค'),
         centerTitle: true,

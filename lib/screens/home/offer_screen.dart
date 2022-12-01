@@ -68,6 +68,7 @@ class _OfferScreenState extends State<OfferScreen> {
       allAddress.insert(1, addressSnapshot['address']);
     }
     return Scaffold(
+      backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
         title: Text('เสนอ'),
         centerTitle: true,

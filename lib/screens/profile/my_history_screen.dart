@@ -39,13 +39,18 @@ class _MyHistoryScreenState extends State<MyHistoryScreen> {
           if (snapshot.hasData) {
             var offer = context.watch<Offers>().offers;
             var selectedOffer = offer
-                .where((offer) =>
-                    offer.status == 'pendingdone' ||
-                    offer.status == 'rejecteddone')
-                .where((offer) =>
-                    offer.firstUser.userId == user.uid ||
-                    offer.secondUser.userId == user.uid)
+                .where(
+                  (offer) =>
+                      offer.status == 'pendingdone' ||
+                      offer.status == 'rejecteddone',
+                )
+                .where(
+                  (offer) =>
+                      offer.firstUser.userId == user.uid ||
+                      offer.secondUser.userId == user.uid,
+                )
                 .toList();
+                selectedOffer.sort();
             return ListView.builder(
               itemCount: selectedOffer.length,
               itemBuilder: ((context, index) {
@@ -60,7 +65,7 @@ class _MyHistoryScreenState extends State<MyHistoryScreen> {
                     height: 140,
                     child: Card(
                       color: selectedOffer[index].status == 'pendingdone'
-                          ? Theme.of(context).canvasColor
+                          ? Theme.of(context).disabledColor
                           : Theme.of(context).splashColor,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15),
