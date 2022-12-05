@@ -50,7 +50,6 @@ class _MyHistoryScreenState extends State<MyHistoryScreen> {
                       offer.secondUser.userId == user.uid,
                 )
                 .toList();
-                selectedOffer.sort();
             return ListView.builder(
               itemCount: selectedOffer.length,
               itemBuilder: ((context, index) {

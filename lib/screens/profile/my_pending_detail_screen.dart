@@ -287,7 +287,28 @@ class _MyPendingDetailScreenState extends State<MyPendingDetailScreen> {
                               style: Theme.of(context).textTheme.bodyText2,
                             ),
                           ),
-                          onTap: (() {
+                          onTap: (() async {
+                            var updateOfferStatus = await db
+                                .collection('offers')
+                                .doc(offer.id)
+                                .update({
+                              'status': 'offer',
+                            });
+
+                            //change item status
+                            await db
+                                .collection('items')
+                                .doc(offer.firstOfferItem.id)
+                                .update({'status': 'on'});
+
+                            //change item isDone
+                            await db
+                                .collection('items')
+                                .doc(offer.firstOfferItem.id)
+                                .update({'isDone': 'false'});
+                            print(
+                                'Item${offer.firstOfferItem.id} isDone => false');
+
                             Navigator.of(context).pop();
                           }),
                         ),

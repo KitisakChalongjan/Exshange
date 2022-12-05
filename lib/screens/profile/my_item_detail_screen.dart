@@ -170,8 +170,8 @@ class _MyItemDetailScreenState extends State<MyItemDetailScreen> {
             await offer.reference.delete();
             print('Delete Offer => ${offer.id}');
           });
-          await context.read<Items>().initItemsData();
           isLoadig = false;
+          await context.read<Items>().initItemsData();
           Navigator.pop(context);
         }),
       ),

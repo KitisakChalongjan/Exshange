@@ -320,10 +320,13 @@ class _MyDealDetailScreenState extends State<MyDealDetailScreen> {
                             await db.collection('offers').doc(offer.id).update({
                           'status': 'rejecteddone',
                         });
+                        
                         print('Offer(${offer.id}) status => rejected!');
                         isLoading = false;
-                        if (!mounted) return;
+                        await offers.fetchMyOffersData();
+                        await userData.fetchUserData(user.uid);
                         offers.notify();
+                        if (!mounted) return;
                         Navigator.pop(context);
                       }),
                     ),
@@ -378,7 +381,13 @@ class _MyDealDetailScreenState extends State<MyDealDetailScreen> {
                             .collection('items')
                             .doc(offer.firstOfferItem.id)
                             .update({'status': 'off'});
-                        print('Item${offer.firstOfferItem.id} status => off');
+
+                        //change item isDone
+                        await db
+                            .collection('items')
+                            .doc(offer.firstOfferItem.id)
+                            .update({'isDone': 'true'});
+                        print('Item${offer.firstOfferItem.id} isDone => true');
 
                         //update user donate/trade count
                         // var responseOffer =
@@ -443,8 +452,10 @@ class _MyDealDetailScreenState extends State<MyDealDetailScreen> {
                         //   print('Update Offer Status Failed :');
                         // }
                         isLoading = false;
-                        if (!mounted) return;
+                        await offers.fetchMyOffersData();
+                        await userData.fetchUserData(user.uid);
                         offers.notify();
+                        if (!mounted) return;
                         Navigator.pop(context);
                       }),
                     ),
